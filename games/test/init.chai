@@ -1,0 +1,5 @@
+// test script calling all default objects and functions
+// all default objects' name begin with double dash (__)
+// objects implemented: __initializer, 
+
+__initializer.graphics("test name", 800, 600) // should change the default 
