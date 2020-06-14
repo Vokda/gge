@@ -1,4 +1,5 @@
 #include "initializer.hpp"
+#include "core.hpp"
 
 void Initializer::graphics(const std::string& s, size_t w, size_t h)
 {
@@ -8,4 +9,9 @@ void Initializer::graphics(const std::string& s, size_t w, size_t h)
 void Initializer::events()
 {
 	_core.initialize(Core::EVENT_HANDLER);
+}
+
+void Initializer::grid(size_t w, size_t h, int size)
+{
+	_core.initialize(Core::GRID, w, h, size);
 }

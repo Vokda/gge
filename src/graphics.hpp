@@ -4,6 +4,7 @@ struct SDL_Window;
 struct SDL_Surface;
 struct SDL_Texture;
 struct SDL_Renderer;
+class Hex_grid;
 
 class Graphics
 {
@@ -11,7 +12,10 @@ class Graphics
 		Graphics(const std::string& window_name, size_t width, size_t height);
 		~Graphics();
 
+		void clear_screen();
 		void render();
+
+		void draw_grid(const Hex_grid& grid);
 
 	private:
 		// some defaults
@@ -22,6 +26,4 @@ class Graphics
 		SDL_Surface* _screen_surface;
 		SDL_Renderer* _sdl_renderer;
 
-		void check_null(const std::string& check_name, const void * SDL_struct);
-		void check_null(const std::string& check_name, const int SDL_result);
 };

@@ -32,7 +32,8 @@ void Scripter::add_defaults()
 			{ chaiscript::constructor<Initializer(Core&)>() },
 			{ 
 				{chaiscript::fun(&Initializer::graphics), "graphics"},
-				{chaiscript::fun(&Initializer::events), "events"}
+				{chaiscript::fun(&Initializer::events), "events"},
+				{chaiscript::fun(&Initializer::grid), "grid"}
 			});
 
 	_chai.add(chaiscript::var(&_initializer), "__initializer");

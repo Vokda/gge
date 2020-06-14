@@ -16,6 +16,16 @@ int main(int argc, char* argv[])
 	Core core;
 	Initializer initializer(core);
 	Scripter scripter(argv[1], initializer);
+
+	core.check_modules_initiated();
+
+	bool quit = false;
+	// main loop
+	while(not quit)
+	{
+		quit = core.handle_events();
+		core.render(true);
+	}
 	// looper (for main game loop)
 	// graphics
 	// event handler

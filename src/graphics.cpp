@@ -3,6 +3,8 @@
 #include "graphics.hpp"
 #include <unistd.h>
 #include <cstdint>
+#include "sdl_init_helper.hpp"
+#include "hex_grid.hpp"
 using namespace std;
 
 Graphics::Graphics(const std::string& window_name, size_t x, size_t y)
@@ -39,49 +41,23 @@ Graphics::~Graphics()
 	SDL_Quit();
 }
 
-
-void Graphics::render()
+void Graphics::clear_screen()
 {
 	// blue
 	SDL_SetRenderDrawColor( _sdl_renderer, 135, 206, 235, 255 );
 	SDL_RenderClear(_sdl_renderer);
+}
 
-	// do drawing
-
+void Graphics::render()
+{
 	SDL_RenderPresent(_sdl_renderer);
 }
 
-
-
-/*
- * check sdl return values
- * and handle it apropriately
- */
-void Graphics::check_null(const std::string& check_name, const void * SDL_struct)
+void Graphics::draw_grid(const Hex_grid& grid)
 {
-	cout << check_name;
-	if(SDL_struct == nullptr)// or *(int*)(SDL_struct) < 0)
+	for(auto& tile : grid.get_grid())
 	{
-		cerr << " - SDL Error: " << SDL_GetError() << endl;
-		throw 1;
-	}
-	else
-	{
-		cout << " - OK" <<endl;
+		const SDL_Point* p = &tile.get_corners().front();
+		SDL_RenderDrawLines( _sdl_renderer, p, 6);
 	}
 }
-
-void Graphics::check_null(const std::string& check_name, const int SDL_result)
-{
-	cout << check_name;
-	if(SDL_result < 0)
-	{
-		cerr << " - SDL Error: " << SDL_GetError() << endl;
-		throw 1;
-	}
-	else
-	{
-		cout << " - OK" <<endl;
-	}
-}
-
