@@ -1,13 +1,8 @@
 #pragma once
 #include <vector>
 #include <SDL2/SDL.h>
-
-struct Cube_coordinate
-{
-	const int q;
-	const int r;
-	const int s;
-};
+#include <iostream>
+#include "cube_coordinate.hpp"
 
 class Hex
 {
@@ -16,15 +11,24 @@ class Hex
 		Hex(int q_, int r_, int s_, int size);
 
 		// to actually create a new hex
-		Hex(int q_, int r_, int s_, int x, int y, int size);
+		Hex(int row, int col, int size, SDL_Point offset);
 
 		//Hex& operator=(const Hex& h);
 
-		const SDL_Point& get_position() { return _position; }
+		//SDL_Point hex_to_pixel(const Hex& hex);
+
+		Cube_coordinate axial_to_cube (const Hex& h) const;
+		Cube_coordinate axial_to_cube (int q, int r) const;
+		SDL_Point cube_to_axial (const Cube_coordinate&) const;
+
+		SDL_Point hex_to_pixel(const Hex& h, int size);
+
+		const SDL_Point& get_position() const { return _position; }
 
 		//std::vector<int>& get_corners() { return _corners; }
 		const std::vector<SDL_Point>& get_corners() const { return _corners; }
 		const Cube_coordinate& get_cube_coordinate() const { return _cube_coordinate; }
+
 
 	private:
 		// cube coordinates
@@ -38,3 +42,5 @@ class Hex
 		void calculate_corners(SDL_Point& c, int s);
 		SDL_Point calculate_corner(SDL_Point& center, int, int );
 };
+
+std::ostream& operator<<(std::ostream& ost, const Hex&);

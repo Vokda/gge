@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <cstdint>
 #include "sdl_init_helper.hpp"
-#include "hex_grid.hpp"
+#include "hex/hex_grid.hpp"
 using namespace std;
 
 Graphics::Graphics(const std::string& window_name, size_t x, size_t y)
@@ -43,8 +43,7 @@ Graphics::~Graphics()
 
 void Graphics::clear_screen()
 {
-	// blue
-	SDL_SetRenderDrawColor( _sdl_renderer, 135, 206, 235, 255 );
+	SDL_SetRenderDrawColor( _sdl_renderer, 0, 0, 0, 255 );
 	SDL_RenderClear(_sdl_renderer);
 }
 
@@ -58,6 +57,10 @@ void Graphics::draw_grid(const Hex_grid& grid)
 	for(auto& tile : grid.get_grid())
 	{
 		const SDL_Point* p = &tile.get_corners().front();
+		const SDL_Point* last_point = p + 5;
+		SDL_SetRenderDrawColor( _sdl_renderer, 255, 255, 255, 255 );
 		SDL_RenderDrawLines( _sdl_renderer, p, 6);
+		SDL_RenderDrawLine( _sdl_renderer, last_point->x, last_point->y, p->x, p->y);
 	}
+
 }

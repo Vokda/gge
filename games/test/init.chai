@@ -4,4 +4,4 @@
 
 __initializer.graphics("test name", 800, 600) // should change the default 
 __initializer.events()
-__initializer.grid(10, 10, 40)
+__initializer.grid(4, 3, 40)

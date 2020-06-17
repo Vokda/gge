@@ -1,5 +1,6 @@
 #include "core.hpp"
 #include "graphics.hpp"
+#include "hex/hex_grid.hpp"
 #include <cstdarg>
 #include <iostream>
 using namespace std;
@@ -26,7 +27,7 @@ void Core::initialize(Module m, ...)
 				auto w = va_arg(args, size_t);
 				auto h = va_arg(args, size_t);
 				auto size = va_arg(args, int);
-				_grid = std::shared_ptr<Hex_grid>(new Hex_grid(w, h, size));
+				_grid = std::shared_ptr<Hex_grid>(new Hex_grid(w, h, size, Hex_grid::FLAT_TOP));
 				break;
 			}
 		default:

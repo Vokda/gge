@@ -3,7 +3,7 @@
 #include <memory>
 #include "graphics.hpp"
 #include "events.hpp"
-#include "hex_grid.hpp"
+class Hex_grid;
 
 class Core
 {
@@ -21,7 +21,6 @@ class Core
 		void grid(size_t w, size_t h);
 
 	private:
-
 
 		void game_loop();
 

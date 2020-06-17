@@ -12,12 +12,13 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
 # chaiscript
-include_directories(${PROJECT_SOURCE_DIR}/chaiscript/)
+include_directories(${PROJECT_SOURCE_DIR}/ChaiScript/include/)
 
 # aux_source_directory("../" SOURCE_FILES)
 # source files
-file(GLOB SOURCE_FILES "src/*.hpp" "src/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
 message(STATUS "source files: ${SOURCE_FILES}")
+
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} dl)
 
