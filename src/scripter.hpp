@@ -1,6 +1,6 @@
 #pragma once
 #include <chaiscript/chaiscript.hpp>
-//#include <functional>
+#include <functional>
 
 class Initializer;
 
@@ -18,31 +18,27 @@ class Scripter
 		// following function s adds functions and classes to chai script
 		// add default functions that gge provides
 		void add_defaults();
-		/* add function
-		 * compiles but I'm having some issues with the templates when actually
-		 * calling the function
-		template<typename R, typename ...Args>
-			void add_fn(
-					std::function<R(Args...)>& fn,
-					const std::string& fn_name)
-			{
-				_chai.add(chaiscript::fun(&fn), fn_name);
-			}
-			*/
-		//void add_class_fns();
-		// add class with functions
-		/*template<typename class_added, typename ...Args>
-		  void add_class(std::vector<>)
+
+		template<typename Class, typename ...Ctor_args>
+		  void add_class(
+				  const std::string& class_name,
+				  const std::vector<chaiscript::Proxy_Function>&& t_constructors,
+				  const std::vector<
+				  std::pair<chaiscript::Proxy_Function, std::string>
+				  >&& member_functions,
+				  Class* instance,
+				  const std::string& instance_name
+				  )
 		  { 
 			  chaiscript::ModulePtr m = chaiscript::ModulePtr(new chaiscript::Module());
 
-			  chaiscript::utility::add_class<class_added>(
+			  chaiscript::utility::add_class<Class>(
 					  *m,
-					  "Initializer",
-					  { chaiscript::constructor<class_added(Args...)>() },
-					  { {chaiscript::fun(&Initializer::graphics), "graphics"} });
+					  class_name,
+					  { chaiscript::constructor<Class(Ctor_args...)>() },
+					  member_functions);
 
-			  _chai.add(chaiscript::var(&_initializer), "__initializer");
+			  _chai.add(chaiscript::var(instance), instance_name);
 			  _chai.add(m);
-		  }*/
+		  }
 };

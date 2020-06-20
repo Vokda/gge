@@ -2,6 +2,6 @@
 // all default objects' name begin with double dash (__)
 // objects implemented: __initializer, 
 
-__initializer.graphics("test name", 800, 600) // should change the default 
-__initializer.events()
-__initializer.grid(4, 3, 40)
+gge_initializer.graphics("test name", 800, 600) // should change the default 
+gge_initializer.events()
+gge_initializer.grid(4, 3, 40)
