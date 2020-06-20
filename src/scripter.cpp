@@ -24,33 +24,15 @@ Scripter::Scripter(const std::string& filename, Initializer& i):
 
 void Scripter::add_defaults()
 {
-	chaiscript::ModulePtr m = chaiscript::ModulePtr(new chaiscript::Module());
-
-	chaiscript::utility::add_class<Initializer>(
-			*m,
+	add_class<Initializer, Core&>(
 			"Initializer",
 			{ chaiscript::constructor<Initializer(Core&)>() },
-			{ 
+			{
 				{chaiscript::fun(&Initializer::graphics), "graphics"},
 				{chaiscript::fun(&Initializer::events), "events"},
 				{chaiscript::fun(&Initializer::grid), "grid"}
-			});
-
-	_chai.add(chaiscript::var(&_initializer), "__initializer");
-	_chai.add(m);
+			},
+			&_initializer,
+			"gge_initializer"
+			);
 }
-
-/*
-template<typename T>
-void add_class<T>(std::vector<)
-{
-	chaiscript::ModulePtr m = chaiscript::ModulePtr(new chaiscript::Module());
-
-	chaiscript::utility::add_class<T>(*m
-			T,
-			{ chaiscript::constructor<T()>() },
-			{ {chaiscript::fun(&T::init_graphics), "init_graphics"} });
-
-	chai.add(m);
-}
-*/
