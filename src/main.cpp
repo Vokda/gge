@@ -13,23 +13,19 @@ int main(int argc, char* argv[])
 	}
 
 	// init 
-	Core core;
-	Initializer initializer(core);
-	Scripter scripter(argv[1], initializer);
-
-	core.check_modules_initiated();
-
-	bool quit = false;
-	// main loop
-	while(not quit)
+	try
 	{
-		quit = core.handle_events();
-		core.render(true);
+		Core core;
+		Initializer initializer(core);
+		Scripter scripter(argv[1], initializer);
+
+		core.check_modules_initiated();
+
+		core.run();
 	}
-	// looper (for main game loop)
-	// graphics
-	// event handler
-
-
-	// 
+	catch (std::exception& e)
+	{
+		cerr << "FATAL: " << e.what() << endl;
+		exit(1);
+	}
 }

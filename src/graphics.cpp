@@ -64,3 +64,7 @@ void Graphics::draw_grid(const Hex_grid& grid)
 	}
 
 }
+
+//void Graphics::load_image(const std::string& path)
+//{
+	

@@ -15,22 +15,30 @@ Hex_grid::Hex_grid(size_t width, size_t height, int size, Hex_orientation ho):
 
 	size_t k = 1;
 	// in case of square grid
-	for(size_t h = 0; h < height; ++h)
+	bool success = true;
+	cout << "Grid -";
+	// && success is for breaking out of outer loop
+	for(size_t h = 0; h < height && success; ++h)
 	{
 		for(size_t w = 0; w < width; ++w)
 		{
 			try
 			{
 				_grid.push_back(Hex(-h, w, _hex_size, {_hex_size*2, _hex_size*4}));
+#ifdef DEBUG
 				cout << "Made hex at " << _grid.back();
+#endif
 			}
 			catch(char const* e)
 			{
-				cout << "Could not create grid: " << e << endl;
+				success = false;
+				cerr << "Could not create grid: " << e << endl;
 				break;
 			}
 		}
 	}
+	if(success)
+		cout << "OK" << endl;
 }
 
 Hex Hex_grid::hex_add(const Hex& a, const Hex& b)
