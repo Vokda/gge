@@ -1,7 +1,18 @@
 // test script calling all default objects and functions
-// all default objects' name begin with double dash (__)
-// objects implemented: __initializer, 
+// default objects begin with gge_
 
 gge_initializer.graphics("test name", 800, 600) // should change the default 
 gge_initializer.events()
 gge_initializer.grid(4, 3, 40)
+
+//gge_initializer.setup()
+
+// return true to exit loop
+def test_f(delta)
+{
+	print("test print from chai")
+	print("delta " + to_string(delta))
+	return true
+}
+
+gge_initializer.game_loop(test_f)

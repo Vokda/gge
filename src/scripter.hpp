@@ -23,9 +23,7 @@ class Scripter
 		  void add_class(
 				  const std::string& class_name,
 				  const std::vector<chaiscript::Proxy_Function>&& t_constructors,
-				  const std::vector<
-				  std::pair<chaiscript::Proxy_Function, std::string>
-				  >&& member_functions,
+				  const std::vector<std::pair<chaiscript::Proxy_Function, std::string>>&& member_functions,
 				  Class* instance,
 				  const std::string& instance_name
 				  )

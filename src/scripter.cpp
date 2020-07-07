@@ -10,16 +10,8 @@ Scripter::Scripter(const std::string& filename, Initializer& i):
 	_initializer(i)
 {
 	add_defaults();
-	try
-	{
-		cout << "Game file: " << filename << endl;
-		auto main_file = _chai.eval_file(filename);
-	}
-	catch (std::exception& e)
-	{
-		cerr << e.what() << endl;
-	}
-
+	cout << "Game file: " << filename << endl;
+	auto main_file = _chai.eval_file(filename);
 }
 
 void Scripter::add_defaults()
@@ -30,9 +22,11 @@ void Scripter::add_defaults()
 			{
 				{chaiscript::fun(&Initializer::graphics), "graphics"},
 				{chaiscript::fun(&Initializer::events), "events"},
-				{chaiscript::fun(&Initializer::grid), "grid"}
+				{chaiscript::fun(&Initializer::grid), "grid"},
+				{chaiscript::fun(&Initializer::game_loop), "game_loop"}
 			},
 			&_initializer,
 			"gge_initializer"
 			);
+
 }
