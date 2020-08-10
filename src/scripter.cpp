@@ -1,7 +1,9 @@
 #include "scripter.hpp"
 #include <exception>
 #include <iostream>
+
 #include <chaiscript/utility/utility.hpp>
+
 #include "initializer.hpp"
 #include "core.hpp"
 using namespace std;

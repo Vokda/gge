@@ -4,12 +4,16 @@ project(gge)
 #  debug options
 add_definitions(-DDEBUG)
 
-# sdl2
 # includes cmake/FindSDL2.cmake
-set(CMAKE_MODULE_PATH $ENV{HOME}/Projects/cmake)
+set(CMAKE_MODULE_PATH cmake/)
 
+# sdl2
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
+
+find_package(SDL2_SUPPORT_LIBRARIES REQUIRED)
+
+message(STATUS "sdl2 include dir ${SDL2_INCLUDE_DIR}")
 
 # chaiscript
 include_directories(${PROJECT_SOURCE_DIR}/ChaiScript/include/)
@@ -20,8 +24,8 @@ file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
 message(STATUS "source files: ${SOURCE_FILES}")
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} dl)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} dl ${SDL2_SUPPORT_LIBRARIES})
 
 # C flags
-set(CMAKE_CXX_FLAGS "-std=c++14")
-set(CMAKE_CXX_COMPILER g++)
+set(CMAKE_CXX_FLAGS "-std=c++14 ")
+set(CMAKE_CXX_COMPILER clang++)

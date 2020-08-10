@@ -1,5 +1,8 @@
-#pragma once
+#ifndef SCRIPTER_HPP
+#define SCRIPTER_HPP
+
 #include <chaiscript/chaiscript.hpp>
+
 #include <functional>
 
 class Initializer;
@@ -40,3 +43,5 @@ class Scripter
 			  _chai.add(m);
 		  }
 };
+
+#endif

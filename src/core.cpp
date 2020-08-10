@@ -1,51 +1,12 @@
 #include "core.hpp"
+#include <iostream>
+#include <chrono>
+#include <stdexcept>
 #include "graphics.hpp"
 #include "events.hpp"
 #include "hex/hex_grid.hpp"
-#include <cstdarg>
-#include <iostream>
 #include <functional>
-#include <chrono>
-#include <stdexcept>
 using namespace std;
-
-void Core::initialize(Module m, ...)
-{
-	va_list args;
-	va_start(args, m);
-	switch(m)
-	{
-		case GRAPHICS:
-			{
-				auto s = va_arg(args, const std::string);
-				auto w = va_arg(args, size_t);
-				auto h = va_arg(args, size_t);
-				_graphics = std::shared_ptr<Graphics>(new Graphics(s, w, h));
-				break;
-			}
-		case EVENT_HANDLER:
-			_events = std::shared_ptr<Events>(new Events());
-			break;
-		case GRID:
-			{
-				auto w = va_arg(args, size_t);
-				auto h = va_arg(args, size_t);
-				auto size = va_arg(args, int);
-				_grid = std::shared_ptr<Hex_grid>(new Hex_grid(w, h, size, Hex_grid::FLAT_TOP));
-				break;
-			}
-		case GAME_LOOP:
-			{
-				auto f = va_arg(args, const std::function<bool(float)>);
-				_game_loop = std::make_shared<std::function<bool(float)>>(f);
-				break;
-			}
-		default:
-			throw "Not implemented yet!";
-			break;
-	}
-	va_end(args);
-}
 
 bool Core::handle_events()
 {
@@ -55,6 +16,29 @@ bool Core::handle_events()
 	else
 		return false;
 }
+
+
+// MODULE INITIALIZERS
+void Core::init_graphics(const string&& name, size_t w, size_t h)
+{
+	_graphics = make_shared<Graphics>(name, w, h, _sdl_helper);
+}
+
+void Core::init_events()
+{
+	_events = make_shared<Events>(_sdl_helper);
+}
+
+void Core::init_grid(size_t w, size_t h, int size)
+{
+	_grid = make_shared<Hex_grid>(w, h, size, Hex_grid::FLAT_TOP);
+}
+
+void Core::init_game_loop(const std::function<bool(float)>& f)
+{
+	_game_loop = std::make_shared<std::function<bool(float)>>(f);
+}
+// MODULE INITIALIZERS END
 
 void Core::run()
 {

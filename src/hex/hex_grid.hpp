@@ -1,10 +1,6 @@
 #pragma once
 
-//#include <cmath>
-//#include <cstdlib>
 #include <vector>
-//#include <algorithm>
-//#include <iterator>
 
 //class Hex;
 #include "hex.hpp"
