@@ -1,7 +1,7 @@
 #include "hex.hpp"
 #include <algorithm>
 #include <iostream>
-#include "../sdl_init_helper.hpp"
+#include "../sdl_helper.hpp"
 #include "utils.hpp"
 using namespace std;
 #include <cmath>

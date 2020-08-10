@@ -1,11 +1,15 @@
-#pragma once
+#ifndef CORE_HPP
+#define CORE_HPP
 
 #include <memory>
 #include <functional>
+#include "sdl_helper.hpp"
+#include <string>
 class Graphics;
 class Events;
 class Hex_grid;
-class string;
+using namespace std;
+class function;
 
 class Core
 {
@@ -15,7 +19,12 @@ class Core
 
 		// for initialzing modules
 		enum Module {GRAPHICS, AUDIO, EVENT_HANDLER, GRID, GAME_LOOP, NR_MODULES};
-		void initialize(Module m, ...);
+
+		// MODULE INITIALIZERS
+		void init_graphics(const std::string&&, size_t w, size_t h);
+		void init_events();
+		void init_grid(size_t w, size_t h, int size);
+		void init_game_loop(const std::function<bool(float)>& f);
 
 		// for loading graphics (and sound and stuff too)
 		void load_graphics(const string& path);
@@ -38,4 +47,7 @@ class Core
 		std::shared_ptr<Hex_grid> _grid;
 		// function pointer to main game loop function defined in chaiscript
 		std::shared_ptr<std::function<bool(float)>> _game_loop;
+		SDL_helper _sdl_helper;
 };
+
+#endif

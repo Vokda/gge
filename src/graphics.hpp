@@ -7,11 +7,12 @@ struct SDL_Surface;
 struct SDL_Texture;
 struct SDL_Renderer;
 class Hex_grid;
+class SDL_helper;
 
 class Graphics
 {
 	public:
-		Graphics(const std::string& window_name, size_t width, size_t height);
+		Graphics(const std::string& window_name, size_t width, size_t height, SDL_helper&);
 		~Graphics();
 
 		void load_image(const std::string& path);
@@ -33,4 +34,5 @@ class Graphics
 		SDL_Surface* _screen_surface;
 		SDL_Renderer* _sdl_renderer;
 
+		SDL_helper& _sdl_helper;
 };

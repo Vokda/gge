@@ -3,17 +3,22 @@
 #include "graphics.hpp"
 #include <unistd.h>
 #include <cstdint>
-#include "sdl_init_helper.hpp"
+#include "sdl_helper.hpp"
 #include "hex/hex_grid.hpp"
 using namespace std;
 
-Graphics::Graphics(const std::string& window_name, size_t x, size_t y)
+Graphics::Graphics(
+		const std::string& window_name, 
+		size_t x,
+		size_t y,
+		SDL_helper& sdl_h):
+	_sdl_helper(sdl_h)
 {
 	_screen_width = x;
 	_screen_height = y;
 	auto pixel_format = SDL_PIXELFORMAT_RGBA8888;
 
-	check_null("SDL initialization", SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS));
+	_sdl_helper.check_null("SDL initialization", SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS));
 
 	// create window
 	_window = SDL_CreateWindow(
@@ -23,11 +28,11 @@ Graphics::Graphics(const std::string& window_name, size_t x, size_t y)
 			_screen_width,
 			_screen_height,
 			SDL_WINDOW_SHOWN); 
-	check_null("SDL window", _window);
+	_sdl_helper.check_null("SDL window", _window);
 
 	// create renderer
 	_sdl_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
-	check_null("SDL renderer", _sdl_renderer);
+	_sdl_helper.check_null("SDL renderer", _sdl_renderer);
 
 	//Initialize renderer color
 	SDL_SetRenderDrawColor( _sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF );

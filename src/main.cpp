@@ -2,6 +2,7 @@
 #include <iostream>
 #include "core.hpp"
 #include "initializer.hpp"
+#include <cstdlib>
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -26,6 +27,9 @@ int main(int argc, char* argv[])
 	catch (std::exception& e)
 	{
 		cerr << "FATAL: " << e.what() << endl;
-		exit(1);
+		exit(2);
 	}
+
+	cout << "Thanks for playing!" << endl;
+	return 0;
 }

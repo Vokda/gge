@@ -1,11 +1,12 @@
 #include "events.hpp"
 #include <iostream>
-#include "sdl_init_helper.hpp"
+#include "sdl_helper.hpp"
 using namespace std;
 
-Events::Events()
+Events::Events(SDL_helper& sdl_h):
+	_sdl_helper(sdl_h)
 {
-	check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
+	_sdl_helper.check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
 }
 
 int Events::get_event()
