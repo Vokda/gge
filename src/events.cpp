@@ -9,28 +9,24 @@ Events::Events(SDL_helper& sdl_h):
 	_sdl_helper.check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
 }
 
-int Events::get_event()
+const vector<int>& Events::get_events()
 {
+	_events.clear();
+
 	while( SDL_PollEvent(&_event) != 0)
 	{
 		auto& e = _event;
-		if(e.type == SDL_QUIT)
-		{
-			return QUIT;
-		}
 		// presses key
-		else if( e.type == SDL_KEYDOWN )
+		if( e.type == SDL_KEYDOWN )
 		{
-			switch (e.key.keysym.sym)
-			{
-				case SDLK_ESCAPE:
-				case SDLK_q:
-					return QUIT;
-					break;
-				case SDLK_SPACE:
-					return PAUSE;
-			}
+			 _events.push_back(e.key.keysym.sym);
 		}
 	}
-	return EVENTLESS;
+	return _events;
+}
+
+SDL_KeyCode Events::get_key_codes()
+{
+	SDL_KeyCode kc;
+	return kc;
 }

@@ -1,34 +1,37 @@
 #ifndef SCRIPTER_HPP
 #define SCRIPTER_HPP
 
-#include <chaiscript/chaiscript.hpp>
+#include "gge_api.hpp"
 
+#include <chaiscript/chaiscript.hpp>
 #include <functional>
+using namespace std;
 
 class Initializer;
 
 class Scripter
 {
 	public:
-		Scripter(const std::string& filename, Initializer& i);
+		Scripter(const string& game_directory, Initializer& i, GGE_API& ga);
 
 	private:
 		chaiscript::ChaiScript _chai;
 		chaiscript::ModulePtr _module_ptr;
 
 		Initializer& _initializer;
+		GGE_API& _gge_api;
 
 		// following function s adds functions and classes to chai script
-		// add default functions that gge provides
-		void add_defaults();
+		// add default functions and variables that gge provides
+		void add_defaults(const string& game_dir);
 
 		template<typename Class, typename ...Ctor_args>
 		  void add_class(
-				  const std::string& class_name,
-				  const std::vector<chaiscript::Proxy_Function>&& t_constructors,
-				  const std::vector<std::pair<chaiscript::Proxy_Function, std::string>>&& member_functions,
+				  const string& class_name,
+				  const vector<chaiscript::Proxy_Function>&& t_constructors,
+				  const vector<pair<chaiscript::Proxy_Function, string>>&& member_functions,
 				  Class* instance,
-				  const std::string& instance_name
+				  const string& instance_name
 				  )
 		  { 
 			  chaiscript::ModulePtr m = chaiscript::ModulePtr(new chaiscript::Module());

@@ -4,16 +4,14 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <chrono>
-using namespace std;
-using namespace chrono;
+#include "timer.hpp"
 
 struct Text
 {
 	std::string txt;
 	SDL_Colour colour;
 	bool permanent;
-	time_point creation;
+	Time_point creation;
 	SDL_Point position;
 };
 

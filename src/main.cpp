@@ -1,6 +1,7 @@
 #include "scripter.hpp"
 #include <iostream>
 #include "core.hpp"
+#include "gge_api.hpp"
 #include "initializer.hpp"
 #include <cstdlib>
 using namespace std;
@@ -18,7 +19,8 @@ int main(int argc, char* argv[])
 	{
 		Core core;
 		Initializer initializer(core);
-		Scripter scripter(argv[1], initializer);
+		GGE_API gge_api(core);
+		Scripter scripter(argv[1], initializer, gge_api);
 
 		core.check_modules_initiated();
 

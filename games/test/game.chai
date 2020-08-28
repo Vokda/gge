@@ -1,0 +1,41 @@
+class Game
+{
+	def Game()
+	{
+		this.max_frames = 10
+		this.control_schema = "ctrl.schema"
+		this.frame = 0
+		this.quit = false
+	}
+
+	var control_schema
+	var max_frames
+	var frame
+	var quit
+
+	def event_handle(events)
+	{
+		// do stuff
+		//var v = Vector_int()
+		for (var i = 0; i < events.size(); ++i)
+		{
+			print("event " + to_string(events[i]))
+			switch(events[i])
+			{
+				case(27){
+					this.quit = true;
+					break;
+				}
+			}
+		}
+	}
+
+	// return true to exit loop, think of the return value as quit
+	// needs to be called game_loop
+	def game_loop(delta)
+	{
+		//print("delta " + to_string(delta))
+		++this.frame
+		return this.quit
+	}
+}

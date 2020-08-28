@@ -1,18 +1,18 @@
 // test script calling all default objects and functions
 // default objects begin with gge_
 
+// put use first sot that stuff isn't unnecessarily initiated.
+// game_dir is defined by gge
+use(game_dir+"game.chai")
+
+
 gge_initializer.graphics("test name", 800, 600) // should change the default 
 gge_initializer.events()
 gge_initializer.grid(4, 3, 40)
 
-//gge_initializer.setup()
+// create instance of game object
+// containing game loop and event handle
+var game = Game()
 
-// return true to exit loop
-def test_f(delta)
-{
-	print("test print from chai")
-	print("delta " + to_string(delta))
-	return true
-}
-
-gge_initializer.game_loop(test_f)
+// return name of game object
+return "game"

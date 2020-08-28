@@ -6,15 +6,14 @@
 #include "events.hpp"
 #include "hex/hex_grid.hpp"
 #include <functional>
+#include <algorithm>
+#include "chai_object.hpp"
 using namespace std;
 
-bool Core::handle_events()
+Core::Core()
 {
-	auto event = _events->get_event();
-	if(event == Events::events::QUIT)
-		return true;
-	else
-		return false;
+	_game_loop = nullptr;
+	_event_handle = nullptr;
 }
 
 
@@ -34,10 +33,26 @@ void Core::init_grid(size_t w, size_t h, int size)
 	_grid = make_shared<Hex_grid>(w, h, size, Hex_grid::FLAT_TOP);
 }
 
-void Core::init_game_loop(const std::function<bool(float)>& f)
+void Core::init_game_object(Chai_object&& co)
 {
-	_game_loop = std::make_shared<std::function<bool(float)>>(f);
+	auto fn_names = co.get_fn_names();
+	_boxed_value = co.get_boxed_value();
+
+	if(find(fn_names.begin(), fn_names.end(), "game_loop") != fn_names.end())
+	{
+		_game_loop = std::make_unique<std::function<bool(Boxed_Value&, float)>>(
+				co.get_function<bool, float>("game_loop")
+				);
+	}
+
+	if(find(fn_names.begin(), fn_names.end(), "event_handle") != fn_names.end())
+	{
+		_event_handle = make_shared<std::function<void(Boxed_Value&, vector<int>)>>(
+				co.get_function<void, vector<int>>("event_handle")
+				);
+	}
 }
+
 // MODULE INITIALIZERS END
 
 void Core::run()
@@ -47,7 +62,7 @@ void Core::run()
 	{
 		auto start = std::chrono::steady_clock::now();
 
-		_quit = handle_events();
+		handle_events();
 		_graphics->clear_screen();
 
 		// draws everything that isn't HUD
@@ -55,7 +70,9 @@ void Core::run()
 
 		// game logic
 		// game can be quit from inside the game loop by returning true
-		_quit = (*_game_loop)(_delta);
+		_quit = (*_game_loop)(_boxed_value, _delta);
+
+
 		_graphics->render();
 
 		auto end = std::chrono::steady_clock::now();
@@ -79,4 +96,19 @@ void Core::check_modules_initiated()
 		std::domain_error de("No game loop provided!");
 		throw de; 
 	}
+	if(not _event_handle)
+	{
+		std::domain_error de("No event handle function provided!");
+		throw de; 
+	}
+}
+
+void Core::handle_events()
+{
+	(*_event_handle)(_boxed_value, _events->get_events());
+}
+
+void Core::quit()
+{
+	_quit = true;
 }

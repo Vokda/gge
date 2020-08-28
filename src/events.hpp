@@ -1,18 +1,21 @@
 #pragma once
 
+#include <vector>
 #include <SDL2/SDL.h>
 class SDL_helper;
+using namespace std;
 
 class Events
 {
 	public:
-		enum events {EVENTLESS, QUIT, PAUSE};
-
 		Events(SDL_helper&);
 
-		int get_event();
+		const vector<int>& get_events();
+		// this is for the chaiscript 
+		static SDL_KeyCode get_key_codes();
 
 	private:
-		SDL_Event _event;
+		SDL_Event _event; 
+		vector<int> _events; // so that the vector doesn't need to be recreated each time
 		SDL_helper& _sdl_helper;
 };
