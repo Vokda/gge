@@ -34,16 +34,13 @@ class Scripter
 				  const string& instance_name
 				  )
 		  { 
-			  chaiscript::ModulePtr m = chaiscript::ModulePtr(new chaiscript::Module());
-
 			  chaiscript::utility::add_class<Class>(
-					  *m,
+					  *_module_ptr,
 					  class_name,
 					  { chaiscript::constructor<Class(Ctor_args...)>() },
 					  member_functions);
 
 			  _chai.add(chaiscript::var(instance), instance_name);
-			  _chai.add(m);
 		  }
 };
 

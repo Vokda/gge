@@ -10,6 +10,14 @@ gge_initializer.graphics("test name", 800, 600) // should change the default
 gge_initializer.events()
 gge_initializer.grid(4, 3, 40)
 
+print(gge_api.hello())
+gge_api.create_text("basic permanent text", 100, 100)
+gge_api.create_text(
+	"advanced temporary red text", 
+	stl_vector_int([255,0,0,255]),
+	stl_vector_int([200,200,-1,-1]),
+	3000)
+
 // create instance of game object
 // containing game loop and event handle
 var game = Game()

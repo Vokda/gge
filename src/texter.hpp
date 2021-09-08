@@ -4,33 +4,52 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include "sdl_helper.hpp"
 #include "timer.hpp"
+using namespace std;
 
 struct Text
 {
-	std::string txt;
-	SDL_Colour colour;
 	bool permanent;
-	Time_point creation;
+	moment creation;
 	SDL_Point position;
+	SDL_Rect size;
+	SDL_Texture* texture;
+	int milliseconds;
 };
 
 class Texter
 {
 	public:
-		Texter(const SDL_Renderer& renderer);
+		Texter(SDL_Renderer* renderer);
 		~Texter();
 
-		size_t create_text(const std::string& msg, const SDL_Color&);
+		// will create text with white text
+		size_t create_text(const std::string& msg, SDL_Point position);
+
+		size_t create_text(
+				const std::string& msg, 
+				const SDL_Color&, 
+				const SDL_Rect& size,
+				int milliseconds);
+
 		Text& operator[](size_t i);
 
-		void render_texts();
+		void tick();
 
 	private:
-		std::vector<Text> _texts;
-		TTF_Font* _font;
-		const SDL_Renderer& _renderer;
+		void remove_text();
+		void render_texts();
 
-	friend class Graphics;
+		int get_text_width(const string&);
+
+		std::vector<Text> _texts;
+		string _font_name = "../fonts/courier_new.ttf";
+		int _font_size = 24;
+		TTF_Font* _font;
+		SDL_Renderer* _renderer; // destruction handled by graphics.hpp
+		SDL_helper _sdl_helper;
+		Timer _timer;
+		moment _start_time; // of the object;
 };
 #endif

@@ -27,5 +27,5 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} dl ${SDL2_SUPPORT_LIBRARIES})
 
 # C flags
-set(CMAKE_CXX_FLAGS "-std=c++14 ")
+set(CMAKE_CXX_FLAGS "-std=c++17")
 set(CMAKE_CXX_COMPILER clang++)

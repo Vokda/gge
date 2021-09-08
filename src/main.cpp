@@ -28,7 +28,8 @@ int main(int argc, char* argv[])
 	}
 	catch (std::exception& e)
 	{
-		cerr << "FATAL: " << e.what() << endl;
+		cerr << "FATAL ERROR: " << endl << e.what() << endl;
+		// kill all objects
 		exit(2);
 	}
 

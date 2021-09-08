@@ -12,6 +12,7 @@ class Hex_grid;
 using namespace std;
 class function;
 class Chai_object;
+class Texter;
 
 #include <chaiscript/chaiscript.hpp>
 using namespace chaiscript; 
@@ -30,6 +31,9 @@ class Core
 		void init_events();
 		void init_grid(size_t w, size_t h, int size);
 		void init_game_object(Chai_object&& co);
+
+		// get modules (mainly for api)
+		shared_ptr<Texter> get_texter();
 
 		// for loading graphics (and sound and stuff too)
 		void load_graphics(const string& path);
@@ -53,6 +57,7 @@ class Core
 		std::shared_ptr<Graphics> _graphics;
 		std::shared_ptr<Events> _events;
 		std::shared_ptr<Hex_grid> _grid;
+		shared_ptr<Texter> _texter;
 
 		// necessary for chaiscript member function functions to be called
 		chaiscript::Boxed_Value _boxed_value;

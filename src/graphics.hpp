@@ -22,6 +22,7 @@ class Graphics
 
 		void draw_grid(const Hex_grid& grid);
 
+		SDL_Renderer* get_renderer() { return _sdl_renderer; }
 
 
 	private:

@@ -11,34 +11,35 @@ using namespace std;
  */
 void SDL_helper::check_null(const std::string& check_name, const void * SDL_struct)
 {
-	cout << check_name;
 	if(SDL_struct == nullptr)// or *(int*)(SDL_struct) < 0)
 	{
-		make_and_throw_exception(SDL_GetError());
+		make_and_throw_exception(check_name, SDL_GetError());
 	}
 	else
 	{
-		cout << " - OK" <<endl;
+		cout << check_name<< " - OK" <<endl;;
 	}
 }
 
 void SDL_helper::check_null(const std::string& check_name, const int SDL_result)
 {
-	cout << check_name;
 	if(SDL_result < 0)
 	{
-		make_and_throw_exception(SDL_GetError());
+		make_and_throw_exception(check_name, SDL_GetError());
 	}
 	else
 	{
-		cout << " - OK" <<endl;
+		cout << check_name<< " - OK" <<endl;;
 	}
 }
 
-void SDL_helper::make_and_throw_exception(const std::string& error)
+
+void SDL_helper::make_and_throw_exception(
+		const std::string& check_name, 
+		const std::string& error)
 {
 	stringstream ss;
-	ss << " - SDL Error: " << error << endl;
+	ss << check_name << " - SDL Error: " << error << endl;
 	std::runtime_error er(ss.str());
 	throw er;
 }

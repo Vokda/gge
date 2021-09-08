@@ -2,6 +2,7 @@
 #include <iostream>
 #include <functional>
 // use C solution until switching to C++17
+// Running C++17 now, but why change a working concept
 #include <sys/stat.h>
 
 // chaiscript
@@ -16,7 +17,8 @@ using namespace std;
 
 Scripter::Scripter(const string& game_dir, Initializer& i, GGE_API& ga):
 	_initializer(i),
-	_gge_api(ga)
+	_gge_api(ga),
+	_module_ptr(chaiscript::ModulePtr(new chaiscript::Module()))
 {
 	// check if dir
 	struct stat file_stat;
@@ -28,6 +30,7 @@ Scripter::Scripter(const string& game_dir, Initializer& i, GGE_API& ga):
 	}
 
 	add_defaults(game_dir);
+	_chai.add(_module_ptr);
 
 	cout << "Game directory: " << game_dir << endl;
 	const string init_file = game_dir + "/" + "init.chai";
@@ -41,6 +44,7 @@ Scripter::Scripter(const string& game_dir, Initializer& i, GGE_API& ga):
 	co.add_function("game_loop");
 	co.add_function("event_handle");
 	_initializer.game_object(co);
+
 }
 
 void Scripter::add_defaults(const string& game_dir)
@@ -61,7 +65,12 @@ void Scripter::add_defaults(const string& game_dir)
 			"GGE_API",
 			{ chaiscript::constructor<GGE_API(Core&)>() },
 			{ 
-				//{ fun(&GGE_API::get_sdl_keycodes), "get_sdl_keycodes" }
+				{chaiscript::fun<const string (GGE_API::*)(void)>(&GGE_API::hello), "hello"},
+				{chaiscript::fun<size_t (GGE_API::*)(const std::string&, int, int)>(&GGE_API::create_text), "create_text"},
+				{chaiscript::fun
+					<size_t // return value
+						(GGE_API::*)(const std::string&, std::vector<int>, std::vector<int>, int)> // args
+					(&GGE_API::create_text), "create_text"} // fn pointer and fn name
 			},
 			&_gge_api,
 			"gge_api"
@@ -70,6 +79,9 @@ void Scripter::add_defaults(const string& game_dir)
 
 	_chai.add(chaiscript::var(game_dir), "game_dir");
 
-	_chai.add(chaiscript::bootstrap::standard_library::vector_type<std::vector<int>>("Vector_int"));
-	_chai.add(chaiscript::vector_conversion<std::vector<int>>());
+	typedef std::vector<int> stl_vector_int;
+	chaiscript::bootstrap::standard_library::vector_type<stl_vector_int>("stl_vector_int", *_module_ptr);
+	//_chai.add();
+	_chai.add(chaiscript::vector_conversion<stl_vector_int>());
+
 }

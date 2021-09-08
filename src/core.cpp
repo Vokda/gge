@@ -8,12 +8,14 @@
 #include <functional>
 #include <algorithm>
 #include "chai_object.hpp"
+#include "texter.hpp"
 using namespace std;
 
 Core::Core()
 {
 	_game_loop = nullptr;
 	_event_handle = nullptr;
+	_texter = nullptr;
 }
 
 
@@ -21,6 +23,7 @@ Core::Core()
 void Core::init_graphics(const string&& name, size_t w, size_t h)
 {
 	_graphics = make_shared<Graphics>(name, w, h, _sdl_helper);
+	_texter = make_shared<Texter>(_graphics->get_renderer());
 }
 
 void Core::init_events()
@@ -55,6 +58,11 @@ void Core::init_game_object(Chai_object&& co)
 
 // MODULE INITIALIZERS END
 
+shared_ptr<Texter> Core::get_texter()
+{
+	return _texter;
+}
+
 void Core::run()
 {
 	// main loop
@@ -65,8 +73,12 @@ void Core::run()
 		handle_events();
 		_graphics->clear_screen();
 
+
 		// draws everything that isn't HUD
 		_graphics->draw_grid(*_grid);
+
+		// HUD
+		_texter->tick();
 
 		// game logic
 		// game can be quit from inside the game loop by returning true
