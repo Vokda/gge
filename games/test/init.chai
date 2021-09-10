@@ -1,7 +1,7 @@
 // test script calling all default objects and functions
 // default objects begin with gge_
 
-// put use first sot that stuff isn't unnecessarily initiated.
+// put use first so that stuff isn't unnecessarily initiated.
 // game_dir is defined by gge
 use(game_dir+"game.chai")
 
@@ -17,7 +17,7 @@ gge_api.create_text(
 	stl_vector_int([255,0,0,255]),
 	stl_vector_int([200,200,-1,-1]),
 	3000)
-
+gge_api.get_mouse_position()
 // create instance of game object
 // containing game loop and event handle
 var game = Game()

@@ -124,3 +124,9 @@ void Core::quit()
 {
 	_quit = true;
 }
+
+template<typename Events>
+std::shared_ptr<Events> Core::get_module()
+{
+	return _events;
+}

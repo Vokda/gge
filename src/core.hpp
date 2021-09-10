@@ -47,6 +47,13 @@ class Core
 
 		void run();
 
+		template<typename T>
+			std::shared_ptr<T> get_module();
+
+		template<>
+			std::shared_ptr<Events> get_module() {return _events;}
+
+
 	private:
 
 		bool _quit = false;
@@ -54,10 +61,10 @@ class Core
 		double _delta = 1.0/60.0; // just some hard coded value to start things out
 
 
-		std::shared_ptr<Graphics> _graphics;
-		std::shared_ptr<Events> _events;
-		std::shared_ptr<Hex_grid> _grid;
-		shared_ptr<Texter> _texter;
+		std::shared_ptr<Graphics> _graphics = nullptr;
+		std::shared_ptr<Events> _events = nullptr;
+		std::shared_ptr<Hex_grid> _grid = nullptr;
+		shared_ptr<Texter> _texter = nullptr;
 
 		// necessary for chaiscript member function functions to be called
 		chaiscript::Boxed_Value _boxed_value;

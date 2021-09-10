@@ -1,5 +1,6 @@
 #include "gge_api.hpp"
 #include "core.hpp"
+#include "events.hpp"
 #include <memory>
 #include "texter.hpp"
 #include <vector>
@@ -40,4 +41,10 @@ size_t GGE_API::create_text(
 			s,
 			milliseconds
 			);
+}
+
+std::vector<int> GGE_API::get_mouse_position()
+{
+	std::shared_ptr<Events> e = _core.get_module<Events>();
+	return e->get_mouse_position();
 }

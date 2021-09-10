@@ -6,6 +6,7 @@ class Game
 		this.control_schema = "ctrl.schema"
 		this.frame = 0
 		this.quit = false
+		print("Game " + gge_api.hello());
 	}
 
 	var control_schema
@@ -22,9 +23,21 @@ class Game
 			print("event " + to_string(events[i]))
 			switch(events[i])
 			{
-				case(27){
+				case(113){} // q
+				case(27){ // esc
 					this.quit = true;
 					break;
+				}
+				case(-1) // left mouse click
+				{
+					auto mp = gge_api.get_mouse_position()
+					print([mp])
+					var v = [mp[0], mp[1], -1, -1]
+					gge_api.create_text(
+						"Click",
+						stl_vector_int([0,0,255,150]),
+						stl_vector_int(v),
+						1000)
 				}
 			}
 		}

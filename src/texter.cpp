@@ -39,8 +39,7 @@ size_t Texter::create_text(
 
 	SDL_Rect rect = size;
 	text.position = {rect.x, rect.y};
-	cout << color << endl;
-	cout << size << endl;
+	cout << "position " << size << endl;
 	if(rect.w < 0)
 		rect.w = get_text_width(msg);
 	if(rect.h < 0)

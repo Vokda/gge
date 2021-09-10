@@ -31,7 +31,8 @@ class Scripter
 				  const vector<chaiscript::Proxy_Function>&& t_constructors,
 				  const vector<pair<chaiscript::Proxy_Function, string>>&& member_functions,
 				  Class* instance,
-				  const string& instance_name
+				  const string& instance_name,
+				  bool global
 				  )
 		  { 
 			  chaiscript::utility::add_class<Class>(
@@ -40,7 +41,10 @@ class Scripter
 					  { chaiscript::constructor<Class(Ctor_args...)>() },
 					  member_functions);
 
-			  _chai.add(chaiscript::var(instance), instance_name);
+			  if(global)
+				  _chai.add_global(chaiscript::var(instance), instance_name);
+			  else
+				  _chai.add(chaiscript::var(instance), instance_name);
 		  }
 };
 

@@ -29,10 +29,12 @@ Scripter::Scripter(const string& game_dir, Initializer& i, GGE_API& ga):
 		throw s.c_str();
 	}
 
+	cout << "Game directory: " << game_dir << endl;
+
 	add_defaults(game_dir);
 	_chai.add(_module_ptr);
 
-	cout << "Game directory: " << game_dir << endl;
+	// include chai files; first the init file
 	const string init_file = game_dir + "/" + "init.chai";
 	// to get a member function from chai to work
 	auto return_value = _chai.eval_file(init_file);
@@ -44,11 +46,11 @@ Scripter::Scripter(const string& game_dir, Initializer& i, GGE_API& ga):
 	co.add_function("game_loop");
 	co.add_function("event_handle");
 	_initializer.game_object(co);
-
 }
 
 void Scripter::add_defaults(const string& game_dir)
 {
+	// add global classes from GGE
 	add_class<Initializer, Core&>(
 			"Initializer",
 			{ chaiscript::constructor<Initializer(Core&)>() },
@@ -58,7 +60,8 @@ void Scripter::add_defaults(const string& game_dir)
 				{chaiscript::fun(&Initializer::grid), "grid"},
 			},
 			&_initializer,
-			"gge_initializer"
+			"gge_initializer",
+			true
 			);
 
 	add_class<GGE_API, Core&>(
@@ -70,18 +73,22 @@ void Scripter::add_defaults(const string& game_dir)
 				{chaiscript::fun
 					<size_t // return value
 						(GGE_API::*)(const std::string&, std::vector<int>, std::vector<int>, int)> // args
-					(&GGE_API::create_text), "create_text"} // fn pointer and fn name
+					(&GGE_API::create_text), "create_text"}, // fn pointer and fn name
+				{chaiscript::fun<std::vector<int> (GGE_API::*)(void)>(&GGE_API::get_mouse_position), "get_mouse_position"}
 			},
 			&_gge_api,
-			"gge_api"
+			"gge_api",
+			true
 			);
 
-
-	_chai.add(chaiscript::var(game_dir), "game_dir");
-
+	// add global vars
+	_chai.add_global(chaiscript::var(game_dir), "game_dir");
 	typedef std::vector<int> stl_vector_int;
 	chaiscript::bootstrap::standard_library::vector_type<stl_vector_int>("stl_vector_int", *_module_ptr);
-	//_chai.add();
+	
+
 	_chai.add(chaiscript::vector_conversion<stl_vector_int>());
+
+
 
 }

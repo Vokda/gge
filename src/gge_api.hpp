@@ -31,6 +31,7 @@ class GGE_API
 		//void add_text(const string& text, int ms);
 
 		// mouse ctrls
+		std::vector<int> get_mouse_position();
 
 	private:
 		Core& _core;
