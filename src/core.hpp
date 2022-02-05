@@ -6,8 +6,8 @@
 #include "sdl_helper.hpp"
 #include <string>
 #include <vector>
+#include "events.hpp"
 class Graphics;
-class Events;
 class Hex_grid;
 using namespace std;
 class function;
@@ -37,8 +37,6 @@ class Core
 
 		// for loading graphics (and sound and stuff too)
 		void load_graphics(const string& path);
-
-		void handle_events();
 
 		// related to game loop
 		void quit();
@@ -70,8 +68,6 @@ class Core
 		chaiscript::Boxed_Value _boxed_value;
 		// function pointer to main game loop function defined in chaiscript
 		std::unique_ptr<std::function<bool(Boxed_Value&, float)>> _game_loop;
-		// function ptr to chai script 
-		std::shared_ptr<std::function<void(Boxed_Value&, vector<int>)>> _event_handle;
 		SDL_helper _sdl_helper;
 };
 

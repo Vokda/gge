@@ -22,3 +22,13 @@ void Initializer::game_object(Chai_object& game_object)
 {
 	_core.init_game_object(forward<Chai_object>(game_object));
 }
+
+const Core& Initializer::get_core() const
+{
+	return _core;
+}
+
+Core& Initializer::get_core()
+{
+	return _core;
+}

@@ -15,16 +15,15 @@ const vector<int>& Events::get_events()
 
 	while( SDL_PollEvent(&_event) != 0)
 	{
-		auto& e = _event;
-		// presses key
-		if( e.type == SDL_KEYDOWN )
+		switch(_event.type)
 		{
-			 _events.push_back(e.key.keysym.sym);
-		}
-		// presses mouse
-		if( e.type == SDL_MOUSEBUTTONDOWN )
-		{
-			_events.push_back(-1);
+			case SDL_MOUSEBUTTONDOWN:
+			//case SDL_MOUSEBUTTONUP:
+				_events.push_back(_event.button.button);
+				break;
+			case SDL_KEYDOWN:
+				_events.push_back(_event.key.keysym.sym);
+				break;
 		}
 	}
 	return _events;

@@ -1,3 +1,6 @@
+/*
+ * Defines the communications between engine and script
+ */
 #ifndef SCRIPTER_HPP
 #define SCRIPTER_HPP
 

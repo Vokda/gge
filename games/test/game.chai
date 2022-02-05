@@ -7,6 +7,7 @@ class Game
 		this.frame = 0
 		this.quit = false
 		print("Game " + gge_api.hello());
+
 	}
 
 	var control_schema
@@ -14,31 +15,26 @@ class Game
 	var frame
 	var quit
 
-	def event_handle(events)
+	def handle_event(event)
 	{
-		// do stuff
-		//var v = Vector_int()
-		for (var i = 0; i < events.size(); ++i)
+		switch(event)
 		{
-			print("event " + to_string(events[i]))
-			switch(events[i])
+			case(113){} // q
+			case(27){ // esc
+				this.quit = true;
+				break;
+			}
+			case(1) // left mouse click
 			{
-				case(113){} // q
-				case(27){ // esc
-					this.quit = true;
-					break;
-				}
-				case(-1) // left mouse click
-				{
-					auto mp = gge_api.get_mouse_position()
-					print([mp])
-					var v = [mp[0], mp[1], -1, -1]
-					gge_api.create_text(
-						"Click",
-						stl_vector_int([0,0,255,150]),
-						stl_vector_int(v),
-						1000)
-				}
+				auto mp = gge_api.get_mouse_position()
+				print([mp])
+				print("click")
+				var v = [mp[0], mp[1], -1, -1]
+				gge_api.create_text(
+				"Click",
+				stl_vector_int([0,0,255,150]),
+				stl_vector_int(v),
+				1000)
 			}
 		}
 	}
@@ -49,6 +45,12 @@ class Game
 	{
 		//print("delta " + to_string(delta))
 		++this.frame
+		var events := gge_api.get_events()
+		for (var i = 0; i < events.size(); ++i)
+		{
+			this.handle_event(events[i])
+		}
+
 		return this.quit
 	}
 }

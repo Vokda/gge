@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "cube_coordinate.hpp"
+#include <memory>
+#include "../chai_object.hpp"
 
 class Hex
 {
@@ -10,8 +12,14 @@ class Hex
 		// for hex calculations
 		Hex(int q_, int r_, int s_, int size);
 
-		// to actually create a new hex
+		// to actually create a new hex (no custom data)
 		Hex(int row, int col, int size, SDL_Point offset);
+		/*Hex(
+				int row, 
+				int col, 
+				int size,
+				SDL_Point offset
+				);*/
 
 		//Hex& operator=(const Hex& h);
 
@@ -41,6 +49,10 @@ class Hex
 
 		void calculate_corners(SDL_Point& c, int s);
 		SDL_Point calculate_corner(SDL_Point& center, int, int );
+
+		std::shared_ptr<Chai_object> _in_hex_data = nullptr;
+		std::shared_ptr<Chai_object> _on_hex_data = nullptr;
+
 };
 
 std::ostream& operator<<(std::ostream& ost, const Hex&);

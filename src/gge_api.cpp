@@ -48,3 +48,9 @@ std::vector<int> GGE_API::get_mouse_position()
 	std::shared_ptr<Events> e = _core.get_module<Events>();
 	return e->get_mouse_position();
 }
+
+
+const std::vector<int>& GGE_API::get_events() const
+{
+	return _core.get_module<Events>()->get_events();
+}

@@ -21,6 +21,9 @@ class Initializer
 		void events();
 		void grid(size_t width, size_t height, int tile_size);
 		void game_object(Chai_object& game_object);
+
+		const Core& get_core() const;
+		Core& get_core();
 	private:
 		Core& _core;
 };

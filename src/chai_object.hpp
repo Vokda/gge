@@ -1,3 +1,8 @@
+/***
+ *
+ * Class for handling chai objects
+ *
+ */
 #ifndef CHAI_OBJECT_HPP
 #define CHAI_OBJECT_HPP
 

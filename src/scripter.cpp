@@ -1,6 +1,7 @@
 #include <exception>
 #include <iostream>
 #include <functional>
+#include <SDL2/SDL.h>
 // use C solution until switching to C++17
 // Running C++17 now, but why change a working concept
 #include <sys/stat.h>
@@ -64,6 +65,7 @@ void Scripter::add_defaults(const string& game_dir)
 			true
 			);
 
+	typedef std::vector<int> stl_vector_int;
 	add_class<GGE_API, Core&>(
 			"GGE_API",
 			{ chaiscript::constructor<GGE_API(Core&)>() },
@@ -74,7 +76,8 @@ void Scripter::add_defaults(const string& game_dir)
 					<size_t // return value
 						(GGE_API::*)(const std::string&, std::vector<int>, std::vector<int>, int)> // args
 					(&GGE_API::create_text), "create_text"}, // fn pointer and fn name
-				{chaiscript::fun<std::vector<int> (GGE_API::*)(void)>(&GGE_API::get_mouse_position), "get_mouse_position"}
+				{chaiscript::fun<std::vector<int> (GGE_API::*)(void)>(&GGE_API::get_mouse_position), "get_mouse_position"},
+				{chaiscript::fun<const std::vector<int>& (GGE_API::*)(void) const>(&GGE_API::get_events), "get_events"}
 			},
 			&_gge_api,
 			"gge_api",
@@ -83,12 +86,19 @@ void Scripter::add_defaults(const string& game_dir)
 
 	// add global vars
 	_chai.add_global(chaiscript::var(game_dir), "game_dir");
-	typedef std::vector<int> stl_vector_int;
 	chaiscript::bootstrap::standard_library::vector_type<stl_vector_int>("stl_vector_int", *_module_ptr);
-	
-
 	_chai.add(chaiscript::vector_conversion<stl_vector_int>());
 
-
-
+	// add struct def
+	// and constructor
+	// and variables and functions
+	/*typedef std::vector<event> stl_vector_event;
+	_chai.add(chaiscript::user_type<event>(), "event");
+	_chai.add(chaiscript::constructor<event ()>(), "event");
+	_chai.add(chaiscript::constructor<event (SDL_Event& e)>(), "event");
+	_chai.add(chaiscript::fun(&event::type), "type");
+	_chai.add(chaiscript::fun(&event::symbol), "symbol");
+	//_chai.add(chaiscript::var(&_sve), "events");
+	_chai.add(chaiscript::vector_conversion<stl_vector_event>());
+	chaiscript::bootstrap::standard_library::vector_type<stl_vector_event>("stl_vector_event", *_module_ptr);*/
 }

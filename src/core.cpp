@@ -14,7 +14,6 @@ using namespace std;
 Core::Core()
 {
 	_game_loop = nullptr;
-	_event_handle = nullptr;
 	_texter = nullptr;
 }
 
@@ -47,13 +46,6 @@ void Core::init_game_object(Chai_object&& co)
 				co.get_function<bool, float>("game_loop")
 				);
 	}
-
-	if(find(fn_names.begin(), fn_names.end(), "event_handle") != fn_names.end())
-	{
-		_event_handle = make_shared<std::function<void(Boxed_Value&, vector<int>)>>(
-				co.get_function<void, vector<int>>("event_handle")
-				);
-	}
 }
 
 // MODULE INITIALIZERS END
@@ -70,7 +62,6 @@ void Core::run()
 	{
 		auto start = std::chrono::steady_clock::now();
 
-		handle_events();
 		_graphics->clear_screen();
 
 
@@ -108,16 +99,6 @@ void Core::check_modules_initiated()
 		std::domain_error de("No game loop provided!");
 		throw de; 
 	}
-	if(not _event_handle)
-	{
-		std::domain_error de("No event handle function provided!");
-		throw de; 
-	}
-}
-
-void Core::handle_events()
-{
-	(*_event_handle)(_boxed_value, _events->get_events());
 }
 
 void Core::quit()
@@ -125,8 +106,8 @@ void Core::quit()
 	_quit = true;
 }
 
-template<typename Events>
+/*template<typename Events>
 std::shared_ptr<Events> Core::get_module()
 {
 	return _events;
-}
+}*/

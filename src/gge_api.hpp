@@ -32,6 +32,7 @@ class GGE_API
 
 		// mouse ctrls
 		std::vector<int> get_mouse_position();
+		const std::vector<int>& get_events() const;
 
 	private:
 		Core& _core;

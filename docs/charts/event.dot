@@ -1,0 +1,18 @@
+digraph SEQ_DIAGRAM
+{
+	{
+		rank = same
+		//gge sdl chai
+	gge [label=GGE]
+	sdl [label=SDL]
+	chai [label="Chaiscript"]
+	}
+
+	gge -> boot -> draw_graphics -> game_loop -> get_events -> 
+	chai -> init -> game_loop -> get_events -> handle_events:
+  /*
+	SDL_PollEvent -> gge_event;
+	gge_core -> chai_event_handler [label="get event handler"];
+	gge_core -> gge_event [label="get events via chai event handler"];
+	*/
+}

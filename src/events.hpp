@@ -5,6 +5,31 @@
 class SDL_helper;
 using namespace std;
 
+enum device {KEYBOARD, MOUSE};
+
+struct event
+{
+	event()
+	{
+		type = 0;
+		symbol = 0;
+	}
+	event(SDL_Event& e)
+	{
+		type = e.type;
+		if(SDL_MOUSEBUTTONDOWN or SDL_MOUSEBUTTONUP)
+		{
+			symbol = (unsigned int) e.button.button;
+		}
+		else if(SDL_KEYDOWN or SDL_KEYUP)
+		{
+			symbol = (unsigned int)e.key.keysym.sym;
+		}
+	}
+	unsigned int type;
+	unsigned int symbol;
+};
+
 class Events
 {
 	public:
@@ -21,3 +46,4 @@ class Events
 		vector<int> _events; // so that the vector doesn't need to be recreated each time
 		SDL_helper& _sdl_helper;
 };
+
