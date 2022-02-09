@@ -45,12 +45,13 @@ class Core
 
 		void run();
 
+		shared_ptr<Hex_grid> get_grid() { return _grid; }
+
 		template<typename T>
 			std::shared_ptr<T> get_module();
 
 		template<>
 			std::shared_ptr<Events> get_module() {return _events;}
-
 
 	private:
 

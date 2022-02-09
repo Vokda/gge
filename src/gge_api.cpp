@@ -4,6 +4,8 @@
 #include <memory>
 #include "texter.hpp"
 #include <vector>
+#include "hex/utils.hpp"
+#include "hex/hex_grid.hpp"
 using namespace std;
 
 GGE_API::GGE_API(Core& core):
@@ -53,4 +55,11 @@ std::vector<int> GGE_API::get_mouse_position()
 const std::vector<int>& GGE_API::get_events() const
 {
 	return _core.get_module<Events>()->get_events();
+}
+
+int GGE_API::get_hex_from_mouse(int x, int y)
+{
+	shared_ptr<Hex_grid> grid = _core.get_grid();
+	cube_coord cc = grid->_utils.axial_to_cube(grid->_utils.xy_to_axial(x, y));
+	return grid->get_hex_index(cc);
 }

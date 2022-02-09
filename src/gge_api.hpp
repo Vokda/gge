@@ -6,6 +6,7 @@
 #include <vector>
 
 class Core;
+class Chai_object;
 
 using namespace std;
 
@@ -33,6 +34,12 @@ class GGE_API
 		// mouse ctrls
 		std::vector<int> get_mouse_position();
 		const std::vector<int>& get_events() const;
+
+		// hex related 
+		// return index to hex in hex grid vector
+		int get_hex_from_mouse(int x, int y);
+		/*Chai_object& get_on_hex_data(int i);
+		Chai_object& get_in_hex_data(int i);*/
 
 	private:
 		Core& _core;

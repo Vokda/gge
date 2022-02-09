@@ -63,7 +63,8 @@ void Graphics::draw_grid(const Hex_grid& grid)
 	{
 		const SDL_Point* p = &tile.get_corners().front();
 		const SDL_Point* last_point = p + 5;
-		SDL_SetRenderDrawColor( _sdl_renderer, 255, 255, 255, 255 );
+		const SDL_Color& c = tile.get_color();
+		SDL_SetRenderDrawColor( _sdl_renderer, c.r, c.g, c.b, c.a);
 		SDL_RenderDrawLines( _sdl_renderer, p, 6);
 		SDL_RenderDrawLine( _sdl_renderer, last_point->x, last_point->y, p->x, p->y);
 	}

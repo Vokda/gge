@@ -1,10 +1,12 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
 
 //class Hex;
 #include "hex.hpp"
 #include "orientation.hpp"
+#include "utils.hpp"
 
 
 using namespace std;
@@ -22,7 +24,23 @@ class Hex_grid
 		std::vector<Hex>& get_grid();
 		const std::vector<Hex>& get_grid() const { return _grid; }
 
+		Hex& get_hex(int q, int  r, int s);
+		int get_hex_index(cube_coord c);
+		
+		/* ugly special case for the gge api 
+		 * so you can do something like
+		 * grid = core.get_grid()
+		 * grid->_utils.<grid_related stuff>();
+		 */
+		Utils _utils;
+
 	private:
+		// used to map qrs coords to index in vector
+		typedef std::unordered_map<int, int> cube_coords_map;
+		cube_coords_map _cube_coords_to_i_map;
+
+		void map_cube_to_i(Cube_coordinate, size_t i);
+		int hash_cube_coord(int q, int r, int s);
 
 		Orientation set_orientation(Hex_orientation);
 

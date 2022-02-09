@@ -27,12 +27,12 @@ class Game
 			case(1) // left mouse click
 			{
 				auto mp = gge_api.get_mouse_position()
-				print([mp])
 				print("click")
+				var hex_i = gge_api.get_hex_from_mouse(mp[0], mp[1])
 				var v = [mp[0], mp[1], -1, -1]
 				gge_api.create_text(
-				"Click",
-				stl_vector_int([0,0,255,150]),
+				"Hex " + to_string(hex_i),
+				stl_vector_int([255,0,0,255]),
 				stl_vector_int(v),
 				1000)
 			}

@@ -37,6 +37,10 @@ class Hex
 		const std::vector<SDL_Point>& get_corners() const { return _corners; }
 		const Cube_coordinate& get_cube_coordinate() const { return _cube_coordinate; }
 
+		const SDL_Color& get_color() const {return _hex_color;}
+
+		Cube_coordinate get_cube_coords() { return _cube_coordinate; }
+
 
 	private:
 		// cube coordinates
@@ -49,6 +53,11 @@ class Hex
 
 		void calculate_corners(SDL_Point& c, int s);
 		SDL_Point calculate_corner(SDL_Point& center, int, int );
+
+		// hex properties
+		SDL_Color _hex_color = {255, 255, 255, 255};
+		bool blink = false;
+
 
 		std::shared_ptr<Chai_object> _in_hex_data = nullptr;
 		std::shared_ptr<Chai_object> _on_hex_data = nullptr;
