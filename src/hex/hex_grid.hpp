@@ -14,17 +14,17 @@ using namespace std;
 class Hex_grid
 {
 	public:
-		enum Hex_orientation {FLAT_TOP, POINTY_TOP};
 
-		Hex_grid(size_t w, size_t h, int hex_size, Hex_orientation ho);
+		Hex_grid(size_t w, size_t h, double hex_size, Hex_orientation ho, Coordinate_system cs);
 
-		Hex hex_add(const Hex& a, const Hex& b);
+		//Hex hex_add(const Hex& a, const Hex& b);
 
 		// getters
 		std::vector<Hex>& get_grid();
 		const std::vector<Hex>& get_grid() const { return _grid; }
 
 		Hex& get_hex(int q, int  r, int s);
+		Hex& get_hex(size_t i) { return _grid[i]; };
 		int get_hex_index(cube_coord c);
 		
 		/* ugly special case for the gge api 
@@ -39,10 +39,8 @@ class Hex_grid
 		typedef std::unordered_map<int, int> cube_coords_map;
 		cube_coords_map _cube_coords_to_i_map;
 
-		void map_cube_to_i(Cube_coordinate, size_t i);
+		void map_cube_to_i(cube_coord, size_t i);
 		int hash_cube_coord(int q, int r, int s);
-
-		Orientation set_orientation(Hex_orientation);
 
 		// vars
 		std::vector<Hex> _grid;

@@ -44,12 +44,12 @@ vector<int> Events::get_mouse_position()
 
 	buttons = SDL_GetMouseState(&x, &y);
 
-#ifdef DEBUG
+/*#ifdef DEBUG
 	SDL_Log("Mouse cursor is at %d, %d", x, y);
 	if ((buttons & SDL_BUTTON_LMASK) != 0) {
 		SDL_Log("Mouse Button 1 (left) is pressed.");
 	}
-#endif
+#endif*/
 
 	return vector<int>({x, y});
 }

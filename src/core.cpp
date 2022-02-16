@@ -22,7 +22,7 @@ Core::Core()
 void Core::init_graphics(const string&& name, size_t w, size_t h)
 {
 	_graphics = make_shared<Graphics>(name, w, h, _sdl_helper);
-	_texter = make_shared<Texter>(_graphics->get_renderer());
+	_texter = make_shared<Texter>(_graphics);
 }
 
 void Core::init_events()
@@ -32,7 +32,7 @@ void Core::init_events()
 
 void Core::init_grid(size_t w, size_t h, int size)
 {
-	_grid = make_shared<Hex_grid>(w, h, size, Hex_grid::FLAT_TOP);
+	_grid = make_shared<Hex_grid>(w, h, size, FLAT_TOP, RECT_ODD_Q); // TODO hard coded for now
 }
 
 void Core::init_game_object(Chai_object&& co)
@@ -64,18 +64,18 @@ void Core::run()
 
 		_graphics->clear_screen();
 
-
+		// draw HUD
+		_graphics->draw(_texter);
+		_texter->tick(); // tick time for temp texts
 		// draws everything that isn't HUD
-		_graphics->draw_grid(*_grid);
+		_graphics->draw(*_grid);
 
-		// HUD
-		_texter->tick();
 
 		// game logic
 		// game can be quit from inside the game loop by returning true
 		_quit = (*_game_loop)(_boxed_value, _delta);
 
-
+		// actually render shit onto screen
 		_graphics->render();
 
 		auto end = std::chrono::steady_clock::now();

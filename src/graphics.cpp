@@ -3,6 +3,7 @@
 #include "graphics.hpp"
 #include <unistd.h>
 #include <cstdint>
+#include "texter.hpp"
 #include "sdl_helper.hpp"
 #include "hex/hex_grid.hpp"
 using namespace std;
@@ -30,6 +31,17 @@ Graphics::Graphics(
 			SDL_WINDOW_SHOWN); 
 	_sdl_helper.check_null("SDL window", _window);
 
+	// create viewports
+	// _bar_view (on top to begin with)
+	_bar_view.x = _bar_view.y = 0;
+	_bar_view.w = _screen_width;
+	_bar_view.h = 50; // hard coded
+
+	_main_view.x = 0;
+	_main_view.y = _bar_view.h;
+	_main_view.w = _screen_width;
+	_main_view.h = _screen_height - _bar_view.h;
+
 	// create renderer
 	_sdl_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
 	_sdl_helper.check_null("SDL renderer", _sdl_renderer);
@@ -48,7 +60,7 @@ Graphics::~Graphics()
 
 void Graphics::clear_screen()
 {
-	SDL_SetRenderDrawColor( _sdl_renderer, 0, 0, 0, 255 );
+	SDL_SetRenderDrawColor( _sdl_renderer, 50, 50, 50, 255 );
 	SDL_RenderClear(_sdl_renderer);
 }
 
@@ -57,8 +69,61 @@ void Graphics::render()
 	SDL_RenderPresent(_sdl_renderer);
 }
 
+void Graphics::draw(const Hex_grid& grid)
+{
+	draw_grid(grid);
+}
+
+void Graphics::draw(shared_ptr<Texter> texter)
+{
+	for(const Text& text : texter->get_texts())
+	{
+		set_viewport(static_cast<viewport>(text.view_port));
+		SDL_RenderCopy(_sdl_renderer, text.texture, NULL, &text.size);
+	}
+}
+
+void Graphics::set_viewport(viewport vp)
+{
+	switch(vp)
+	{
+		case(MAIN):
+		default:
+			SDL_RenderSetViewport(_sdl_renderer, &_main_view);
+			break;
+		case(BAR):
+			SDL_RenderSetViewport(_sdl_renderer, &_bar_view);
+			break;
+		case(SIDE_BAR):
+			SDL_RenderSetViewport(_sdl_renderer, &_side_bar_view);
+			break;
+	}
+}
+
+const SDL_Rect& Graphics::get_viewport(int vp)
+{
+	return get_viewport(static_cast<viewport>(vp));
+}
+
+const SDL_Rect& Graphics::get_viewport(viewport vp)
+{
+	switch(vp)
+	{
+		case(MAIN):
+		default:
+			return _main_view;
+		case(BAR):
+			return _bar_view;
+		case(SIDE_BAR):
+			return  _side_bar_view;
+	}
+}
+
+// PRIVATE
+
 void Graphics::draw_grid(const Hex_grid& grid)
 {
+	SDL_RenderSetViewport(_sdl_renderer, &_main_view);
 	for(auto& tile : grid.get_grid())
 	{
 		const SDL_Point* p = &tile.get_corners().front();
@@ -68,7 +133,6 @@ void Graphics::draw_grid(const Hex_grid& grid)
 		SDL_RenderDrawLines( _sdl_renderer, p, 6);
 		SDL_RenderDrawLine( _sdl_renderer, last_point->x, last_point->y, p->x, p->y);
 	}
-
 }
 
 //void Graphics::load_image(const std::string& path)

@@ -2,18 +2,16 @@
 #include <algorithm>
 #include <iostream>
 #include "../sdl_helper.hpp"
-#include "utils.hpp"
 using namespace std;
 #include <cmath>
 
-Hex::Hex(int q, int r, int s, int size): 
-	_cube_coordinate({q, r, s})
+Hex::Hex(int col, int row, cube_coord cc, SDL_Point center_point, int size, SDL_Color c ): 
+	_cube_coordinate(cc), _position(center_point), _hex_color(c)
 {
-	if (q + r + s != 0) throw "q + r + s must be 0";
-	//calculate_corners(_position, size);
+	calculate_corners(_position, size);
 }
 
-Hex::Hex(int r, int c, int size, SDL_Point offset): 
+/*Hex::Hex(int r, int c, int size, SDL_Point offset): 
 	_cube_coordinate(evenq_to_cube(r, c))
 {
 	_position = hex_to_pixel(*this, size);
@@ -21,19 +19,7 @@ Hex::Hex(int r, int c, int size, SDL_Point offset):
 	_position.y += offset.y;
 	if (size < 1) throw "size must be larger than 1";
 	calculate_corners(_position, size);
-}
-
-/*
-SDL_Point Hex::hex_to_pixel(const Hex& hex)
-{
-	return
-	{
-		_hex_size * (3.0/2.0 * hex.q),
-		_hex_size * (sqrt(3)/2.0 * hex.q + sqrt(3) * hex.r)
-	};
-}
-*/
-
+}*/
 
 void Hex::calculate_corners(SDL_Point& c, int size)
 {
@@ -66,45 +52,13 @@ Hex& Hex::operator=(const Hex& other)
 }
 */
 
-
-Cube_coordinate Hex::axial_to_cube(const Hex& h) const
-{
-	auto cc = get_cube_coordinate();
-    return Cube_coordinate(cc.q, cc.r, -cc.q - cc.r);
-}
-
-Cube_coordinate Hex::axial_to_cube(int q, int r) const
-{
-    return Cube_coordinate(q, r, -q - r);
-}
-
-SDL_Point Hex::cube_to_axial(const Cube_coordinate& cc) const
-{
-	return 
-	{
-		cc.q,
-		cc.r
-	};
-}
-//
-// only flat-top atm
-SDL_Point Hex::hex_to_pixel(const Hex& h, int size)
-{
-	auto cc = h.get_cube_coordinate();
-	return 
-	{
-		int(round(size * (3.0/2.0 * cc.q))),
-		  int(round(size * (sqrt(3)/2.0 * cc.q + sqrt(3) * cc.r)))
-	};
-}
-
 std::ostream& operator<<(std::ostream& ost, const Hex& hex)
 {
 	auto cc = hex.get_cube_coordinate();
-	SDL_Point axial = hex.cube_to_axial(cc);
+	//SDL_Point axial = hex.cube_to_axial(cc);
 	ost << "Hex " << &hex << endl;
 	ost << "cube coords [" << cc.q << ", " << cc.r << ", " << cc.s << ']' << endl;
-	ost << "axial coords [" << axial.x << ", " << axial.y << "]" << endl;
+	//ost << "axial coords [" << axial.x << ", " << axial.y << "]" << endl;
 	ost << "position " << hex.get_position() << endl;
 
 	return ost;

@@ -2,52 +2,43 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <iostream>
-#include "cube_coordinate.hpp"
+#include "coords.hpp"
 #include <memory>
 #include "../chai_object.hpp"
 
 class Hex
 {
 	public:
-		// for hex calculations
-		Hex(int q_, int r_, int s_, int size);
-
-		// to actually create a new hex (no custom data)
-		Hex(int row, int col, int size, SDL_Point offset);
-		/*Hex(
-				int row, 
+		Hex(
 				int col, 
+				int row, 
+				cube_coord, 
+				SDL_Point,
 				int size,
-				SDL_Point offset
-				);*/
+				SDL_Color c = {255, 255, 255, 255}
+		   );
+
+		// old implementation
+		//Hex(int row, int col, int size, SDL_Point offset, const Utils& u);
 
 		//Hex& operator=(const Hex& h);
-
-		//SDL_Point hex_to_pixel(const Hex& hex);
-
-		Cube_coordinate axial_to_cube (const Hex& h) const;
-		Cube_coordinate axial_to_cube (int q, int r) const;
-		SDL_Point cube_to_axial (const Cube_coordinate&) const;
-
-		SDL_Point hex_to_pixel(const Hex& h, int size);
 
 		const SDL_Point& get_position() const { return _position; }
 
 		//std::vector<int>& get_corners() { return _corners; }
 		const std::vector<SDL_Point>& get_corners() const { return _corners; }
-		const Cube_coordinate& get_cube_coordinate() const { return _cube_coordinate; }
+		const cube_coord& get_cube_coordinate() const { return _cube_coordinate; }
 
 		const SDL_Color& get_color() const {return _hex_color;}
 
-		Cube_coordinate get_cube_coords() { return _cube_coordinate; }
+		cube_coord get_cube_coords() { return _cube_coordinate; }
 
+		void set_color(const SDL_Color c) {_hex_color = c;}
 
 	private:
-		// cube coordinates
-		Cube_coordinate _cube_coordinate;
+		cube_coord _cube_coordinate; // cube coordinates
+		SDL_Point _position; // center point position x y
 
-		// position x y
-		SDL_Point _position;
 
 		std::vector<SDL_Point> _corners;
 
@@ -55,9 +46,8 @@ class Hex
 		SDL_Point calculate_corner(SDL_Point& center, int, int );
 
 		// hex properties
-		SDL_Color _hex_color = {255, 255, 255, 255};
+		SDL_Color _hex_color;
 		bool blink = false;
-
 
 		std::shared_ptr<Chai_object> _in_hex_data = nullptr;
 		std::shared_ptr<Chai_object> _on_hex_data = nullptr;

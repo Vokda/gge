@@ -53,16 +53,19 @@ class Core
 		template<>
 			std::shared_ptr<Events> get_module() {return _events;}
 
+		template<>
+			shared_ptr<Graphics> get_module() {return _graphics;}
+
 	private:
 
 		bool _quit = false;
 
 		double _delta = 1.0/60.0; // just some hard coded value to start things out
 
-
-		std::shared_ptr<Graphics> _graphics = nullptr;
-		std::shared_ptr<Events> _events = nullptr;
-		std::shared_ptr<Hex_grid> _grid = nullptr;
+		// modules
+		shared_ptr<Graphics> _graphics = nullptr;
+		shared_ptr<Events> _events = nullptr;
+		shared_ptr<Hex_grid> _grid = nullptr;
 		shared_ptr<Texter> _texter = nullptr;
 
 		// necessary for chaiscript member function functions to be called

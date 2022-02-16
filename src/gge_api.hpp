@@ -21,15 +21,22 @@ class GGE_API
 		SDL_KeyCode get_sdl_keycodes() const;
 
 		// text
-		size_t create_text(const string& text, int x, int y);
+		size_t create_text(const string& text, int view_port);
+		size_t create_text(const string& text, int view_port, int ms, int x, int y);
 		size_t create_text(
 				const string& text, 
 				vector<int> color,
 				vector<int> size,
-				int milliseconds
+				int milliseconds,
+				int view_port
 				);
 
-		//void add_text(const string& text, int ms);
+		bool modify_text(
+				size_t index,
+				int value
+				);
+
+		void set_hex_color(const vector<int>& c, size_t i);
 
 		// mouse ctrls
 		std::vector<int> get_mouse_position();

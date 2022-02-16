@@ -7,12 +7,14 @@ class Game
 		this.frame = 0
 		this.quit = false
 		print("Game " + gge_api.hello());
+		this.prev_hex_i = -1
 
 	}
 
 	var control_schema
 	var max_frames
 	var frame
+	var prev_hex_i
 	var quit
 
 	def handle_event(event)
@@ -34,7 +36,8 @@ class Game
 				"Hex " + to_string(hex_i),
 				stl_vector_int([255,0,0,255]),
 				stl_vector_int(v),
-				1000)
+				1000,
+				0)
 			}
 		}
 	}
@@ -50,7 +53,30 @@ class Game
 		{
 			this.handle_event(events[i])
 		}
+		
+		// highlight hex when hovering mouse over it
+		//this.highlight_hex()
 
 		return this.quit
+	}
+
+	def highlight_hex
+	{
+		var mouse_pos = gge_api.get_mouse_position()
+		var hex_i = gge_api.get_hex_from_mouse(mouse_pos[0], mouse_pos[1])
+		if(hex_i == -1)
+		{
+			//gge_api.set_hex_color([255, 255, 255, 255], this.prev_hex_i)
+			//this.prev_hex_i = hex_i
+			return;
+		}
+
+		gge_api.set_hex_color([255, 0, 0, 255], hex_i)
+		// reset old hex and update prev hex
+		if(hex_i != this.prev_hex_i )
+		{
+			gge_api.set_hex_color([255, 255, 255, 255], this.prev_hex_i)
+			this.prev_hex_i = hex_i
+		}
 	}
 }

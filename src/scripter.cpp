@@ -71,11 +71,17 @@ void Scripter::add_defaults(const string& game_dir)
 			{ chaiscript::constructor<GGE_API(Core&)>() },
 			{ 
 				{chaiscript::fun<const string (GGE_API::*)(void)>(&GGE_API::hello), "hello"},
-				{chaiscript::fun<size_t (GGE_API::*)(const std::string&, int, int)>(&GGE_API::create_text), "create_text"},
+				// Text related
+				{chaiscript::fun<size_t (GGE_API::*)(const std::string&, int, int, int, int)>(&GGE_API::create_text), "create_text"},
+				{chaiscript::fun<size_t (GGE_API::*)(const std::string&, int)>(&GGE_API::create_text), "create_text"},
 				{chaiscript::fun
 					<size_t // return value
-						(GGE_API::*)(const std::string&, std::vector<int>, std::vector<int>, int)> // args
+						(GGE_API::*)(const std::string&, std::vector<int>, std::vector<int>, int, int)> // args
 					(&GGE_API::create_text), "create_text"}, // fn pointer and fn name
+				{chaiscript::fun<bool (GGE_API::*)(size_t, int)>(&GGE_API::modify_text), "modify_text"},
+
+				{chaiscript::fun<void (GGE_API::*)(const vector<int>& c, size_t i)>(&GGE_API::set_hex_color), "set_hex_color"},
+
 				{chaiscript::fun<std::vector<int> (GGE_API::*)(void)>(&GGE_API::get_mouse_position), "get_mouse_position"},
 				{chaiscript::fun<const std::vector<int>& (GGE_API::*)(void) const>(&GGE_API::get_events), "get_events"},
 				{chaiscript::fun<int (GGE_API::*)(int x, int y)>(&GGE_API::get_hex_from_mouse), "get_hex_from_mouse"}
