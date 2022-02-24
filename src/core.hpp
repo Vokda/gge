@@ -13,6 +13,7 @@ using namespace std;
 class function;
 class Chai_object;
 class Texter;
+class Scroller;
 
 #include <chaiscript/chaiscript.hpp>
 using namespace chaiscript; 
@@ -24,7 +25,7 @@ class Core
 		Core();
 
 		// for initialzing modules
-		enum Module {GRAPHICS, AUDIO, EVENT_HANDLER, GRID, GAME_LOOP, NR_MODULES};
+		enum Module {GRAPHICS, AUDIO, EVENT_HANDLER, GRID, GAME_LOOP, SCROLLER, TEXTER, NR_MODULES};
 
 		// MODULE INITIALIZERS
 		void init_graphics(const std::string&&, size_t w, size_t h);
@@ -47,6 +48,11 @@ class Core
 
 		shared_ptr<Hex_grid> get_grid() { return _grid; }
 
+		/*
+		 * TODO 
+		 * I have an idea here.
+		 * don't worry
+		 */
 		template<typename T>
 			std::shared_ptr<T> get_module();
 
@@ -55,6 +61,9 @@ class Core
 
 		template<>
 			shared_ptr<Graphics> get_module() {return _graphics;}
+
+		template<>
+			shared_ptr<Scroller> get_module() {return _scroller;}
 
 	private:
 
@@ -67,6 +76,7 @@ class Core
 		shared_ptr<Events> _events = nullptr;
 		shared_ptr<Hex_grid> _grid = nullptr;
 		shared_ptr<Texter> _texter = nullptr;
+		shared_ptr<Scroller> _scroller = nullptr;
 
 		// necessary for chaiscript member function functions to be called
 		chaiscript::Boxed_Value _boxed_value;

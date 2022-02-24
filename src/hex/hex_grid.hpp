@@ -20,7 +20,7 @@ class Hex_grid
 		//Hex hex_add(const Hex& a, const Hex& b);
 
 		// getters
-		std::vector<Hex>& get_grid();
+		std::vector<Hex>& get_grid() { return _grid; };
 		const std::vector<Hex>& get_grid() const { return _grid; }
 
 		Hex& get_hex(int q, int  r, int s);

@@ -7,6 +7,7 @@
 
 class Core;
 class Chai_object;
+struct SDL_Point;
 
 using namespace std;
 
@@ -42,6 +43,8 @@ class GGE_API
 		std::vector<int> get_mouse_position();
 		const std::vector<int>& get_events() const;
 
+		bool scroll(vector<int>& mouse_position);
+
 		// hex related 
 		// return index to hex in hex grid vector
 		int get_hex_from_mouse(int x, int y);
@@ -50,6 +53,11 @@ class GGE_API
 
 	private:
 		Core& _core;
+
+		/*
+		 * change the mouse input position based on the amount scrolled
+		 */
+ 		void scroll_mouse(int& x, int& y);
 };
 
 #endif

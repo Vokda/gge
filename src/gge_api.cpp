@@ -7,6 +7,11 @@
 #include "hex/utils.hpp"
 #include "hex/hex_grid.hpp"
 #include "graphics.hpp"
+#include "scroller.hpp"
+#ifdef DEBUG
+#include <iostream>
+#include "sdl_helper.hpp"
+#endif
 using namespace std;
 
 GGE_API::GGE_API(Core& core):
@@ -74,15 +79,19 @@ const std::vector<int>& GGE_API::get_events() const
 
 int GGE_API::get_hex_from_mouse(int x, int y)
 {
+#ifdef DEBUG
+	cout << "DEBUG: raw input [" << x << ", " << y <<"]" << endl;
+#endif
+
 	shared_ptr<Hex_grid> grid = _core.get_grid();
 	// TODO if top bar add top bar size to y
 	y -= _core.get_module<Graphics>()->get_viewport(1).h; 
+	// test for scroll
+	scroll_mouse(x, y);
+	y += _core.get_module<Graphics>()->get_viewport(1).h; 
 	cube_coord cc = grid->_utils.axial_to_cube(grid->_utils.xy_to_axial(x, y));
 	int i = grid->get_hex_index(cc);
-#ifdef DEBUG
-#include <iostream>
-	cout << "DEBUG: [" << x << ", " << y <<"] -> " << i << endl;
-#endif
+
 	return i;
 }
 
@@ -93,4 +102,25 @@ void GGE_API::set_hex_color(const vector<int>& c, size_t hex_i)
 	auto grid = _core.get_grid();
 	Hex& hex = grid->get_hex(hex_i);
 	hex.set_color(color);
+}
+
+bool GGE_API::scroll(vector<int>& mouse_pos)
+{
+	auto scroller = _core.get_module<Scroller>();
+	SDL_Point p;
+	p.x = mouse_pos[0];
+	p.y = mouse_pos[1];
+	return scroller->scroll(p);
+}
+
+void GGE_API::scroll_mouse(int& x, int& y)
+{
+	auto scroller = _core.get_module<Scroller>();
+	SDL_Point scrolled = scroller->get_scrolled();
+	x -= scrolled.x;
+	y -= scrolled.y;
+#ifdef DEBUG
+	cout << "DEBUG: " << scrolled << endl;
+	cout << "DEBUG: processed input [" << x << ", " << y <<"]" << endl;
+#endif
 }

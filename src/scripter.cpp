@@ -84,7 +84,8 @@ void Scripter::add_defaults(const string& game_dir)
 
 				{chaiscript::fun<std::vector<int> (GGE_API::*)(void)>(&GGE_API::get_mouse_position), "get_mouse_position"},
 				{chaiscript::fun<const std::vector<int>& (GGE_API::*)(void) const>(&GGE_API::get_events), "get_events"},
-				{chaiscript::fun<int (GGE_API::*)(int x, int y)>(&GGE_API::get_hex_from_mouse), "get_hex_from_mouse"}
+				{chaiscript::fun<int (GGE_API::*)(int x, int y)>(&GGE_API::get_hex_from_mouse), "get_hex_from_mouse"},
+				{chaiscript::fun<bool (GGE_API::*)(std::vector<int>&)>(&GGE_API::scroll), "scroll"}
 			},
 			&_gge_api,
 			"gge_api",

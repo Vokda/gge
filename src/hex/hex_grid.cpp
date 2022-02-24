@@ -85,8 +85,3 @@ int Hex_grid::hash_cube_coord(int q, int r, int s)
 	hash = ((hash << 5) + hash) + (s);
 	return hash;
 }
- 
-std::vector<Hex>& Hex_grid::get_grid()
-{
-	return _grid;
-}

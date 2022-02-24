@@ -38,6 +38,13 @@ class Game
 				stl_vector_int(v),
 				1000,
 				0)
+				break
+			}
+
+			case(3)
+			{
+				this.scroll()
+				break
 			}
 		}
 	}
@@ -55,7 +62,8 @@ class Game
 		}
 		
 		// highlight hex when hovering mouse over it
-		//this.highlight_hex()
+		this.highlight_hex()
+
 
 		return this.quit
 	}
@@ -78,5 +86,11 @@ class Game
 			gge_api.set_hex_color([255, 255, 255, 255], this.prev_hex_i)
 			this.prev_hex_i = hex_i
 		}
+	}
+
+	def scroll
+	{
+		var mouse_pos = gge_api.get_mouse_position()
+		return gge_api.scroll(mouse_pos)
 	}
 }

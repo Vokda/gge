@@ -9,6 +9,7 @@
 #include <algorithm>
 #include "chai_object.hpp"
 #include "texter.hpp"
+#include "scroller.hpp"
 using namespace std;
 
 Core::Core()
@@ -22,6 +23,10 @@ Core::Core()
 void Core::init_graphics(const string&& name, size_t w, size_t h)
 {
 	_graphics = make_shared<Graphics>(name, w, h, _sdl_helper);
+	_scroller = make_shared<Scroller>(
+			_graphics->get_screen_width(), 
+			_graphics->get_screen_height()
+			); // TODO max scroll
 	_texter = make_shared<Texter>(_graphics);
 }
 
@@ -61,6 +66,8 @@ void Core::run()
 	while(not _quit)
 	{
 		auto start = std::chrono::steady_clock::now();
+
+		_scroller->scroll_grid(_grid);
 
 		_graphics->clear_screen();
 

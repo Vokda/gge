@@ -6,6 +6,8 @@
 #include "texter.hpp"
 #include "sdl_helper.hpp"
 #include "hex/hex_grid.hpp"
+#include <memory>
+#include "scroller.hpp"
 using namespace std;
 
 Graphics::Graphics(

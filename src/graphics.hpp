@@ -10,6 +10,7 @@ struct SDL_Renderer;
 class Hex_grid;
 class SDL_helper;
 class Texter;
+class Scroller;
 
 class Graphics
 {

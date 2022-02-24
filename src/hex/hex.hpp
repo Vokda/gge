@@ -25,8 +25,9 @@ class Hex
 
 		const SDL_Point& get_position() const { return _position; }
 
-		//std::vector<int>& get_corners() { return _corners; }
 		const std::vector<SDL_Point>& get_corners() const { return _corners; }
+		std::vector<SDL_Point>& get_corners() { return _corners; }
+
 		const cube_coord& get_cube_coordinate() const { return _cube_coordinate; }
 
 		const SDL_Color& get_color() const {return _hex_color;}
