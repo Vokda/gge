@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <SDL2/SDL.h>
+#include "gge_module.hpp"
 class SDL_helper;
 using namespace std;
 
@@ -30,10 +31,11 @@ struct event
 	unsigned int symbol;
 };
 
-class Events
+class Events: public GGE_module
 {
 	public:
-		Events(SDL_helper&);
+		Events(SDL_helper& e);
+		~Events() = default;
 
 		const vector<int>& get_events();
 		// this is for the chaiscript 

@@ -3,6 +3,7 @@
 #include "sdl_helper.hpp"
 #include "texter.hpp"
 #include "graphics.hpp"
+#include <memory>
 #ifdef DEBUG
 #include <iostream>
 using namespace std;
@@ -11,7 +12,6 @@ using namespace std;
 Texter::Texter(shared_ptr<Graphics> graphics)
 {
 	_renderer = graphics->get_renderer();
-	_graphics = graphics;
 	_sdl_helper.check_null("SDL_TTF initalization", TTF_Init());
 	_font = TTF_OpenFont(_font_name.c_str(), _font_size);
 	string s = "Loading font ";
@@ -25,20 +25,27 @@ Texter::Texter(shared_ptr<Graphics> graphics)
 Texter::~Texter()
 {
 	TTF_CloseFont(_font);
-	for(auto& text: _texts)
+	for(auto comp: _components)
 	{
-		SDL_DestroyTexture(text.texture);
+		auto text = static_pointer_cast<Text>(comp);
+		SDL_DestroyTexture(text->texture);
 	}
 }
 
 bool Texter::modify_text(size_t i, int value)
 {
-	if(i >= _texts.size()) return false;
-	string& s = _texts[i].text;
+	if(i >= _components.size()) return false;
+	auto itr = _components.begin();
+	while(itr != _components.end())
+	{
+		itr++;
+	}
+	auto text = static_pointer_cast<Text>(*itr);
+	string& s = text->text;
 	string r = regex_replace(s, _re, to_string(value));
 	if(s == r) return false;
 	s = r;
-	_texts[i].texture = text_to_texture(s, _texts[i].color);
+	text->texture = text_to_texture(s, text->color);
 	return true;
 }
 
@@ -54,9 +61,6 @@ size_t Texter::create_text(
 	text.permanent = (ms < 1 ? true : false);
 
 	SDL_Rect rect = size;
-	/*const SDL_Rect& viewport = _graphics->get_viewport(vp);
-	rect.x -= viewport.x;
-	rect.y -= viewport.y;*/
 	text.position = {rect.x, rect.y};
 	cout << "position " << size << endl;
 	if(rect.w < 0)
@@ -72,31 +76,14 @@ size_t Texter::create_text(
 	text.color = color;
 	text.texture = text_to_texture(msg, color);
 
-	_texts.push_back(text);
+	_components.push_back(make_shared<Text>(text));
 
 #ifdef DEBUG
 	cout << "Debug: Adv text created @ " << text.position.x << " " << text.position.y << endl;
 	cout << "Debug: size " << rect.w << " " << rect.h << endl;
 	cout << "Debug: text '" << msg << "'" << endl;
 #endif 
-	return _texts.size() - 1;
-}
-
-void Texter::tick()
-{
-	for(auto itr = _texts.begin(); itr != _texts.end(); ++itr)
-	{
-		Text& text = (*itr);
-		if(not text.permanent)
-		{
-			int time_left = _timer.time_left(text.creation, text.milliseconds);
-			if(time_left <= 0)
-			{
-				_texts.erase(itr);
-				break;
-			}
-		}
-	}
+	return _components.size() - 1;
 }
 
 SDL_Texture* Texter::text_to_texture(const string& s, const SDL_Color& c)

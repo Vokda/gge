@@ -5,12 +5,12 @@
 // game_dir is defined by gge
 use(game_dir+"game.chai")
 
-
-gge_initializer.graphics("test name", 800, 600) // should change the default 
-gge_initializer.events()
-gge_initializer.grid(2, 3, 60)
-
 print(gge_api.hello())
+
+gge_api.init_graphics("test name", 800, 600) // should change the default 
+gge_api.init_events()
+gge_api.init_grid(2, 3, 60)
+
 //print(gge_api.info())
 // view ports 
 // main = 0, bar = 1, side = 2

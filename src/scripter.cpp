@@ -10,14 +10,12 @@
 #include <chaiscript/utility/utility.hpp>
 
 #include "scripter.hpp"
-#include "initializer.hpp"
 #include "chai_object.hpp"
 #include "core.hpp"
 class GGE_API;
 using namespace std;
 
-Scripter::Scripter(const string& game_dir, Initializer& i, GGE_API& ga):
-	_initializer(i),
+Scripter::Scripter(const string& game_dir, GGE_API& ga):
 	_gge_api(ga),
 	_module_ptr(chaiscript::ModulePtr(new chaiscript::Module()))
 {
@@ -46,46 +44,19 @@ Scripter::Scripter(const string& game_dir, Initializer& i, GGE_API& ga):
 	Chai_object co(_chai, game_obj_name);
 	co.add_function("game_loop");
 	co.add_function("event_handle");
-	_initializer.game_object(co);
+	_gge_api.init_game_object(co);
 }
 
 void Scripter::add_defaults(const string& game_dir)
 {
 	// add global classes from GGE
-	add_class<Initializer, Core&>(
-			"Initializer",
-			{ chaiscript::constructor<Initializer(Core&)>() },
-			{
-				{chaiscript::fun(&Initializer::graphics), "graphics"},
-				{chaiscript::fun(&Initializer::events), "events"},
-				{chaiscript::fun(&Initializer::grid), "grid"},
-			},
-			&_initializer,
-			"gge_initializer",
-			true
-			);
-
 	typedef std::vector<int> stl_vector_int;
 	add_class<GGE_API, Core&>(
 			"GGE_API",
-			{ chaiscript::constructor<GGE_API(Core&)>() },
+			{ chaiscript::constructor<GGE_API(Core&)>() }, // constructor
 			{ 
 				{chaiscript::fun<const string (GGE_API::*)(void)>(&GGE_API::hello), "hello"},
-				// Text related
-				{chaiscript::fun<size_t (GGE_API::*)(const std::string&, int, int, int, int)>(&GGE_API::create_text), "create_text"},
-				{chaiscript::fun<size_t (GGE_API::*)(const std::string&, int)>(&GGE_API::create_text), "create_text"},
-				{chaiscript::fun
-					<size_t // return value
-						(GGE_API::*)(const std::string&, std::vector<int>, std::vector<int>, int, int)> // args
-					(&GGE_API::create_text), "create_text"}, // fn pointer and fn name
-				{chaiscript::fun<bool (GGE_API::*)(size_t, int)>(&GGE_API::modify_text), "modify_text"},
-
-				{chaiscript::fun<void (GGE_API::*)(const vector<int>& c, size_t i)>(&GGE_API::set_hex_color), "set_hex_color"},
-
-				{chaiscript::fun<std::vector<int> (GGE_API::*)(void)>(&GGE_API::get_mouse_position), "get_mouse_position"},
-				{chaiscript::fun<const std::vector<int>& (GGE_API::*)(void) const>(&GGE_API::get_events), "get_events"},
-				{chaiscript::fun<int (GGE_API::*)(int x, int y)>(&GGE_API::get_hex_from_mouse), "get_hex_from_mouse"},
-				{chaiscript::fun<bool (GGE_API::*)(std::vector<int>&)>(&GGE_API::scroll), "scroll"}
+#include "gge_api_defaults.generated"
 			},
 			&_gge_api,
 			"gge_api",

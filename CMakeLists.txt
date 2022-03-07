@@ -23,6 +23,9 @@ include_directories(${PROJECT_SOURCE_DIR}/ChaiScript/include/)
 file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
 message(STATUS "source files: ${SOURCE_FILES}")
 
+execute_process(COMMAND perl build_tools/generate_gge_api_defaults.pl WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+execute_process(COMMAND perl build_tools/generate_get_gge_modules.pl WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} dl ${SDL2_SUPPORT_LIBRARIES})
 

@@ -78,10 +78,11 @@ void Graphics::draw(const Hex_grid& grid)
 
 void Graphics::draw(shared_ptr<Texter> texter)
 {
-	for(const Text& text : texter->get_texts())
+	for(auto c: texter->get_components())
 	{
-		set_viewport(static_cast<viewport>(text.view_port));
-		SDL_RenderCopy(_sdl_renderer, text.texture, NULL, &text.size);
+		shared_ptr<Text> text = static_pointer_cast<Text>(c);
+		set_viewport(static_cast<viewport>(text->view_port));
+		SDL_RenderCopy(_sdl_renderer, text->texture, NULL, &text->size);
 	}
 }
 

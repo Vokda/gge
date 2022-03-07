@@ -1,16 +1,17 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <memory>
+#include "gge_module.hpp"
 using namespace std;
 class Hex_grid;
 
-class Scroller
+class Scroller: public GGE_module
 {
 	public:
 		Scroller(
 				int w,
 				int h,
-				SDL_Rect* max_scroll = nullptr);
+				SDL_Rect* max_scroll);
 		~Scroller();
 
 		/*

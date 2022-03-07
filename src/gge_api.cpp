@@ -10,13 +10,40 @@
 #include "scroller.hpp"
 #ifdef DEBUG
 #include <iostream>
-#include "sdl_helper.hpp"
 #endif
 using namespace std;
 
 GGE_API::GGE_API(Core& core):
 	_core(core)
 {}
+
+/* initializers */
+
+void GGE_API::init_graphics(const std::string& s, size_t w, size_t h)
+{
+	_core.init_module<Graphics>(s, w, h, _sdl_helper);
+	auto g = _core.get_module<Graphics>();
+	_core.init_module<Texter>(g);
+	_core.init_module<Scroller>(w, h, nullptr);
+}
+
+void GGE_API::init_events()
+{
+	_core.init_module<Events>(_sdl_helper);
+}
+
+void GGE_API::init_grid(size_t width, size_t height, int tile_size)
+{
+	//TODO hard coded for now
+	_core.init_module<Hex_grid>(width, height, tile_size, FLAT_TOP, RECT_ODD_Q);
+}
+
+void GGE_API::init_game_object(Chai_object& game_object)
+{
+	_core.init_game_object(game_object);
+}
+
+// init end
 
 const string GGE_API::hello()
 {
@@ -41,7 +68,7 @@ size_t GGE_API::create_text(
 		int view_port
 		)
 {
-	auto texter = _core.get_texter();
+	auto texter = _core.get_module<Texter>();
 	vector<Uint8> casted_v(color.begin(), color.end());
 	SDL_Color c = {casted_v[0], casted_v[1], casted_v[2], casted_v[3]};
 
@@ -59,7 +86,7 @@ size_t GGE_API::create_text(
 
 bool GGE_API::modify_text(size_t i, int v)
 {
-	auto texter = _core.get_texter();
+	auto texter = _core.get_module<Texter>();
 	return texter->modify_text(i, v);
 }
 
@@ -83,7 +110,7 @@ int GGE_API::get_hex_from_mouse(int x, int y)
 	cout << "DEBUG: raw input [" << x << ", " << y <<"]" << endl;
 #endif
 
-	shared_ptr<Hex_grid> grid = _core.get_grid();
+	shared_ptr<Hex_grid> grid = _core.get_module<Hex_grid>();
 	// TODO if top bar add top bar size to y
 	y -= _core.get_module<Graphics>()->get_viewport(1).h; 
 	// test for scroll
@@ -99,7 +126,7 @@ void GGE_API::set_hex_color(const vector<int>& c, size_t hex_i)
 {
 	vector<Uint8> v(c.begin(), c.end());
 	SDL_Color color = {v[0], v[1], v[2], v[3]};
-	auto grid = _core.get_grid();
+	shared_ptr<Hex_grid> grid = _core.get_module<Hex_grid>();
 	Hex& hex = grid->get_hex(hex_i);
 	hex.set_color(color);
 }
@@ -123,4 +150,9 @@ void GGE_API::scroll_mouse(int& x, int& y)
 	cout << "DEBUG: " << scrolled << endl;
 	cout << "DEBUG: processed input [" << x << ", " << y <<"]" << endl;
 #endif
+}
+
+void create_shape(int shape, const vector<int>& p)
+{
+	cout <<"shape!" << endl;
 }

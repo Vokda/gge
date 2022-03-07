@@ -1,19 +1,14 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include <memory>
 #include <functional>
 #include "sdl_helper.hpp"
 #include <string>
-#include <vector>
-#include "events.hpp"
-class Graphics;
-class Hex_grid;
-using namespace std;
+class GGE_module;
 class function;
 class Chai_object;
-class Texter;
-class Scroller;
+class Initializer;
+#include "moduler.hpp"
 
 #include <chaiscript/chaiscript.hpp>
 using namespace chaiscript; 
@@ -24,17 +19,11 @@ class Core
 
 		Core();
 
-		// for initialzing modules
-		enum Module {GRAPHICS, AUDIO, EVENT_HANDLER, GRID, GAME_LOOP, SCROLLER, TEXTER, NR_MODULES};
+		void init_game_object(Chai_object& co);
 
-		// MODULE INITIALIZERS
-		void init_graphics(const std::string&&, size_t w, size_t h);
-		void init_events();
-		void init_grid(size_t w, size_t h, int size);
-		void init_game_object(Chai_object&& co);
-
-		// get modules (mainly for api)
-		shared_ptr<Texter> get_texter();
+		// initializer for every other module
+		template<typename T, typename ...Args>
+			void init_module(Args... args) { _moduler.set_module(args...); }
 
 		// for loading graphics (and sound and stuff too)
 		void load_graphics(const string& path);
@@ -46,24 +35,12 @@ class Core
 
 		void run();
 
-		shared_ptr<Hex_grid> get_grid() { return _grid; }
-
-		/*
-		 * TODO 
-		 * I have an idea here.
-		 * don't worry
-		 */
 		template<typename T>
-			std::shared_ptr<T> get_module();
+			shared_ptr<T> get_module() { return _moduler.get_module<T>(); }
 
-		template<>
-			std::shared_ptr<Events> get_module() {return _events;}
+		//Moduler& get_moduler() { return _moduler; };
 
-		template<>
-			shared_ptr<Graphics> get_module() {return _graphics;}
-
-		template<>
-			shared_ptr<Scroller> get_module() {return _scroller;}
+//#include "get_gge_modules.generated"
 
 	private:
 
@@ -71,7 +48,9 @@ class Core
 
 		double _delta = 1.0/60.0; // just some hard coded value to start things out
 
-		// modules
+		Moduler _moduler;
+
+		// some quick access pointers
 		shared_ptr<Graphics> _graphics = nullptr;
 		shared_ptr<Events> _events = nullptr;
 		shared_ptr<Hex_grid> _grid = nullptr;

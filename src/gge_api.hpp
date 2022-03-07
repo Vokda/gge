@@ -1,5 +1,6 @@
 #ifndef GGE_API_HPP
 #define GGE_API_HPP
+#include "sdl_helper.hpp"
 
 #include <string>
 #include <SDL2/SDL.h>
@@ -20,6 +21,15 @@ class GGE_API
 		const string hello();
 
 		SDL_KeyCode get_sdl_keycodes() const;
+
+		// no need to export
+		void init_game_object(Chai_object& game_object); 
+
+		/* BEGIN EXPORT */
+		void init_graphics(const std::string&, size_t w, size_t h);
+		void init_events();
+		void init_grid(size_t width, size_t height, int tile_size);
+
 
 		// text
 		size_t create_text(const string& text, int view_port);
@@ -48,11 +58,16 @@ class GGE_API
 		// hex related 
 		// return index to hex in hex grid vector
 		int get_hex_from_mouse(int x, int y);
+
+		/* END EXPORT */
+		void create_shape(int shape, const vector<int>& p);
+
 		/*Chai_object& get_on_hex_data(int i);
 		Chai_object& get_in_hex_data(int i);*/
 
 	private:
 		Core& _core;
+		SDL_helper _sdl_helper;
 
 		/*
 		 * change the mouse input position based on the amount scrolled

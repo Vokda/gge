@@ -2,45 +2,27 @@
 #include <iostream>
 #include <chrono>
 #include <stdexcept>
-#include "graphics.hpp"
+/*#include "graphics.hpp"
 #include "events.hpp"
-#include "hex/hex_grid.hpp"
+#include "hex/hex_grid.hpp"*/
 #include <functional>
 #include <algorithm>
 #include "chai_object.hpp"
-#include "texter.hpp"
-#include "scroller.hpp"
+/*#include "texter.hpp"
+#include "scroller.hpp"*/
+#include "registered_gge_modules.hpp"
+class Initializer;
 using namespace std;
 
 Core::Core()
 {
+	_graphics = _moduler.get_module<Graphics>();
+	_scroller = _moduler.get_module<Scroller>();
+	_grid = _moduler.get_module<Hex_grid>();
 	_game_loop = nullptr;
-	_texter = nullptr;
 }
 
-
-// MODULE INITIALIZERS
-void Core::init_graphics(const string&& name, size_t w, size_t h)
-{
-	_graphics = make_shared<Graphics>(name, w, h, _sdl_helper);
-	_scroller = make_shared<Scroller>(
-			_graphics->get_screen_width(), 
-			_graphics->get_screen_height()
-			); // TODO max scroll
-	_texter = make_shared<Texter>(_graphics);
-}
-
-void Core::init_events()
-{
-	_events = make_shared<Events>(_sdl_helper);
-}
-
-void Core::init_grid(size_t w, size_t h, int size)
-{
-	_grid = make_shared<Hex_grid>(w, h, size, FLAT_TOP, RECT_ODD_Q); // TODO hard coded for now
-}
-
-void Core::init_game_object(Chai_object&& co)
+void Core::init_game_object(Chai_object& co)
 {
 	auto fn_names = co.get_fn_names();
 	_boxed_value = co.get_boxed_value();
@@ -55,14 +37,13 @@ void Core::init_game_object(Chai_object&& co)
 
 // MODULE INITIALIZERS END
 
-shared_ptr<Texter> Core::get_texter()
-{
-	return _texter;
-}
-
 void Core::run()
 {
 	// main loop
+	/* TODO
+	 * redo the main loop so that it can offer more 
+	 * flexibility with which modules are used and in what order
+	 */
 	while(not _quit)
 	{
 		auto start = std::chrono::steady_clock::now();
@@ -72,8 +53,8 @@ void Core::run()
 		_graphics->clear_screen();
 
 		// draw HUD
-		_graphics->draw(_texter);
-		_texter->tick(); // tick time for temp texts
+		//_graphics->draw(_texter);
+		//_texter->tick(); // tick time for temp texts
 		// draws everything that isn't HUD
 		_graphics->draw(*_grid);
 
@@ -95,12 +76,21 @@ void Core::run()
 
 void Core::check_modules_initiated()
 {
-	if(not _graphics)
+	vector<registered_gge_module> important = {GRAPHICS, EVENTS, GRID};
+	for(auto m: important)
+	{
+		if(_moduler[m] == nullptr)
+		{
+			cerr << "Warning: " << GGE_module::get_module_name(m) <<  " not initiated!" << endl;
+		}
+	}
+	/*if(not _graphics)
 		cerr << "Warning: Graphics not initiated!" << endl;
 	if(not _events)
 		cerr << "Warning: Events not initiated!" << endl;
 	if(not _grid)
-		cerr << "Warning: Grid not initiated!" << endl;
+		cerr << "Warning: Grid not initiated!" << endl;*/
+
 	if(not _game_loop)
 	{
 		std::domain_error de("No game loop provided!");

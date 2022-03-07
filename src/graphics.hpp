@@ -1,6 +1,8 @@
 #pragma once
 
+#include "gge_module.hpp"
 #include <memory>
+#include <SDL2/SDL.h>
 using namespace std;
 
 struct SDL_Window;
@@ -11,11 +13,12 @@ class Hex_grid;
 class SDL_helper;
 class Texter;
 class Scroller;
+class Shape;
 
-class Graphics
+class Graphics: public GGE_module
 {
 	public:
-		Graphics(const std::string& window_name, size_t width, size_t height, SDL_helper&);
+		Graphics(const std::string& window_name, size_t width, size_t height, SDL_helper& sh);
 		~Graphics();
 
 		enum viewport {MAIN, BAR, SIDE_BAR};
@@ -28,6 +31,7 @@ class Graphics
 		// always draws to _main_view
 		void draw(const Hex_grid& grid);
 		void draw(shared_ptr<Texter> texter);
+		void draw(const Shape& shape);
 
 		SDL_Renderer* get_renderer() { return _sdl_renderer; }
 		int get_screen_width() { return _screen_width; }

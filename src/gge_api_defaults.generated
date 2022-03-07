@@ -1,0 +1,9 @@
+{chaiscript::fun<const std::vector<int>& (GGE_API::*)(void) const>(&GGE_API::get_events), "get_events"},
+{chaiscript::fun<void (GGE_API::*)(void) >(&GGE_API::init_events), "init_events"},
+{chaiscript::fun<bool (GGE_API::*)(vector<int>& mouse_position) >(&GGE_API::scroll), "scroll"},
+{chaiscript::fun<size_t (GGE_API::*)(const string& text,vector<int> color,vector<int> size,int milliseconds,int view_port) >(&GGE_API::create_text), "create_text"},
+{chaiscript::fun<bool (GGE_API::*)(size_t index,int value) >(&GGE_API::modify_text), "modify_text"},
+{chaiscript::fun<void (GGE_API::*)(Chai_object& game_object) >(&GGE_API::init_game_object), "init_game_object"},
+{chaiscript::fun<void (GGE_API::*)(size_t width,size_t height,int tile_size) >(&GGE_API::init_grid), "init_grid"},
+{chaiscript::fun<void (GGE_API::*)(const vector<int>& c,size_t i) >(&GGE_API::set_hex_color), "set_hex_color"},
+{chaiscript::fun<void (GGE_API::*)(const std::string&,size_t w,size_t h) >(&GGE_API::init_graphics), "init_graphics"}

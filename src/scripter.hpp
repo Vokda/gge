@@ -10,18 +10,15 @@
 #include <functional>
 using namespace std;
 
-class Initializer;
-
 class Scripter
 {
 	public:
-		Scripter(const string& game_directory, Initializer& i, GGE_API& ga);
+		Scripter(const string& game_directory, GGE_API& ga);
 
 	private:
 		chaiscript::ChaiScript _chai;
 		chaiscript::ModulePtr _module_ptr;
 
-		Initializer& _initializer;
 		GGE_API& _gge_api;
 
 		// following function s adds functions and classes to chai script

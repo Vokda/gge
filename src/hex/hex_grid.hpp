@@ -7,11 +7,12 @@
 #include "hex.hpp"
 #include "orientation.hpp"
 #include "utils.hpp"
+#include "../gge_module.hpp"
 
 
 using namespace std;
 
-class Hex_grid
+class Hex_grid: public GGE_module
 {
 	public:
 
