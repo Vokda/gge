@@ -22,16 +22,20 @@ The core components of the engine is just right in in `src/` *blows raspberry*.
 
 `cmake/` contains cmake files for finding SDL libraries 
 
+`build_tools/` contains some perl scripts that generate code. While not strictly necessary they lessen the amount of code needed to write.
+
 # Requirements
 * C++17 compiler (I recommend clang (*may* work with C++14))
 * CMake
-* make
+* Make
 * SDL2
 * Chaiscript (is a submodule in this git)
+## Optional
+* Perl 5 (build tools)
 
 # Build and Run
 In the root of the repo...
-1. Run `setup_build_env.sh`
+1. Run `setup_build_env.sh`. Comment out build tools in the CMakefile if you want to skip that step.
 2. Goto `build/`
 3. Run `make` (multithreaded compilation can be used for a faster compilation)
 4. run `./gge games/test/` to test the engine (don't forget the last '/')

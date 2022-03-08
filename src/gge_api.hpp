@@ -25,7 +25,7 @@ class GGE_API
 		// no need to export
 		void init_game_object(Chai_object& game_object); 
 
-		/* BEGIN EXPORT */
+		/* gge_begin export */
 		void init_graphics(const std::string&, size_t w, size_t h);
 		void init_events();
 		void init_grid(size_t width, size_t height, int tile_size);
@@ -58,8 +58,8 @@ class GGE_API
 		// hex related 
 		// return index to hex in hex grid vector
 		int get_hex_from_mouse(int x, int y);
+		/* gge_end export */
 
-		/* END EXPORT */
 		void create_shape(int shape, const vector<int>& p);
 
 		/*Chai_object& get_on_hex_data(int i);

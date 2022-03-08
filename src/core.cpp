@@ -53,8 +53,8 @@ void Core::run()
 		_graphics->clear_screen();
 
 		// draw HUD
-		//_graphics->draw(_texter);
-		//_texter->tick(); // tick time for temp texts
+		_graphics->draw(_texter);
+		_texter->tick(); // tick time for temp texts
 		// draws everything that isn't HUD
 		_graphics->draw(*_grid);
 
@@ -84,12 +84,12 @@ void Core::check_modules_initiated()
 			cerr << "Warning: " << GGE_module::get_module_name(m) <<  " not initiated!" << endl;
 		}
 	}
-	/*if(not _graphics)
-		cerr << "Warning: Graphics not initiated!" << endl;
-	if(not _events)
-		cerr << "Warning: Events not initiated!" << endl;
-	if(not _grid)
-		cerr << "Warning: Grid not initiated!" << endl;*/
+
+	_graphics = _moduler.get_module<Graphics>();
+	_events = _moduler.get_module<Events>();
+	_grid = _moduler.get_module<Hex_grid>();
+	_texter = _moduler.get_module<Texter>();
+	_scroller = _moduler.get_module<Scroller>();
 
 	if(not _game_loop)
 	{

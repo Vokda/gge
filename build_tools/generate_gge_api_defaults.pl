@@ -2,6 +2,8 @@
 
 use strict;
 use warnings;
+use lib 'build_tools/';
+use ggeb;
 use Data::Dumper;
 
 my $src_dir = 'src/';
@@ -21,51 +23,25 @@ sub read_file
 	return $content;
 }
 
-# regex to capture type and variable name in c++
-my $cpp_var = '[\w,\s&<>:]+';
+our $cpp_code;
 
 my $text = read_file($gge_api_file);
-$text =~ s/.+BEGIN EXPORT \*\/(.+)\/\* END EXPORT.+/$1/s;
+$text =~ s/.+gge_begin export \*\/(.+)\/\* gge_end export.+/$1/s;
 my %exported_functions;
 print "Generating GGE API defaults...\n";
-for my $line (split(/;/, $text))
-{
-	next if($line =~ /\/{2,}/);
-	if($line =~ /\w+\s*\w+\(/)
-	{
-		$line =~ s/^(\/\*).+$//g; # remove /**/ comments
-		$line =~ s/^.+(\*\/)$//g; # remove /**/ comments
-		my ($return_type, $fn_name) = $line =~ /($cpp_var)+\s(\w+)\(/;
-		print "Processing $fn_name...";
-		my ($formal_params) = $line =~ /\(($cpp_var)\)/gm;
-		my ($is_const) = $line =~ /(const)$/;
-		my @parameters = $formal_params ? split(/,/, $formal_params) : ('void');
-		$return_type =~ s/\n\s*//g;
-		s/^\s*(.+)\s*$/$1/ for @parameters;
-		$exported_functions{$fn_name} = {
-			function_name => $fn_name,
-			return_type => $return_type,
-			parameters => \@parameters,
-			const => $is_const // ''
-		};
-		print "done!\n";
-	}
-	else
-	{
-		next;
-	}
-}
-
+my %gge_fns = parse_functions($text);
 open(my $out_fh, '>', $out_file) or die $!;
 my @output;
-for my $fn_name (keys %exported_functions)
+for my $fn_name (keys %gge_fns)
 {
-	my $rv = $exported_functions{$fn_name}->{return_type};
-	my $params = join(',', @{$exported_functions{$fn_name}->{parameters}});
-	my $const = $exported_functions{$fn_name}->{const};
+	print "Processing $fn_name...";
+	my $rv = $gge_fns{$fn_name}{return_value};
+	my $params = $gge_fns{$fn_name}{formal_parameters};
+	my $const = $gge_fns{$fn_name}{is_const};
 	my $line = "{chaiscript::fun<$rv (GGE_API::*)($params) $const>(&GGE_API::$fn_name), \"$fn_name\"}";
 	push(@output, $line);
+	print "done!\n";
 }
-#warn Dumper \%exported_functions;
-print $out_fh join(",\n", @output);
+my $out = join(",\n", @output);
+print $out_fh $out;
 print "Generation complete!\n";

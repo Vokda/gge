@@ -4,11 +4,16 @@
 
 use strict;
 use warnings;
+use Data::Dumper;
 
 my $src_dir = 'src/';
 my $reg_mod_file = $src_dir . 'registered_gge_modules.hpp';
 # just a catch all c++ code
-my $cpp_code = '[.\/\"#\n\t\w\d,\s&*<>(){}\[\]:=;]+';
+our $cpp_code = '[.\/\"#\n\t\w\d,\s&*<>(){}\[\]:=;]+';
+
+# for future sub
+	#$line =~ s/^(\/\*).+$//g; # remove /**/ comments
+	#$line =~ s/^.+(\*\/)$//g; # remove /**/ comments
 
 sub slurp_file
 {
@@ -73,6 +78,39 @@ sub get_gge_modules
 		}
 	}
 	return @modules;
+}
+
+sub parse_functions
+{
+	my ($text) = @_; 
+
+	my @lines = split(';', $text);
+	# clean up
+	for my $line (@lines)
+	{
+		$line =~ s/(\s*\/\/(\s+\w+)+)+\n//;
+		$line =~ s/^\s+//;
+		$line =~ s/\s+$//;
+	}
+	@lines = grep { $_ ne '' } @lines;
+	my %gge_fns;
+	for my $line (@lines)
+	{
+		my ($return_value, $fn_name, $args) = $line =~ /($cpp_code)+\s+($cpp_code)+\(($cpp_code)*\)/;
+		$gge_fns{$fn_name} = 
+		{
+			return_value => $return_value,
+			formal_parameters => $args // '',
+		};
+		$gge_fns{$fn_name}{parameters_names} = get_ctor_names($args) if($args);
+		$gge_fns{$fn_name}{is_const} = fn_is_const($line) ? 'const' : '';
+	}
+	return %gge_fns;
+}
+
+sub fn_is_const
+{
+	return $_[0] =~ /(const);?$/;
 }
 
 
