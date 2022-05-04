@@ -16,10 +16,6 @@ using namespace std;
 
 Core::Core()
 {
-	_graphics = _moduler.get_module<Graphics>();
-	_scroller = _moduler.get_module<Scroller>();
-	_grid = _moduler.get_module<Hex_grid>();
-	_game_loop = nullptr;
 }
 
 void Core::init_game_object(Chai_object& co)
@@ -40,15 +36,18 @@ void Core::init_game_object(Chai_object& co)
 void Core::run()
 {
 	// main loop
-	/* TODO
-	 * redo the main loop so that it can offer more 
-	 * flexibility with which modules are used and in what order
-	 */
 	while(not _quit)
 	{
 		auto start = std::chrono::steady_clock::now();
 
-		_scroller->scroll_grid(_grid);
+		_runner.exec_commands();
+
+		// game logic
+		// game can be quit from inside the game loop by returning true
+		_quit = (*_game_loop)(_boxed_value, _delta);
+
+
+		/*_scroller->scroll_grid(_grid);
 
 		_graphics->clear_screen();
 
@@ -59,12 +58,9 @@ void Core::run()
 		_graphics->draw(*_grid);
 
 
-		// game logic
-		// game can be quit from inside the game loop by returning true
-		_quit = (*_game_loop)(_boxed_value, _delta);
-
 		// actually render shit onto screen
 		_graphics->render();
+		*/
 
 		auto end = std::chrono::steady_clock::now();
 
@@ -76,6 +72,9 @@ void Core::run()
 
 void Core::check_modules_initiated()
 {
+	_moduler.list_modules();
+
+	// probably important modules
 	vector<registered_gge_module> important = {GRAPHICS, EVENTS, GRID};
 	for(auto m: important)
 	{
@@ -85,17 +84,13 @@ void Core::check_modules_initiated()
 		}
 	}
 
-	_graphics = _moduler.get_module<Graphics>();
-	_events = _moduler.get_module<Events>();
-	_grid = _moduler.get_module<Hex_grid>();
-	_texter = _moduler.get_module<Texter>();
-	_scroller = _moduler.get_module<Scroller>();
-
 	if(not _game_loop)
 	{
 		std::domain_error de("No game loop provided!");
 		throw de; 
 	}
+
+	_runner.list_commands();
 }
 
 void Core::quit()
@@ -103,8 +98,7 @@ void Core::quit()
 	_quit = true;
 }
 
-/*template<typename Events>
-std::shared_ptr<Events> Core::get_module()
+void Core::add_command(const string & cmd)
 {
-	return _events;
-}*/
+	return _runner.add_command(cmd, _moduler);
+}

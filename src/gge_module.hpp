@@ -15,17 +15,23 @@ class GGE_module
 		{
 			switch(m)
 			{
+				case(NONE):
+					return "<no module>";
 				// gge_begin cases
 				case(GRAPHICS):
 					return "Graphics";
 				case(EVENTS):
 					return "Events";
 				case(GRID):
-					return "Grid";
-				// gge_end cases
+					return "Hex_grid";
+				case(SCROLLER):
+					return "Scroller";
+				case(TEXTER):
+					return "Texter";
+
+// gge_end cases
 				default:
 					return "<Unnamed GGE Module [" + to_string(m) + "]>";
 			}
 		}
-	private:
 };

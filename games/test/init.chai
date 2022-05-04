@@ -11,6 +11,17 @@ gge_api.init_graphics("test name", 800, 600) // should change the default
 gge_api.init_events()
 gge_api.init_grid(2, 3, 60)
 
+// command order
+gge_api.add_command("graphics.clear_screen()")
+gge_api.add_command("scroller.scroll(grid)")
+gge_api.add_command("texter.tick()")
+gge_api.add_command("graphics.draw(grid)")
+gge_api.add_command("graphics.draw(shape)")
+gge_api.add_command("graphics.draw(texter)")
+gge_api.add_command("graphics.render()")
+// ^ oh wow how intuitive ^
+
+
 //print(gge_api.info())
 // view ports 
 // main = 0, bar = 1, side = 2

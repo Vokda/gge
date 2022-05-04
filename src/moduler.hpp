@@ -51,6 +51,8 @@ class Moduler
 
 		shared_ptr<GGE_module> operator[](registered_gge_module m); 
 
+		int list_modules() const;
+
 	private:
 		typedef map<registered_gge_module, shared_ptr<GGE_module>> modules_map;
 		modules_map _modules;

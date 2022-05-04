@@ -64,7 +64,6 @@ class Game
 		// highlight hex when hovering mouse over it
 		this.highlight_hex()
 
-
 		return this.quit
 	}
 

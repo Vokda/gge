@@ -1,0 +1,6 @@
+digraph d
+{
+	node [shape="square"];
+	chai_cmd [label="call gge_api.command(<CLASS>.<FUNCTION>(<ARGS>)"];
+	
+}

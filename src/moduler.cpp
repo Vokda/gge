@@ -12,6 +12,16 @@ Moduler::Moduler()
 {
 }
 
+int Moduler::list_modules() const
+{
+	cout << "Loaded modules:\n";
+	for(auto it = _modules.begin(); it != _modules.end(); ++it)
+	{
+		cout  << it->second->get_module_name(it->first) << endl;
+	}
+	return _modules.size();
+}
+
 /*modules_map::iterator Moduler::find(registered_gge_module m)
 {
 	return _modules.find(m);

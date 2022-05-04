@@ -11,6 +11,14 @@ my $reg_mod_file = $src_dir . 'registered_gge_modules.hpp';
 # just a catch all c++ code
 our $cpp_code = '[.\/\"#\n\t\w\d,\s&*<>(){}\[\]:=;]+';
 
+sub get_headers
+{
+	opendir(my $dh, $src_dir) or die "$src_dir: $!";
+	my @headers = map { $src_dir . $_ } grep /\.hpp/, readdir($dh);
+	closedir($dh);
+	return @headers;
+}
+
 # for future sub
 	#$line =~ s/^(\/\*).+$//g; # remove /**/ comments
 	#$line =~ s/^.+(\*\/)$//g; # remove /**/ comments
@@ -94,35 +102,57 @@ sub parse_functions
 	}
 	@lines = grep { $_ ne '' } @lines;
 	my %gge_fns;
+	my $overload = 1;
 	for my $line (@lines)
 	{
 		my ($return_value, $fn_name, $args) = $line =~ /($cpp_code)+\s+($cpp_code)+\(($cpp_code)*\)/;
+		warn "not a function? $line" unless $fn_name;
+		$fn_name .= '__' . $overload++ if(exists $gge_fns{$fn_name});
+
 		$gge_fns{$fn_name} = 
 		{
 			return_value => $return_value,
 			formal_parameters => $args // '',
 		};
-		$gge_fns{$fn_name}{parameters_names} = get_ctor_names($args) if($args);
+		$gge_fns{$fn_name}{parameters_names} = get_ctor_names($gge_fns{$fn_name}{formal_parameters}) // '';
 		$gge_fns{$fn_name}{is_const} = fn_is_const($line) ? 'const' : '';
 	}
 	return %gge_fns;
 }
+
 
 sub fn_is_const
 {
 	return $_[0] =~ /(const);?$/;
 }
 
+sub read_section
+{
+	my ($section, $text_ref) = @_;
+	$section =~ s/\s/\\s/g;
+	my $begin_sec = '\/\/\s*gge_begin\s+' . $section . '\n';
+	my $end_sec = '\/\/\s*gge_end\s+' . $section . '\n';
+
+	#print "reading $$text_ref\n";
+	my ($content) = $$text_ref =~ /
+	$begin_sec
+	(.+)
+	$end_sec
+	/xgs;
+
+	return $content ? $content : undef;
+}
 
 sub expand_section
 {
 	my ($content, $section, $text) = @_;
-	print "Expanding $section...";
+	print "Expanding \"$section\"...";
 	# /* gge_being $section */
+	$section =~ s/\s/\\s/g;
 	my $begin_sec = '\/\/\s*gge_begin\s+' . $section . '\n';
 	my $end_sec = '\/\/\s*gge_end\s+' . $section . '\n';
 
-	#warn "Incomplete section: $section!" if($$content =~ /$begin/ or );
+	warn "Incomplete section: $section!" if($$content !~ /$begin_sec/ or $$content !~ /$end_sec/);
 
 	$$content =~ 
 	s/
@@ -135,9 +165,23 @@ sub expand_section
 
 sub write_to_file
 {
-	my ($content, $file) = @_;
-	open(my $fh, '>', $file);
+	my ($content, $file, $debug) = @_;
+	my $file_name = $src_dir . $file;
+	if($debug)
+	{
+		warn Dumper $content; 
+		return;
+	}
+	open(my $fh, '>', $file_name) or die $file_name . ": $!";
 	print $fh $content;
+	close $fh;
+}
+
+sub demangle_name
+{
+	my $name = shift;
+	$name =~ s/(.+)__\d+/$1/;
+	return $name;
 }
 
 1;

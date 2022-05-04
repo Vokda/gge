@@ -1,0 +1,10 @@
+digraph g
+{
+	node [shape = "square"];
+	reg_mod [label="register module in registered_gge_modules.hpp"];
+	gen_moduler [label="generate (or write) getters and setters in Moduler class"];
+	gen_gge_api [label="add init functions to gge_api if necessary"];
+	gen_gge_api_defaults [label="expose gge_api functions to Scripter class"];
+	reg_mod -> gen_code;
+	gen_moduler -> gen_gge_api -> gen_gge_api_defaults;
+

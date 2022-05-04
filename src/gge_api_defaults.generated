@@ -1,6 +1,3 @@
-{chaiscript::fun<void (GGE_API::*)(size_t width, size_t height, int tile_size) >(&GGE_API::init_grid), "init_grid"},
-{chaiscript::fun<void (GGE_API::*)() >(&GGE_API::init_events), "init_events"},
-{chaiscript::fun<const std::vector<int>& (GGE_API::*)() const>(&GGE_API::get_events), "get_events"},
 {chaiscript::fun<size_t (GGE_API::*)(
 				const string& text, 
 				vector<int> color,
@@ -8,12 +5,17 @@
 				int milliseconds,
 				int view_port
 				) >(&GGE_API::create_text), "create_text"},
+{chaiscript::fun<void (GGE_API::*)(const std::string&, size_t w, size_t h) >(&GGE_API::init_graphics), "init_graphics"},
 {chaiscript::fun<bool (GGE_API::*)(vector<int>& mouse_position) >(&GGE_API::scroll), "scroll"},
+{chaiscript::fun<void (GGE_API::*)(const vector<int>& c, size_t i) >(&GGE_API::set_hex_color), "set_hex_color"},
+{chaiscript::fun<size_t (GGE_API::*)(const string& text, int view_port) >(&GGE_API::create_text), "create_text"},
+{chaiscript::fun<void (GGE_API::*)() >(&GGE_API::init_events), "init_events"},
+{chaiscript::fun<size_t (GGE_API::*)(const string& text, int view_port, int ms, int x, int y) >(&GGE_API::create_text), "create_text"},
+{chaiscript::fun<int (GGE_API::*)(int x, int y) >(&GGE_API::get_hex_from_mouse), "get_hex_from_mouse"},
 {chaiscript::fun<bool (GGE_API::*)(
 				size_t index,
 				int value
 				) >(&GGE_API::modify_text), "modify_text"},
-{chaiscript::fun<void (GGE_API::*)(const vector<int>& c, size_t i) >(&GGE_API::set_hex_color), "set_hex_color"},
-{chaiscript::fun<int (GGE_API::*)(int x, int y) >(&GGE_API::get_hex_from_mouse), "get_hex_from_mouse"},
-{chaiscript::fun<std::vector<int> (GGE_API::*)() >(&GGE_API::get_mouse_position), "get_mouse_position"},
-{chaiscript::fun<void (GGE_API::*)(const std::string&, size_t w, size_t h) >(&GGE_API::init_graphics), "init_graphics"}
+{chaiscript::fun<void (GGE_API::*)(size_t width, size_t height, int tile_size) >(&GGE_API::init_grid), "init_grid"},
+{chaiscript::fun<const std::vector<int>& (GGE_API::*)() const>(&GGE_API::get_events), "get_events"},
+{chaiscript::fun<std::vector<int> (GGE_API::*)() >(&GGE_API::get_mouse_position), "get_mouse_position"}

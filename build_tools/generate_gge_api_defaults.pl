@@ -38,6 +38,7 @@ for my $fn_name (keys %gge_fns)
 	my $rv = $gge_fns{$fn_name}{return_value};
 	my $params = $gge_fns{$fn_name}{formal_parameters};
 	my $const = $gge_fns{$fn_name}{is_const};
+	my $fn_demangled = demangle_name($fn_name);
 	my $line = "{chaiscript::fun<$rv (GGE_API::*)($params) $const>(&GGE_API::$fn_name), \"$fn_name\"}";
 	push(@output, $line);
 	print "done!\n";

@@ -30,7 +30,6 @@ class GGE_API
 		void init_events();
 		void init_grid(size_t width, size_t height, int tile_size);
 
-
 		// text
 		size_t create_text(const string& text, int view_port);
 		size_t create_text(const string& text, int view_port, int ms, int x, int y);
@@ -58,6 +57,10 @@ class GGE_API
 		// hex related 
 		// return index to hex in hex grid vector
 		int get_hex_from_mouse(int x, int y);
+
+		// TODO if possible depending on loaded modules
+		void add_command(const string& command);
+
 		/* gge_end export */
 
 		void create_shape(int shape, const vector<int>& p);

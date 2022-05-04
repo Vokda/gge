@@ -1,0 +1,16 @@
+digraph d
+{
+	node [shape="square"];
+	chai_init [label="chai init script"];
+	rgm [label="registerd gge module"];
+	scripter -> chai_init;
+	gge_api -> scripter;
+	gge_api -> core;
+	moduler -> rgm;
+	core -> moduler -> commands;
+	moduler -> graphics;
+	moduler -> events;
+	moduler -> hex_grid;
+	moduler -> scroller;
+	moduler -> texter;
+}

@@ -76,6 +76,11 @@ void Graphics::draw(const Hex_grid& grid)
 	draw_grid(grid);
 }
 
+void Graphics::draw(const Shape& shape)
+{
+	// TODO
+}
+
 void Graphics::draw(shared_ptr<Texter> texter)
 {
 	for(auto c: texter->get_components())

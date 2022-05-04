@@ -25,6 +25,7 @@ class Graphics: public GGE_module
 
 		void load_image(const std::string& path);
 
+		// gge_begin make commands
 		void clear_screen();
 		void render();
 
@@ -32,6 +33,7 @@ class Graphics: public GGE_module
 		void draw(const Hex_grid& grid);
 		void draw(shared_ptr<Texter> texter);
 		void draw(const Shape& shape);
+		// gge_end make commands
 
 		SDL_Renderer* get_renderer() { return _sdl_renderer; }
 		int get_screen_width() { return _screen_width; }

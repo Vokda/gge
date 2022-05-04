@@ -9,6 +9,7 @@ class function;
 class Chai_object;
 class Initializer;
 #include "moduler.hpp"
+#include "runner.hpp"
 
 #include <chaiscript/chaiscript.hpp>
 using namespace chaiscript; 
@@ -40,7 +41,8 @@ class Core
 
 		//Moduler& get_moduler() { return _moduler; };
 
-//#include "get_gge_modules.generated"
+		void add_command(const string&);
+		//bool add_command(const string& cmd);
 
 	private:
 
@@ -50,17 +52,12 @@ class Core
 
 		Moduler _moduler;
 
-		// some quick access pointers
-		shared_ptr<Graphics> _graphics = nullptr;
-		shared_ptr<Events> _events = nullptr;
-		shared_ptr<Hex_grid> _grid = nullptr;
-		shared_ptr<Texter> _texter = nullptr;
-		shared_ptr<Scroller> _scroller = nullptr;
+		Runner _runner;
 
 		// necessary for chaiscript member function functions to be called
 		chaiscript::Boxed_Value _boxed_value;
 		// function pointer to main game loop function defined in chaiscript
-		std::unique_ptr<std::function<bool(Boxed_Value&, float)>> _game_loop;
+		std::unique_ptr<std::function<bool(Boxed_Value&, float)>> _game_loop = nullptr;
 		SDL_helper _sdl_helper;
 };
 

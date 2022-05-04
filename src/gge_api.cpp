@@ -23,6 +23,7 @@ void GGE_API::init_graphics(const std::string& s, size_t w, size_t h)
 {
 	_core.init_module<Graphics>(s, w, h, _sdl_helper);
 	auto g = _core.get_module<Graphics>();
+	// TODO initialized through separate functions?
 	_core.init_module<Texter>(g);
 	_core.init_module<Scroller>(w, h, nullptr);
 }
@@ -152,7 +153,13 @@ void GGE_API::scroll_mouse(int& x, int& y)
 #endif
 }
 
-void create_shape(int shape, const vector<int>& p)
+void GGE_API::create_shape(int shape, const vector<int>& p)
 {
+	// TODO
 	cout <<"shape!" << endl;
+}
+
+void GGE_API::add_command(const string& cmd)
+{
+	return _core.add_command(cmd);
 }
