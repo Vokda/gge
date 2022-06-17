@@ -1,0 +1,26 @@
+// class
+if(class_name == "graphics")
+{
+	module_type = GRAPHICS;
+	m = moduler[module_type];
+}
+// member function
+if(function_name == "clear_screen")
+{
+	arg_type = NONE;
+	arg = nullptr;
+}
+
+switch(module_type)
+{
+	case GRAPHICS:
+		_commands.push_back(
+				make_shared<Graphics_command>(m, module_type, arg, arg_type,GRAPHICS_CLEAR_SCREEN)
+				);
+		break;
+	default:
+		{
+			std::string s = "module_type " + GGE_module::get_module_name(module_type) + " not recognized!";
+			throw invalid_argument(s);
+		}
+}

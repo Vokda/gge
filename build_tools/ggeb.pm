@@ -1,10 +1,12 @@
 #!/usr/bin/perl
 
 # gge builder
-
+package ggeb;
 use strict;
 use warnings;
 use Data::Dumper;
+use lib 'build_tools/';
+use gge_modules;
 
 my $src_dir = 'src/';
 my $reg_mod_file = $src_dir . 'registered_gge_modules.hpp';
@@ -71,23 +73,6 @@ sub get_ctor_names
 	return join(', ', @ctor_args);
 }
 
-sub get_gge_modules
-{
-	my @modules;
-	open(my $fh, '<', $reg_mod_file) or die $!;
-	while(my $line = <$fh>)
-	{
-		if($line =~ /enum\s+registered_gge_module\s+{/)
-		{
-			$line =~ s/enum\s+registered_gge_module\s+{(.+)};/$1/;
-			$line =~ s/[\s\n]+//g;
-			@modules =  split(',', $line);
-			last;
-		}
-	}
-	return @modules;
-}
-
 sub parse_functions
 {
 	my ($text) = @_; 
@@ -106,7 +91,7 @@ sub parse_functions
 	for my $line (@lines)
 	{
 		my ($return_value, $fn_name, $args) = $line =~ /($cpp_code)+\s+($cpp_code)+\(($cpp_code)*\)/;
-		warn "not a function? $line" unless $fn_name;
+		warn "not a function? ---\n$line\n---" unless $fn_name;
 		$fn_name .= '__' . $overload++ if(exists $gge_fns{$fn_name});
 
 		$gge_fns{$fn_name} = 

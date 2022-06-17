@@ -6,6 +6,10 @@ use lib 'build_tools/';
 use ggeb;
 use class_builder;
 use Data::Dumper;
+use parse_templates;
+use gge_modules;
+
+my $gge_modules = new gge_modules();
 
 my @headers = get_headers();
 my @commands;
@@ -42,6 +46,9 @@ my $command_hpp = slurp_file('src/commands/command.hpp');
 expand_section(\$command_hpp, 'import commands', $enum);
 write_to_file($command_hpp, 'commands/command.hpp');
 
+# runner switch generation
+warn Dumper $gge_modules;
+process_template('runner_switch.tmpl', {modules => $gge_modules});
 
 sub def_command
 {

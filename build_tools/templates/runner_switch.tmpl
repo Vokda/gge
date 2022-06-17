@@ -1,0 +1,55 @@
+// class
+[% i = 0 %]
+[% FOREACH key IN modules.keys %]
+[%-
+	module = modules.$key
+	class_name = modules.$key.class_name
+	module_enum = modules.$key.gge_module_name 
+-%]
+[%- IF i == 0 -%]
+if(class_name == "[% class_name %]")
+[%- ELSE -%]
+else if(class_name == "[% class_name %]")
+[%- END %]
+{
+	module_type = [% module_enum %];
+	m = moduler[module_type];
+}
+[% i = i + 1 -%]
+[% END %]
+
+// member function
+[% i = 0 %]
+[% FOR key IN modules.keys %]
+[%-
+	module = modules.$key
+	class_name = modules.$key.class_name
+	module_enum = modules.$key.gge_module_name 
+-%]
+[% IF i > 0 %] else [% END %] if(function_name == "[% cc.function_name %]")
+{
+	arg_type = [% cc.function_arg_type %];
+	[% IF cc.function_arg %]
+	arg = [% cc.arg_pointer %];
+	[% ELSE %]
+	arg = nullptr;
+	[% END %]
+}
+[% i = i + 1 -%]
+[% END %]
+
+switch(module_type)
+{
+	[% FOR cc IN command_class %]
+	case [% cc.module_type %]:
+		_commands.push_back(
+				make_shared<[% cc.command_class_name %]>(m, module_type, arg, arg_type, [% cc.command_enum %])
+				);
+		break;
+	[% END %]
+	default:
+	{
+		std::string s = "module_type " + GGE_module::get_module_name(module_type) + " not recognized!";
+		throw invalid_argument(s);
+	}
+}
