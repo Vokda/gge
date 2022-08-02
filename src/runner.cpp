@@ -70,6 +70,11 @@ void Runner::list_commands()
 	cout << endl;
 }
 
+bool Runner::check_dependencies()
+{
+	return true;
+}
+
 /*int string_to_command(const string& cmd_str)
 {
 	return 

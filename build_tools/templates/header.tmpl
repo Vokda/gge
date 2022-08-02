@@ -1,6 +1,6 @@
 [% PROCESS includes %]
 
-class [% class_name %][% IF parent %]: [% parent %]
+class [% class_name %][% IF parent %]: public [% parent %]
 {
 	public:
 		[% FOREACH f IN functions %]

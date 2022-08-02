@@ -20,5 +20,3 @@ bool Command::setup(std::shared_ptr<GGE_module> arg)
 	_arg = arg; 
 	return true;
 }
-
-

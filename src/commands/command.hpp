@@ -4,13 +4,14 @@
 class GGE_module;
 // gge_begin import commands
 
-		enum command = {GRAPHICS_CLEAR_SCREEN, GRAPHICS_DRAW_GRID, GRAPHICS_DRAW_SHAPE, GRAPHICS_DRAW_TEXTER, GRAPHICS_RENDER, SCROLLER_SCROLL_GRID};
+		enum command {GRAPHICS_CLEAR_SCREEN, GRAPHICS_DRAW_GRID, GRAPHICS_DRAW_SHAPE, GRAPHICS_DRAW_TEXTER, GRAPHICS_RENDER, SCROLLER_SCROLL_GRID};
 
 // gge_end import commands
 
 class Command
 {
 	public:
+// gge_begin export ctor
 		Command(
 				std::shared_ptr<GGE_module> m, 
 				rgm type,
@@ -18,6 +19,7 @@ class Command
 				rgm arg_type,
 				command cmd
 				);
+// gge_end export ctor
 
 		bool setup(std::shared_ptr<GGE_module> arg);
 	

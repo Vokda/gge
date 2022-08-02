@@ -24,9 +24,10 @@ sub new
 	# get functions
 	for (keys %$self)
 	{
-		$self->{$_} = gge_module_parser::parse_file($src_dir . $self->{$_}->{header_file});
-	}
-	die Dumper $self;
+		$self->{$_}->{commands} = gge_module_parser::parse_file($src_dir . $self->{$_}->{header_file});
+	};
+	return $self;
+	#die Dumper $self;
 }
 
 sub get_modules
@@ -35,7 +36,6 @@ sub get_modules
 	my $gge_modules = [get_gge_modules()];
 	$modules = {map { $_ => {gge_module_name => $_} } @{$gge_modules}};
 	$modules = get_class_names($modules);
-
 	return $modules;
 }
 

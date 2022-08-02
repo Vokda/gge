@@ -13,6 +13,7 @@ class Runner
 		Runner();
 		void exec_commands(); 
 		void add_command(const std::string& cmd, Moduler&);
+		bool check_dependencies(); // true if all dependencies are OK
 		void list_commands();
 	private:
 		command string_to_command(const std::string& cmd_str);

@@ -15,8 +15,10 @@ our $cpp_code = '[.\/\"#\n\t\w\d,\s&*<>(){}\[\]:=;]+';
 
 sub get_headers
 {
-	opendir(my $dh, $src_dir) or die "$src_dir: $!";
-	my @headers = map { $src_dir . $_ } grep /\.hpp/, readdir($dh);
+	my $dir = $1 // $src_dir;
+	my $dh;
+	opendir($dh, $dir) or die "$dir $!";
+	my @headers = map { $dir . $_ } grep /\.hpp/, readdir($dh);
 	closedir($dh);
 	return @headers;
 }
@@ -47,7 +49,7 @@ sub get_file_handle
 sub classify_name
 {
 	my ($name) = @_;
-	my $class_name = substr($name, 0, 1) . lc(substr($name, 1));
+	my $class_name = uc(substr($name, 0, 1)) . lc(substr($name, 1));
 	# special case of hex_grid
 	$class_name = 'Hex_grid' if $class_name eq 'Grid';
 	return $class_name;
@@ -68,6 +70,9 @@ sub get_ctor_names
 	my @ctor_args = split(',', $ctor_args);
 	for my $c (@ctor_args)
 	{
+		$c =~ s/\n//;
+		$c =~ s/^[\t\s]+//;
+		$c =~ s/[\t\s]+$//;
 		$c =~ s/.+\s(\w+)$/$1/;
 	}
 	return join(', ', @ctor_args);
@@ -90,8 +95,15 @@ sub parse_functions
 	my $overload = 1;
 	for my $line (@lines)
 	{
-		my ($return_value, $fn_name, $args) = $line =~ /($cpp_code)+\s+($cpp_code)+\(($cpp_code)*\)/;
-		warn "not a function? ---\n$line\n---" unless $fn_name;
+		my ($return_value, $fn_name, $args) = $line =~ /
+		(?:($cpp_code)+ # return value 
+		\s+)?
+		($cpp_code)+ # fn name
+		\(($cpp_code)*\) # parameters
+		/ix;
+		die "not a function? ---\n$line\n---" unless $fn_name;
+
+		# add __ and n to the nth overloaded function
 		$fn_name .= '__' . $overload++ if(exists $gge_fns{$fn_name});
 
 		$gge_fns{$fn_name} = 
@@ -99,6 +111,12 @@ sub parse_functions
 			return_value => $return_value,
 			formal_parameters => $args // '',
 		};
+		if(not $return_value)
+		{
+			warn "no return value, assuming constructor!";
+			$gge_fns{$fn_name}{is_ctor} = 1;
+			$gge_fns{$fn_name}{return_value} = '';
+		}
 		$gge_fns{$fn_name}{parameters_names} = get_ctor_names($gge_fns{$fn_name}{formal_parameters}) // '';
 		$gge_fns{$fn_name}{is_const} = fn_is_const($line) ? 'const' : '';
 	}
@@ -114,6 +132,12 @@ sub fn_is_const
 sub read_section
 {
 	my ($section, $text_ref) = @_;
+	my $section_raw = $section;
+	unless(defined $text_ref)
+	{
+		my $caller = caller;
+		die "No text to read! $caller";
+	}
 	$section =~ s/\s/\\s/g;
 	my $begin_sec = '\/\/\s*gge_begin\s+' . $section . '\n';
 	my $end_sec = '\/\/\s*gge_end\s+' . $section . '\n';
@@ -125,6 +149,7 @@ sub read_section
 	$end_sec
 	/xgs;
 
+	#warn "No section '$section_raw' in text!" unless $content; 
 	return $content ? $content : undef;
 }
 

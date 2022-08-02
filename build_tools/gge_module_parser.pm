@@ -30,7 +30,7 @@ sub read_section
 	my $begin_sec = '\/\/\s*gge_begin\s+' . $sec . '\n*';
 	my $end_sec = '\/\/\s*gge_end\s+' . $sec . '\n*';
 
-	print "Looking for $sec\n";
+	#print "Looking for $sec\n";
 	my @matches = $content =~ m/
 		$begin_sec
 		($cpp_code)

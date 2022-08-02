@@ -9,29 +9,36 @@ use Data::Dumper;
 use parse_templates;
 use gge_modules;
 
-my $gge_modules = new gge_modules();
+our $debug = 1;
 
-my @headers = get_headers();
+my $gge_modules = new gge_modules();
+my @headers = ggeb::get_headers();
+my $command_hpp = ggeb::slurp_file('src/commands/command.hpp');
+my $ctor = ggeb::read_section('export ctor', \$command_hpp);
 my @commands;
 for my $header (@headers)
 {
-	my $text = slurp_file($header);
-	my $sec = read_section('make commands', \$text);
+	my $text = ggeb::slurp_file($header);
+	my $sec = ggeb::read_section('make commands', \$text);
 	if($sec)
 	{
-		my %fns = parse_functions($sec);
+		my %fns = ggeb::parse_functions($sec);
 		$header =~ s/.+\/(.+)\.hpp/$1/;
-		my $class_callee = classify_name($header);
+		my $class_callee = ggeb::classify_name($header);
 		for (keys %fns)
 		{
-			$fns{$_}{definition} = def_command($_, $fns{$_}{parameters_names}, classify_name(uc $header)) // '';
+			$fns{$_}{definition} = def_command($_, $fns{$_}{parameters_names}, ggeb::classify_name(uc $header)) // '';
 		}
-		my $class_name = classify_name( $header) . '_command';
+		my $class_name = ggeb::classify_name( $header . '_command' );
+		# create constructor for children
+		%fns = (%fns, ggeb::parse_functions($ctor));
+		$fns{$class_name} = delete $fns{Command};
+		$fns{$class_name}{parent} = 'Command';
 		create_class(
 			'commands/'.lc($class_name), 
 			$class_name, 
-			['../'.$class_callee, 'command'], 
-			['../'.$class_callee],
+			['../'.lc($class_callee), 'command'], 
+			['../'.lc($class_callee)],
 			'Command',
 			%fns
 		);
@@ -40,14 +47,13 @@ for my $header (@headers)
 
 my $cmds = join(', ', sort(@commands));
 my $enum = <<enum;
-		enum command = {$cmds};
+		enum command {$cmds};
 enum
-my $command_hpp = slurp_file('src/commands/command.hpp');
-expand_section(\$command_hpp, 'import commands', $enum);
-write_to_file($command_hpp, 'commands/command.hpp');
+ggeb::expand_section(\$command_hpp, 'import commands', $enum);
+ggeb::write_to_file($command_hpp, 'commands/command.hpp');
 
 # runner switch generation
-warn Dumper $gge_modules;
+#warn Dumper $gge_modules;
 process_template('runner_switch.tmpl', {modules => $gge_modules});
 
 sub def_command

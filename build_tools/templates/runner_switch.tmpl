@@ -21,21 +21,24 @@ else if(class_name == "[% class_name %]")
 // member function
 [% i = 0 %]
 [% FOR key IN modules.keys %]
-[%-
-	module = modules.$key
-	class_name = modules.$key.class_name
-	module_enum = modules.$key.gge_module_name 
--%]
-[% IF i > 0 %] else [% END %] if(function_name == "[% cc.function_name %]")
+	[%-
+		module = modules.$key
+		class_name = modules.$key.class_name
+		module_enum = modules.$key.gge_module_name 
+		command = modules.$key.commands
+	-%]
+	[%- FOR com_key IN command.key %]
+		[% IF i > 0 %] else [% END %] if(function_name == "[% command.$com_key %]")
 {
 	arg_type = [% cc.function_arg_type %];
 	[% IF cc.function_arg %]
-	arg = [% cc.arg_pointer %];
+		arg = [% cc.arg_pointer %];
 	[% ELSE %]
-	arg = nullptr;
+		arg = nullptr;
 	[% END %]
 }
-[% i = i + 1 -%]
+	[%- END -%]
+	[% i = i + 1 -%]
 [% END %]
 
 switch(module_type)
