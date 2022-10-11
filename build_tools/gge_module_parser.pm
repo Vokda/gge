@@ -5,6 +5,7 @@ use warnings;
 use Data::Dumper;
 use lib 'build_tools/';
 use ggeb;
+use gge_utils;
 
 # just a catch all c++ code
 our $cpp_code = '[.\/\"#\n\t\w\d,\s&*<>(){}\[\]:=;]+';
@@ -17,8 +18,9 @@ sub parse_file
 {
 	my ($file, $import) = @_;
 	print "Reading $file\n";
-	return read_section($file);
+	return (read_section($file), gge_utils::find_parents($file));
 }
+
 
 # TODO cannot read nested commands...yet
 sub read_section
@@ -64,7 +66,7 @@ sub read_subsection
 		}
 		elsif($key)
 		{
-			return {ggeb::parse_functions($match)};
+			return {gge_utils::parse_functions($match)};
 		}
 		elsif($match )
 		{

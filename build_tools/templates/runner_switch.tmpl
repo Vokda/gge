@@ -21,33 +21,42 @@ else if(class_name == "[% class_name %]")
 // member function
 [% i = 0 %]
 [% FOR key IN modules.keys %]
-	[%-
-		module = modules.$key
-		class_name = modules.$key.class_name
-		module_enum = modules.$key.gge_module_name 
-		command = modules.$key.commands
-	-%]
-	[%- FOR com_key IN command.key %]
-		[% IF i > 0 %] else [% END %] if(function_name == "[% command.$com_key %]")
+[%-
+	module = modules.$key
+	class_name = modules.$key.class_name
+	module_enum = modules.$key.gge_module_name 
+	command = modules.$key.make_commands
+-%]
+[%- FOR com_key IN command.keys -%]
+[%- 
+	fn_name = command.$com_key
+	fn_arg_type = command.$com_key.parameters_types.0
+-%]
+[%-IF i > 0 -%]else[%- END -%] if(function_name == "[% com_key %]")
 {
-	arg_type = [% cc.function_arg_type %];
-	[% IF cc.function_arg %]
-		arg = [% cc.arg_pointer %];
-	[% ELSE %]
-		arg = nullptr;
-	[% END %]
+	arg_type = [%- IF fn_arg_type -%] [% fn_arg_type %] [%- ELSE -%] NONE [%- END -%];
+	arg = [% IF fn_arg_type %] [% fn_arg_type %] [%- ELSE -%] nullptr [%- END -%];
 }
-	[%- END -%]
 	[% i = i + 1 -%]
+	[%- END -%]
 [% END %]
 
 switch(module_type)
 {
-	[% FOR cc IN command_class %]
-	case [% cc.module_type %]:
+	[% FOR key IN modules.keys %]
+	[%-
+		module = modules.$key
+		class_name = modules.$key.class_name
+		module_enum = modules.$key.gge_module_name 
+		commands = modules.$key.commands
+	%]
+	case [% module_enum %]:
+		[% FOR cmd IN commands.make_commands.keys %]
 		_commands.push_back(
-				make_shared<[% cc.command_class_name %]>(m, module_type, arg, arg_type, [% cc.command_enum %])
+				make_shared<[% class_name %]>
+					(module, arg, [% class_name -%]::[%- cmd %])
 				);
+		[% END %]
 		break;
 	[% END %]
 	default:

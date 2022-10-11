@@ -17,6 +17,7 @@ class Hex_grid: public GGE_module
 	public:
 
 		Hex_grid(size_t w, size_t h, double hex_size, Hex_orientation ho, Coordinate_system cs);
+		Hex_grid(const Hex_grid& hg);
 
 		//Hex hex_add(const Hex& a, const Hex& b);
 

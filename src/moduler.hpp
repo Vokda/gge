@@ -25,6 +25,12 @@ class Moduler
 		template<typename T>
 			shared_ptr<T> get_module();
 
+		template<typename T>
+			set_module(rgm, shared_ptr<T> gge_module)
+			{
+				_modules[rgm] = gge_module;
+			}
+
 		// gge_begin functions
 
 		void set_module(const std::string& window_name, size_t width, size_t height, SDL_helper& sh);

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "registered_gge_modules.hpp"
+#include <memory>
 using namespace std;
 /*
  * just a small class to have base pointers of modules
@@ -9,6 +10,8 @@ using namespace std;
 class GGE_module
 {
 	public:
+		GGE_module(rgm m = NONE);
+		GGE_module(const GGE_module& m);
 		virtual ~GGE_module() = default;
 
 		static string get_module_name(registered_gge_module m)
@@ -34,4 +37,10 @@ class GGE_module
 					return "<Unnamed GGE Module [" + to_string(m) + "]>";
 			}
 		}
+
+		rgm get_type();
+		const string get_type_string();
+
+	protected:
+		rgm _module;
 };

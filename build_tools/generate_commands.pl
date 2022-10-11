@@ -9,62 +9,121 @@ use Data::Dumper;
 use parse_templates;
 use gge_modules;
 
-our $debug = 1;
-
+$ggeb::debug = 0;
 my $gge_modules = new gge_modules();
 my @headers = ggeb::get_headers();
 my $command_hpp = ggeb::slurp_file('src/commands/command.hpp');
-my $ctor = ggeb::read_section('export ctor', \$command_hpp);
-my @commands;
-for my $header (@headers)
+my $ctor = gge_utils::read_section('export ctor', $command_hpp);
+my @commands; #enum
+
+for (keys %$gge_modules)
 {
-	my $text = ggeb::slurp_file($header);
-	my $sec = ggeb::read_section('make commands', \$text);
-	if($sec)
+	my $class_name = $gge_modules->{$_}->{class_name} . '_command';
+	my $class_callee = $gge_modules->{$_}->{class_name}; # the one the commands call
+	# create command constructor for childrens' constructor
+	# IF there are commands to be made
+	if(exists $gge_modules->{$_}->{make_commands})
 	{
-		my %fns = ggeb::parse_functions($sec);
-		$header =~ s/.+\/(.+)\.hpp/$1/;
-		my $class_callee = ggeb::classify_name($header);
-		for (keys %fns)
+		my %fns = gge_utils::parse_functions($ctor);
+		my @v = values %fns;
+		$gge_modules->{$_}->{parent_command_ctor} = $v[0];
+
+		for my $function_name (keys %{$gge_modules->{$_}->{make_commands}})
 		{
-			$fns{$_}{definition} = def_command($_, $fns{$_}{parameters_names}, ggeb::classify_name(uc $header)) // '';
+			my $command = make_command_enum(
+					$class_callee, 
+					$function_name,
+					$gge_modules->{$_}->{make_commands}->{$function_name}->{parameters_names}
+				);
+			$gge_modules->{$_}->{make_commands}->{$function_name}->{enum} = $command;
+			$gge_modules->{$_}->{make_commands}->{$function_name}->{definition} = 
+				define_command($class_callee, $function_name, $gge_modules->{$_}->{make_commands}->{$function_name});
+			push(@commands, $command);
 		}
-		my $class_name = ggeb::classify_name( $header . '_command' );
-		# create constructor for children
-		%fns = (%fns, ggeb::parse_functions($ctor));
-		$fns{$class_name} = delete $fns{Command};
-		$fns{$class_name}{parent} = 'Command';
-		create_class(
+
+		# create the execute functions inherited from Command
+		my $defs = mk_defs($gge_modules->{$_}->{make_commands}, $_);
+		my $def_fns = join("\n", @$defs);
+		my $definition =  <<eod; 
+switch(_cmd) 
+{
+	$def_fns
+};
+eod
+		$gge_modules->{$_}->{make_commands}->{execute} = {
+			return_value => 'void',
+			formal_parameters => '',
+			parameters_names => '',
+			definition => $definition};
+
+		class_builder::create_class(
 			'commands/'.lc($class_name), 
 			$class_name, 
 			['../'.lc($class_callee), 'command'], 
-			['../'.lc($class_callee)],
-			'Command',
-			%fns
+			['../'.lc($class_callee), lc($class_callee) . '_command'],
+			{ parent => 'Command', ctor => $gge_modules->{$_}->{parent_command_ctor} },
+			%{ $gge_modules->{$_}->{make_commands} }
 		);
 	}
 }
-
+die;
 my $cmds = join(', ', sort(@commands));
 my $enum = <<enum;
-		enum command {$cmds};
+enum command {$cmds};
 enum
 ggeb::expand_section(\$command_hpp, 'import commands', $enum);
 ggeb::write_to_file($command_hpp, 'commands/command.hpp');
 
 # runner switch generation
-#warn Dumper $gge_modules;
-process_template('runner_switch.tmpl', {modules => $gge_modules});
+#die Dumper $gge_modules;
+parse_templates::process_template('runner_switch.tmpl', {modules => $gge_modules}, );
+
+sub make_command_enum
+{
+	my ($class, $fn_name, $param_names) = @_;
+	my $out = uc($class) . '_' . uc(gge_utils::demangle_name($fn_name));
+	$out .= '_' . uc($param_names) if $param_names;
+	return $out;
+}
+
+sub define_command
+{
+	my ($class_name, $fn_name, $fns) = @_;
+	my $arg = $fns->{parameters_names};
+	my $out = "static_pointer_cast<$class_name>(_module)->$fn_name($arg);";
+}
 
 sub def_command
 {
 	my ($fn_name, $fn_names, $class_name) = @_;
-	$fn_name = demangle_fn_name($fn_name);
-	my $out = "static_pointer_cast<$class_name>(_module)->$fn_name($fn_names);";
+	$fn_name = gge_utils::demangle_name($fn_name);
+	my $arg = "$fn_names";
+	my $out = "static_pointer_cast<$class_name>(_module)->$fn_name($arg);";
 	my ($param_names) = split('_', $fn_names);
 	my $command = $class_name;
 	$command .= '_' . $fn_name;
 	$command .= '_' . $param_names if($param_names and $command !~ /$param_names/i);
-	push(@commands, uc($command));
+	#push(@commands, uc($command));
 	return $out;
+}
+
+sub mk_defs
+{
+	my ($fns, $cmd) = @_;
+	my $defs = [];
+	for my $fn_name (keys %$fns)
+	{
+		# can only every be one type
+		my $type = $fns->{$fn_name}->{formal_parameters};
+		$type =~ s/(.+)\s.+/$1/;
+		push(@$defs, <<defs);
+	// $_
+	case($cmd): 
+	{
+		$fn_name(static_pointer_cast<$type>(arg_));
+		break;
+	};
+defs
+	}
+	return $defs;
 }

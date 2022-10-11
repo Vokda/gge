@@ -71,17 +71,30 @@ void Graphics::render()
 	SDL_RenderPresent(_sdl_renderer);
 }
 
-void Graphics::draw(const Hex_grid& grid)
+void Graphics::draw(const shared_ptr<GGE_module> module)
 {
-	draw_grid(grid);
+	// TODO this needs to be generalized to Grid parent class
+	switch(module->get_type())
+	{
+		case GRID:
+			draw_grid(static_pointer_cast<Hex_grid>(module));
+			break;
+		case TEXTER:
+			draw_text(static_pointer_cast<Texter>(module));
+			break;
+		default:
+			string s = "Cannot draw ";
+			s += module->get_type();
+			throw s;
+	}
 }
 
-void Graphics::draw(const Shape& shape)
+/*void Graphics::draw(const Shape& shape)
 {
 	// TODO
-}
+}*/
 
-void Graphics::draw(shared_ptr<Texter> texter)
+void Graphics::draw_text(const shared_ptr<Texter> texter)
 {
 	for(auto c: texter->get_components())
 	{
@@ -129,10 +142,10 @@ const SDL_Rect& Graphics::get_viewport(viewport vp)
 
 // PRIVATE
 
-void Graphics::draw_grid(const Hex_grid& grid)
+void Graphics::draw_grid(const shared_ptr<Hex_grid> grid)
 {
 	SDL_RenderSetViewport(_sdl_renderer, &_main_view);
-	for(auto& tile : grid.get_grid())
+	for(auto& tile : grid->get_grid())
 	{
 		const SDL_Point* p = &tile.get_corners().front();
 		const SDL_Point* last_point = p + 5;

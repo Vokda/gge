@@ -29,7 +29,9 @@ class Componenter
 
 		//shared_ptr<component> operator[](void*);
 
+		// gge_begin make commands
 		void tick();
+		// gge_end make commands
 
 	protected:
 		Timer _timer;

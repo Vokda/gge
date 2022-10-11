@@ -5,12 +5,17 @@ use warnings;
 use lib 'build_tools/';
 use Data::Dumper;
 use ggeb;
+use gge_utils;
 use gge_module_parser;
+use gge_command_parser;
 
 my $src_dir = 'src/';
 my $reg_mod_file = $src_dir . 'registered_gge_modules.hpp';
 my $commands_file = $src_dir . 'commands/command.hpp';
 my @header_files;
+#my $command_hpp = ggeb::slurp_file($commands_file);
+#my $ctor = ggeb::read_section('export ctor', \$command_hpp);
+my @commands;
 
 # just a catch all c++ code
 our $cpp_code = '[.\/\"#\n\t\w\d,\s&*<>(){}\[\]:=;]+';
@@ -21,13 +26,24 @@ sub new
 	my $self = get_modules();
 	bless $self, $class;
 	$self->get_header_files();
-	# get functions
 	for (keys %$self)
 	{
-		$self->{$_}->{commands} = gge_module_parser::parse_file($src_dir . $self->{$_}->{header_file});
+		my $header = $src_dir . $self->{$_}->{header_file};
+		# get commands among other things
+		my ($sec, @parents) = gge_module_parser::parse_file($header);
+		while ( my ($k, $v) = each %$sec)
+		{
+			$self->{$_}->{$k} = $v;
+			# add command parent
+		}
+		if(@parents)
+		{
+			$self->{$_}->{parents} = \@parents;
+		}
 	};
+
+	print "Found modules " . join(', ', keys %$self) . "\n";
 	return $self;
-	#die Dumper $self;
 }
 
 sub get_modules
@@ -98,17 +114,24 @@ sub get_header_files
 sub generate_commands
 {
 	my $self = shift;
+	die Dumper $self;
 	# read commands
+	print "generating commands\n";
 	my @commands;
-	open(my $fh, '<', $reg_mod_file) or die $!;
+	open(my $fh, '<', $commands_file) or die $!;
 	while(my $line = <$fh>)
 	{
 		if($line =~ /enum\s+commands\s+{/)
 		{
-			$line =~ s/enum\s+commands\s+{(.+)};/$1/;
+			$line =~ s/enum\s+commands\s+{([,.]+)};/$1/;
 			$line =~ s/[\s\n]+//g;
-			#@modules =  split(',', $line);
+			@commands = split(',',$line);
+			die Dumper \@commands;
 			last;
+		}
+		else
+		{
+			next;
 		}
 	}
 	for my $command (@commands)
@@ -122,6 +145,26 @@ sub generate_commands
 
 		#warn Dumper \@matches;
 	}
+}
+
+sub def_command
+{
+	my ($fn_name, $fn_names, $class_name) = @_;
+	$fn_name = demangle_fn_name($fn_name);
+	my $out = "static_pointer_cast<$class_name>(_module)->$fn_name($fn_names);";
+	my ($param_names) = split('_', $fn_names);
+	my $command = $class_name;
+	$command .= '_' . $fn_name;
+	$command .= '_' . $param_names if($param_names and $command !~ /$param_names/i);
+	push(@commands, uc($command));
+	return $out;
+}
+
+sub demangle_fn_name
+{
+	my $name = shift;
+	$name =~ s/(.+)__\d+/$1/;
+	return $name;
 }
 
 1;

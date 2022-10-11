@@ -9,7 +9,8 @@
 using namespace std;
 #endif 
 
-Texter::Texter(shared_ptr<Graphics> graphics)
+Texter::Texter(shared_ptr<Graphics> graphics):
+	GGE_module(TEXTER)
 {
 	_renderer = graphics->get_renderer();
 	_sdl_helper.check_null("SDL_TTF initalization", TTF_Init());

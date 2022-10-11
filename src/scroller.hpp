@@ -21,6 +21,7 @@ class Scroller: public GGE_module
 		bool scroll(SDL_Point); 
 
 		// actually move the grid
+
 		// gge_begin make commands
 		void scroll_grid(shared_ptr<Hex_grid> grid);
 		// gge_end make commands

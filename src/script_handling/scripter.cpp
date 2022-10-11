@@ -6,18 +6,13 @@
 // Running C++17 now, but why change a working concept
 #include <sys/stat.h>
 
-// chaiscript
-#include <chaiscript/utility/utility.hpp>
-
 #include "scripter.hpp"
-#include "chai_object.hpp"
-#include "core.hpp"
+#include "../core.hpp"
 class GGE_API;
 using namespace std;
 
 Scripter::Scripter(const string& game_dir, GGE_API& ga):
-	_gge_api(ga),
-	_module_ptr(chaiscript::ModulePtr(new chaiscript::Module()))
+	_gge_api(ga)
 {
 	// check if dir
 	struct stat file_stat;
@@ -30,7 +25,12 @@ Scripter::Scripter(const string& game_dir, GGE_API& ga):
 
 	cout << "Game directory: " << game_dir << endl;
 
-	add_defaults(game_dir);
+	string file_name = game_dir + "init.scm";
+	_script.read_file(file_name.c_str());
+
+		//scm_with_guile
+
+	/*add_defaults(game_dir);
 	_chai.add(_module_ptr);
 
 	// include chai files; first the init file
@@ -44,9 +44,10 @@ Scripter::Scripter(const string& game_dir, GGE_API& ga):
 	Chai_object co(_chai, game_obj_name);
 	co.add_function("game_loop");
 	co.add_function("event_handle");
-	_gge_api.init_game_object(co);
+	_gge_api.init_game_object(co);*/
 }
 
+/*
 void Scripter::add_defaults(const string& game_dir)
 {
 	// add global classes from GGE
@@ -67,17 +68,5 @@ void Scripter::add_defaults(const string& game_dir)
 	_chai.add_global(chaiscript::var(game_dir), "game_dir");
 	chaiscript::bootstrap::standard_library::vector_type<stl_vector_int>("stl_vector_int", *_module_ptr);
 	_chai.add(chaiscript::vector_conversion<stl_vector_int>());
-
-	// add struct def
-	// and constructor
-	// and variables and functions
-	/*typedef std::vector<event> stl_vector_event;
-	_chai.add(chaiscript::user_type<event>(), "event");
-	_chai.add(chaiscript::constructor<event ()>(), "event");
-	_chai.add(chaiscript::constructor<event (SDL_Event& e)>(), "event");
-	_chai.add(chaiscript::fun(&event::type), "type");
-	_chai.add(chaiscript::fun(&event::symbol), "symbol");
-	//_chai.add(chaiscript::var(&_sve), "events");
-	_chai.add(chaiscript::vector_conversion<stl_vector_event>());
-	chaiscript::bootstrap::standard_library::vector_type<stl_vector_event>("stl_vector_event", *_module_ptr);*/
 }
+*/

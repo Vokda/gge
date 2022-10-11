@@ -1,9 +1,15 @@
-[% PROCESS includes %]
+#pragma once
+[% FOR include IN includes %]
+[% include -%]
+[% END %]
 
-class [% class_name %][% IF parent %]: public [% parent %]
+[% gge_specific %]
+
+class [% class_name %][%- IF parent -%]: public [% parent %][%- END -%]
 {
 	public:
-		[% FOREACH f IN functions %]
-		[% f %]
-		[% END %]
+		[% constructor %]
+		[%- FOR f IN functions.keys -%]
+		[% functions.$f %]
+		[%- END -%]
 };

@@ -3,7 +3,6 @@
 #include <iostream>
 // gge_begin import headers
 #include "commands/command.hpp"
-#include "commands/graphics_command.hpp"
 // gge_end import headers
 #include <regex>
 #include <algorithm>
@@ -32,8 +31,8 @@ void Runner::add_command(const string& cmd_str, Moduler& moduler)
 	cout << "trying to add command '"<< s << "'" << endl;
 	if(std::regex_match(s, mr, e))
 	{
-		cout << "number of matches" << endl;
-		cout << mr.size() << endl;
+		//cout << "number of matches" << endl;
+		//cout << mr.size() << endl;
 		string class_name = mr.str(1);
 		string function_name = mr.str(2);
 		string argument = mr.size() > 2 ? mr.str(3) : "";
@@ -43,10 +42,9 @@ void Runner::add_command(const string& cmd_str, Moduler& moduler)
 		cout << "function_name " << function_name << endl;
 		cout << "argument " << argument << endl;
 
-		shared_ptr<GGE_module> m = nullptr;
+		shared_ptr<GGE_module> module = nullptr;
 		rgm module_type = NONE;
 		shared_ptr<GGE_module> arg = nullptr;
-		rgm arg_type = NONE;
 
 #include "runner_add_command_switch.generated"
 

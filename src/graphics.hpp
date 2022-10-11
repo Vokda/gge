@@ -30,9 +30,7 @@ class Graphics: public GGE_module
 		void render();
 
 		// always draws to _main_view
-		void draw(const Hex_grid& grid);
-		void draw(shared_ptr<Texter> texter);
-		void draw(const Shape& shape);
+		void draw(const shared_ptr<GGE_module> grid);
 		// gge_end make commands
 
 		SDL_Renderer* get_renderer() { return _sdl_renderer; }
@@ -43,7 +41,8 @@ class Graphics: public GGE_module
 		const SDL_Rect& get_viewport(viewport vp);
 
 	private:
-		void draw_grid(const Hex_grid& grid);
+		void draw_grid(const shared_ptr<Hex_grid> grid);
+		void draw_text(const shared_ptr<Texter>);
 		// flushes renderer if viewport changes
 		void set_viewport(viewport v);
 

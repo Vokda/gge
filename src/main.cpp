@@ -1,7 +1,7 @@
-#include "scripter.hpp"
+#include "script_handling/scripter.hpp"
 #include <iostream>
 #include "core.hpp"
-#include "gge_api.hpp"
+#include "script_handling/gge_api.hpp"
 #include <cstdlib>
 using namespace std;
 
@@ -9,7 +9,8 @@ int main(int argc, char* argv[])
 {
 	if(argc < 2)
 	{
-		cout << "Please provide a game file (.chai)" << endl;
+		cout << "How to use:" << endl;
+		cout << "gge [path/to/game_dir]" << endl;
 		exit(1);
 	}
 

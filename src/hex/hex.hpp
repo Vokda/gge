@@ -4,7 +4,6 @@
 #include <iostream>
 #include "coords.hpp"
 #include <memory>
-#include "../chai_object.hpp"
 
 class Hex
 {
@@ -50,8 +49,8 @@ class Hex
 		SDL_Color _hex_color;
 		bool blink = false;
 
-		std::shared_ptr<Chai_object> _in_hex_data = nullptr;
-		std::shared_ptr<Chai_object> _on_hex_data = nullptr;
+		//std::shared_ptr<Chai_object> _in_hex_data = nullptr;
+		//std::shared_ptr<Chai_object> _on_hex_data = nullptr;
 
 };
 

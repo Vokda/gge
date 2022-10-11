@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # gge builder
-package ggeb;
+package gge_utils;
 use strict;
 use warnings;
 use Data::Dumper;
@@ -111,6 +111,14 @@ sub parse_functions
 			return_value => $return_value,
 			formal_parameters => $args // '',
 		};
+
+		my @pt = map { 
+			my $s = $_; 
+			$s =~ s/^[\s\n]+//; 
+			$s =~ s/[\s\n]+$//; 
+			$s =~ s/^($cpp_code)\s.+$/$1/; $s 
+		} split(',', $args);
+		$gge_fns{$fn_name}{parameters_types} = \@pt;
 		if(not $return_value)
 		{
 			warn "no return value, assuming constructor!";
@@ -129,28 +137,63 @@ sub fn_is_const
 	return $_[0] =~ /(const);?$/;
 }
 
-sub read_section
+sub read_all_sections
 {
-	my ($section, $text_ref) = @_;
-	my $section_raw = $section;
-	unless(defined $text_ref)
+	my ($section, $text) = @_;
+	unless(defined $text)
 	{
 		my $caller = caller;
 		die "No text to read! $caller";
 	}
-	$section =~ s/\s/\\s/g;
-	my $begin_sec = '\/\/\s*gge_begin\s+' . $section . '\n';
+
+	unless($section)
+	{
+		my $caller = caller;
+		die "No section to use on text! $caller";
+	}
+
+	my $begin_sec = qr/\/\/\s*gge_begin\s+($section)\n/;
 	my $end_sec = '\/\/\s*gge_end\s+' . $section . '\n';
 
-	print "reading $$text_ref\n" if $debug;
-	my ($sec, $content) = $$text_ref =~ /
-	($begin_sec)
-	(.+)
-	$end_sec
-	/xgs;
+	print "reading $text\n" if $debug;
+	my ($sec, $content) = $text =~ /$begin_sec(.+)$end_sec/gs;
 
-	warn "No section '$section_raw' in text!" if not($content) and $debug; 
-	return ($content, $sec) if $content;
+	$sec =~ s/\s+/_/g if $sec;
+	warn Dumper $text, $begin_sec, $sec, $content if $debug;
+
+	# it is possible to not find anything
+	warn "No section '$section' in text!" if not($content) and $debug; 
+	my %ret;
+	$ret{$sec} = $content if $sec;
+	return \%ret if $content;
+}
+
+sub read_section
+{
+	my ($section, $text) = @_;
+	unless(defined $text)
+	{
+		my $caller = caller;
+		die "No text to read! $caller";
+	}
+
+	unless($section)
+	{
+		my $caller = caller;
+		die "No section to use on text! $caller";
+	}
+
+	my $begin_sec = '\/\/\s*gge_begin\s+' . $section .'\n';
+	my $end_sec = '\/\/\s*gge_end\s+' . $section . '\n';
+
+	print "reading $text\n" if $debug;
+	my ($content) = $text =~ /$begin_sec(.+)$end_sec/gs;
+
+	warn Dumper $text, $begin_sec, $content if $debug;
+
+	# it is possible to not find anything
+	warn "No section '$section' in text!" if not($content) and $debug; 
+	return $content if $content;
 }
 
 sub expand_section
@@ -192,6 +235,17 @@ sub demangle_name
 	my $name = shift;
 	$name =~ s/(.+)__\d+/$1/;
 	return $name;
+}
+
+# find parents of a class
+sub find_parents
+{
+	my ($file_name) = shift;
+	my $content = slurp_file($file_name);
+	my @parents = $content =~ m/class \w+:\s*public\s+(\w+)(?:\s*,?\s*public\s+(\w+))*/;
+	@parents = grep defined, @parents;
+	warn Dumper \@parents if $debug;
+	return @parents;
 }
 
 1;

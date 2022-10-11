@@ -1,13 +1,6 @@
 #include "gge_api.hpp"
-#include "core.hpp"
-#include "events.hpp"
 #include <memory>
-#include "texter.hpp"
 #include <vector>
-#include "hex/utils.hpp"
-#include "hex/hex_grid.hpp"
-#include "graphics.hpp"
-#include "scroller.hpp"
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -16,35 +9,6 @@ using namespace std;
 GGE_API::GGE_API(Core& core):
 	_core(core)
 {}
-
-/* initializers */
-
-void GGE_API::init_graphics(const std::string& s, size_t w, size_t h)
-{
-	_core.init_module<Graphics>(s, w, h, _sdl_helper);
-	auto g = _core.get_module<Graphics>();
-	// TODO initialized through separate functions?
-	_core.init_module<Texter>(g);
-	_core.init_module<Scroller>(w, h, nullptr);
-}
-
-void GGE_API::init_events()
-{
-	_core.init_module<Events>(_sdl_helper);
-}
-
-void GGE_API::init_grid(size_t width, size_t height, int tile_size)
-{
-	//TODO hard coded for now
-	_core.init_module<Hex_grid>(width, height, tile_size, FLAT_TOP, RECT_ODD_Q);
-}
-
-void GGE_API::init_game_object(Chai_object& game_object)
-{
-	_core.init_game_object(game_object);
-}
-
-// init end
 
 const string GGE_API::hello()
 {

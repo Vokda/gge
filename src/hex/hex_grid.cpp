@@ -6,7 +6,17 @@
 #include "coords.hpp"
 using namespace std;
 
+
+Hex_grid::Hex_grid(const Hex_grid& hg):
+	GGE_module(GRID),
+	_hex_size(hg._hex_size),
+	_layout(hg._layout),
+	_utils(hg._layout)
+{
+}
+
 Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho, Coordinate_system cs):
+	GGE_module(GRID),
 	_hex_size(size), 
 	_layout(Orientation(ho, size), cs), 
 	_utils(_layout)
