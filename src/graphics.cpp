@@ -13,9 +13,8 @@ using namespace std;
 Graphics::Graphics(
 		const std::string& window_name, 
 		size_t x,
-		size_t y,
-		SDL_helper& sdl_h):
-	_sdl_helper(sdl_h)
+		size_t y):
+	GGE_module(GRAPHICS)
 {
 	_screen_width = x;
 	_screen_height = y;

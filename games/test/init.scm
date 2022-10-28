@@ -2,8 +2,9 @@
 ; default objects begin with gge_
 
 ; remember to export the directory where the gge standard modules are located
-(use-modules (gge_scheme_std_modules gge_api))
+;(use-modules (gge_scheme_std_modules gge_api))
 (gge_hello)
+(gge_init_module 1 "GGE Test" 640 480)
 
 
 ;print(gge_api.hello())

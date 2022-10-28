@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include "../registered_gge_modules.hpp"
 class GGE_module;
 
 // gge_begin import commands

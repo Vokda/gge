@@ -10,9 +10,9 @@ using namespace std;
 class GGE_module
 {
 	public:
-		GGE_module(rgm m = NONE);
+		GGE_module(rgm m);
 		GGE_module(const GGE_module& m);
-		virtual ~GGE_module() = default;
+		virtual ~GGE_module() {};
 
 		static string get_module_name(registered_gge_module m)
 		{

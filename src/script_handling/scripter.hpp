@@ -6,20 +6,19 @@
 
 #include "gge_api.hpp"
 #include <functional>
-#include "guile.hpp"
+#include "script_engine.hpp"
+#include <memory>
 using namespace std;
 
 class Scripter
 {
 	public:
-		Scripter(const string& game_directory, GGE_API& ga);
-		bool is_script_engine_runnig() { return _is_running; }
+		Scripter(const string& game_directory, GGE_API& gge_api);
+		bool is_script_engine_runnig() { return _script_engine->is_running(); }
 
 	private:
 		GGE_API& _gge_api;
-		bool _is_running;
-		// change to a more generic version some day
-		Guile _script;
+		unique_ptr<Script_engine> _script_engine;
 };
 
 #endif

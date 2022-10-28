@@ -7,12 +7,13 @@
 #include <sys/stat.h>
 
 #include "scripter.hpp"
-#include "../core.hpp"
+#include "gge_api.hpp"
+#include "guile.hpp"
 class GGE_API;
 using namespace std;
 
 Scripter::Scripter(const string& game_dir, GGE_API& ga):
-	_gge_api(ga)
+	_gge_api(ga), _script_engine(make_unique<Guile>(ga))
 {
 	// check if dir
 	struct stat file_stat;
@@ -25,10 +26,9 @@ Scripter::Scripter(const string& game_dir, GGE_API& ga):
 
 	cout << "Game directory: " << game_dir << endl;
 
-	string file_name = game_dir + "init.scm";
-	_script.read_file(file_name.c_str());
-
-		//scm_with_guile
+	// TODO if script engine type look for associate file type
+	string file_name = game_dir + "/init.scm";
+	_script_engine->read_file(file_name);
 
 	/*add_defaults(game_dir);
 	_chai.add(_module_ptr);

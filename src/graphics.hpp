@@ -3,6 +3,7 @@
 #include "gge_module.hpp"
 #include <memory>
 #include <SDL2/SDL.h>
+#include "sdl_helper.hpp"
 using namespace std;
 
 struct SDL_Window;
@@ -10,7 +11,6 @@ struct SDL_Surface;
 struct SDL_Texture;
 struct SDL_Renderer;
 class Hex_grid;
-class SDL_helper;
 class Texter;
 class Scroller;
 class Shape;
@@ -18,7 +18,7 @@ class Shape;
 class Graphics: public GGE_module
 {
 	public:
-		Graphics(const std::string& window_name, size_t width, size_t height, SDL_helper& sh);
+		Graphics(const std::string& window_name, size_t width, size_t height);
 		~Graphics();
 
 		enum viewport {MAIN, BAR, SIDE_BAR};
@@ -60,5 +60,5 @@ class Graphics: public GGE_module
 		SDL_Rect _side_bar_view; // side info bar view
 		viewport _current_viewport = MAIN;
 
-		SDL_helper& _sdl_helper;
+		SDL_helper _sdl_helper;
 };

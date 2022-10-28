@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <functional>
 #include <algorithm>
-#include "registered_gge_modules.hpp"
+#include "gge_module.hpp"
 class Initializer;
 using namespace std;
 

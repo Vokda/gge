@@ -6,7 +6,7 @@
 using namespace std;
 
 Scroller::Scroller(int w, int h, SDL_Rect* max_scroll ):
-	_mid_screen({w/2, h/2})
+	GGE_module(SCROLLER), _mid_screen({w/2, h/2})
 {
 	_scrolled.x = 0;
 	_scrolled.y = 0;

@@ -5,24 +5,34 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <vector>
+#include "../registered_gge_modules.hpp"
+#include "../core.hpp"
 
-class Core;
+
 struct SDL_Point;
 
 using namespace std;
-
 
 class GGE_API
 {
 	public:
 		GGE_API(Core& core);
 
-		const string hello();
 
 		SDL_KeyCode get_sdl_keycodes() const;
 
+		/* 
+		 * a bit to difficult to 
+		 * automatically export template functions
+		 */
+		template<typename ...Args>
+		void gge_init_module(rgm module, Args... args)
+		{
+			_core.init_module(module, args...);
+		}
 
 		/* gge_begin export */
+		void hello();
 
 		// text
 		size_t create_text(const string& text, int view_port);

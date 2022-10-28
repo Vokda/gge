@@ -4,9 +4,9 @@
 #include <functional>
 #include "sdl_helper.hpp"
 #include <string>
+#include "gge_module_initializer.hpp"
 class GGE_module;
 class function;
-class Initializer;
 #include "moduler.hpp"
 #include "runner.hpp"
 
@@ -17,8 +17,13 @@ class Core
 		Core();
 
 		// initializer for every other module
-		template<typename T, typename ...Args>
-			void init_module(Args... args) { _moduler.set_module(args...); }
+		template<typename ...Args>
+			void init_module(rgm m, Args... args) 
+			{ 
+				cout << "core hej" << endl;
+				auto ptr = _gge_initializer.initialize(m, args...);
+				_moduler.set_module(m, ptr); 
+			}
 
 		// for loading graphics (and sound and stuff too)
 		void load_graphics(const string& path);
@@ -30,10 +35,9 @@ class Core
 
 		void run();
 
-		template<typename T>
-			shared_ptr<T> get_module() { return _moduler.get_module<T>(); }
+		shared_ptr<GGE_module> get_module(rgm m) { return _moduler[m]; }
 
-		//Moduler& get_moduler() { return _moduler; };
+		Moduler& get_moduler() { return _moduler; };
 
 		void add_command(const string&);
 		//bool add_command(const string& cmd);
@@ -54,6 +58,7 @@ class Core
 		std::unique_ptr<std::function<bool(Boxed_Value&, float)>> _game_loop = nullptr;*/
 		bool _game_loop; //TODO
 		SDL_helper _sdl_helper;
+		GGE_module_initializer _gge_initializer;
 };
 
 #endif

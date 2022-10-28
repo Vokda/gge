@@ -1,8 +1,8 @@
 #include "script_handling/scripter.hpp"
 #include <iostream>
 #include "core.hpp"
-#include "script_handling/gge_api.hpp"
 #include <cstdlib>
+#include "gge.hpp"  // just a big ascii of "GGE"
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -12,6 +12,10 @@ int main(int argc, char* argv[])
 		cout << "How to use:" << endl;
 		cout << "gge [path/to/game_dir]" << endl;
 		exit(1);
+	}
+	else
+	{
+		cout << GGE_ASCII << endl;
 	}
 
 	// init 
@@ -32,6 +36,6 @@ int main(int argc, char* argv[])
 		exit(2);
 	}
 
-	cout << "Thanks for playing!" << endl;
+	cout << "Thanks for using" << endl << GGE_ASCII << endl;
 	return 0;
 }
