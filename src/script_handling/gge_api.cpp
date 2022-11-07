@@ -20,6 +20,31 @@ void GGE_API::hello()
 	cout << "GGE API says hello!\n" << endl;
 }
 
+// init 
+void GGE_API::init_graphics(const string& s, size_t w, size_t h)
+{
+	add_module(GRAPHICS, _gge_init.graphics(s, w, h));
+}
+
+void GGE_API::init_events()
+{
+	add_module(EVENTS, _gge_init.events());
+}
+
+void GGE_API::init_grid(size_t w, size_t h, int s)
+{
+	add_module(GRID, _gge_init.grid(w, h, s));
+}
+
+void GGE_API::init_game_loop()
+{
+	add_module(GAME_LOOP, _gge_init.game_loop(*_script_engine, _core));
+}
+
+// init end
+
+
+
 size_t GGE_API::create_text(const string& text, int view_port)
 {
 	return create_text(text, view_port);
@@ -133,4 +158,9 @@ void GGE_API::create_shape(int shape, const vector<int>& p)
 void GGE_API::add_command(const string& cmd)
 {
 	return _core.add_command(cmd);
+}
+
+void GGE_API::add_module(rgm m, shared_ptr<GGE_module> ptr)
+{
+	_core.add_module(m, ptr);
 }

@@ -117,7 +117,7 @@ sub parse_functions
 			$s =~ s/^[\s\n]+//; 
 			$s =~ s/[\s\n]+$//; 
 			$s =~ s/^($cpp_code)\s.+$/$1/; $s 
-		} split(',', $args);
+		} split(',', $args) if ($args);
 		$gge_fns{$fn_name}{parameters_types} = \@pt;
 		if(not $return_value)
 		{

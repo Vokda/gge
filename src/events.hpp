@@ -3,7 +3,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include "gge_module.hpp"
-class SDL_helper;
+#include "sdl_helper.hpp"
 using namespace std;
 
 enum device {KEYBOARD, MOUSE};
@@ -34,7 +34,9 @@ struct event
 class Events: public GGE_module
 {
 	public:
-		Events(SDL_helper& e);
+		// gge_begin export ctor
+		Events();
+		// gge_end export ctor
 		~Events() = default;
 
 		const vector<int>& get_events();
@@ -46,6 +48,6 @@ class Events: public GGE_module
 	private:
 		SDL_Event _event; 
 		vector<int> _events; // so that the vector doesn't need to be recreated each time
-		SDL_helper& _sdl_helper;
+		SDL_helper _sdl_helper;
 };
 

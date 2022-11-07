@@ -11,8 +11,9 @@ int Moduler::list_modules() const
 	cout << "Loaded modules:\n";
 	for(auto it = _modules.begin(); it != _modules.end(); ++it)
 	{
-		cout  << it->second->get_module_name(it->first) << endl;
+		cout  << "+ " << it->second->get_module_name(it->first) << endl;
 	}
+	cout << endl;
 	return _modules.size();
 }
 

@@ -3,7 +3,7 @@
 #include <string>
 
 // modules that are known by gge
-enum registered_gge_module {NONE, GRAPHICS, EVENTS, GRID, SCROLLER, TEXTER}; 
+enum registered_gge_module {NONE, GRAPHICS, EVENTS, GRID, SCROLLER, TEXTER, GAME_LOOP}; 
 using rgm = registered_gge_module;
 
 typedef registered_gge_module rgm;

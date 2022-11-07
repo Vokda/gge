@@ -2,7 +2,6 @@
 #include <iostream>
 #include <chrono>
 #include <stdexcept>
-#include <functional>
 #include <algorithm>
 #include "gge_module.hpp"
 class Initializer;
@@ -23,10 +22,6 @@ void Core::run()
 
 		_runner.exec_commands();
 
-		// game logic
-		// game can be quit from inside the game loop by returning true
-		//_quit = (*_game_loop)(_boxed_value, _delta);
-
 		auto end = std::chrono::steady_clock::now();
 
 		// calculate delta
@@ -40,22 +35,37 @@ void Core::check_modules_initiated()
 	_moduler.list_modules();
 
 	// probably important modules
-	vector<registered_gge_module> important = {GRAPHICS, EVENTS, GRID};
+	vector<registered_gge_module> important = {GRAPHICS, EVENTS, GRID, GAME_LOOP};
 	for(auto m: important)
 	{
 		if(_moduler[m] == nullptr)
 		{
-			cerr << "Warning: " << GGE_module::get_module_name(m) <<  " not initiated!" << endl;
+			cerr << "Warning: " << GGE_module::get_module_name(m) <<  " not initialized!" << endl;
 		}
 	}
 
-	if(not _game_loop)
+	if(not _moduler[GAME_LOOP])
 	{
 		std::domain_error de("No game loop provided!");
 		throw de; 
 	}
+}
 
-	_runner.list_commands();
+void Core::check_commands_order()
+{
+	cout << "Command order - ";
+	if(_runner.check_dependencies())
+	{
+		cout << "OK" << endl;
+		int nr = _runner.list_commands();
+		if(nr == 0)
+			_quit = true;
+	}
+	else
+	{
+		std::domain_error de("Command order not possible!");
+		throw de;
+	}
 }
 
 void Core::quit()
@@ -63,7 +73,13 @@ void Core::quit()
 	_quit = true;
 }
 
+void Core::add_module(rgm m, shared_ptr<GGE_module> ptr)
+{
+	_moduler.set_module(m, ptr);
+}
+
 void Core::add_command(const string & cmd)
 {
 	return _runner.add_command(cmd, _moduler);
 }
+

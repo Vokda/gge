@@ -1,4 +1,5 @@
 #include "script_handling/scripter.hpp"
+#include "script_handling/gge_api.hpp"
 #include <iostream>
 #include "core.hpp"
 #include <cstdlib>
@@ -22,10 +23,12 @@ int main(int argc, char* argv[])
 	try
 	{
 		Core core;
+
 		GGE_API gge_api(core);
 		Scripter scripter(argv[1], gge_api);
 
 		core.check_modules_initiated();
+		core.check_commands_order();
 
 		core.run();
 	}

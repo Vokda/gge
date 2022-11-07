@@ -14,7 +14,8 @@ class Runner
 		void exec_commands(); 
 		void add_command(const std::string& cmd, Moduler&);
 		bool check_dependencies(); // true if all dependencies are OK
-		void list_commands();
+		// returns nr of commands
+		int list_commands();
 	private:
 		command string_to_command(const std::string& cmd_str);
 		std::vector<std::shared_ptr<Command>> _commands;

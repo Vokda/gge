@@ -1,39 +1,31 @@
 #pragma once
-
-#include <string>
-#include <sstream>
-
 #include "gge_module.hpp"
-
-// gge_begin includes
-#include "events.hpp"
-#include "graphics.hpp"
-#include "hex/hex_grid.hpp"
-#include "scroller.hpp"
-#include "texter.hpp"
-#include "hex/orientation.hpp"
-// gge_end includes
+class Script_engine;
+class Core;
 
 class GGE_module_initializer
 {
 	public:
 		GGE_module_initializer() = default;
 
-		template<typename... Args>
-			shared_ptr<GGE_module> initialize(rgm module, Args... args)
-			{
-				switch(module)
-				{
-					//gge_begin set_modules
-					case(GRAPHICS):
-						return make_shared<Graphics>(args...);
-						break;
-					//gge_end set_modules
-					default:
-						stringstream s;
-						s << __FILE__ << ": Cannot initialize " << GGE_module::get_module_name(module);
-						throw s;
-						break;
-				}
-			}
+		/*template<typename T, typename... Args>
+			shared_ptr<GGE_module> initialize(rgm module, Args... args);*/
+
+		// ye olde C way
+		// int rather than rgm to supress warnings regarding varargs
+		//shared_ptr<GGE_module> initialize(int module...);
+
+		/* for safe keeping
+		shared_ptr<GGE_module> graphics(const string& s, size_t, size_t);
+		shared_ptr<GGE_module> events();
+		shared_ptr<GGE_module> grid(size_t, size_t, int);
+		shared_ptr<GGE_module> game_loop();
+		*/
+
+		// gge_begin import ctor_decl
+		shared_ptr<GGE_module> graphics(const string& s, size_t, size_t);
+		shared_ptr<GGE_module> events();
+		shared_ptr<GGE_module> grid(size_t, size_t, int);
+		shared_ptr<GGE_module> game_loop(Script_engine&, Core&);
+		// gge_end import ctor_decl
 };

@@ -1,4 +1,5 @@
 #include "gge_api_wrapper.hpp"
+#include <string>
 
 extern "C"
 {
@@ -21,26 +22,42 @@ extern "C"
 		rgm m = static_cast<rgm>(scm_to_int(module));
 		switch(m)
 		{
-			case GRAPHICS:
-				{
-					SCM scm = va_arg(args, SCM);
-					char * c = scm_to_locale_string(scm);
-					const string s(c);
-					free(c);
-
-					scm = va_arg(args, SCM);
-					size_t w = scm_to_uint(scm);
-
-					scm = va_arg(args, SCM);
-					size_t h = scm_to_uint(scm);
-
-					printf("c string from scheme '%s\n'", c);
-					_gge_api->gge_init_module(m, s, w, h);
-				}
-				break;
+//#include "guile_init_module_switch.generated"
 			default:
 				throw throw_message(__FILE__, "Cannot initialize", m);
 		}
 	}
+
+
+	void init_events()
+	{
+		_gge_api->init_events();
+	}
+
+	void init_grid(SCM w, SCM h, SCM s)
+	{
+		_gge_api->init_grid(
+				scm_to_uint(w),
+				scm_to_uint(h),
+				scm_to_int(s)
+				);
+	}
+
+	void init_game_loop()
+	{
+		_gge_api->init_game_loop();
+	}
+
 } // extern C END
 
+// definition outside to handle C++ strings
+void init_graphics(SCM s, SCM w, SCM h)
+{
+	const char* c = scm_to_locale_string(s);
+	const string str(c);
+
+	_gge_api->init_graphics(str, 
+			scm_to_uint(w),
+			scm_to_uint(h)
+			);
+}

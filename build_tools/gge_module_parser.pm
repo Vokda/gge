@@ -9,7 +9,7 @@ use gge_utils;
 
 # just a catch all c++ code
 our $cpp_code = '[.\/\"#\n\t\w\d,\s&*<>(){}\[\]:=;]+';
-my @key_words = qw(make import exoprt);
+my @key_words = qw(make import export);
 my $kw = join('|', @key_words);
 
 my %sections;
@@ -27,54 +27,45 @@ sub read_section
 {
 	my ($file_name) = shift;
 	my $content = slurp_file($file_name);
-	#my $section = '(.+)(?:\s+(.+))?';
+
 	my $sec = "((?:$kw)" . '\s+(?:\w+)?)';
 	my $begin_sec = '\/\/\s*gge_begin\s+' . $sec . '\n*';
 	my $end_sec = '\/\/\s*gge_end\s+' . $sec . '\n*';
 
 	#print "Looking for $sec\n";
+	my $sections;
 	my @matches = $content =~ m/
 		$begin_sec
 		($cpp_code)
 		$end_sec/xgs;
-	for (@matches)
-	{
-		s/^\s|\t+//;
-		s/\s|\t+$//;
-		s/\/\/.+//;
-	}
 
-	return read_subsection(matches => \@matches);
-	#die Dumper {matches => \@matches, section => $section} if $section;
-}
-
-sub read_subsection
-{
-	my %args = @_;
-	my @matches = @{$args{matches}};
-	my $key //= $args{key};
-	#warn Dumper {subsec => \@matches, key => $key};
-	my $subsection;
-	for my $match (@matches)
+	my $c_kw = '';
+	while(my $match = shift @matches)
 	{
+		#$match =~ s/\s+//;
+		$match =~ s/\/\/.+//; # remove //-comments
+
 		if($match =~ m/($kw)(.+)/)
 		{
-			$key = $1.'_'.$2;
-			shift @matches;
-			pop @matches;
-			$subsection->{$key} = read_subsection(matches => \@matches, key => $key);
+			print "Processing '$match'...";
+			my $key = $1.'_'.$2;
+			$key =~ s/\s+//;
+			my $sec = shift @matches; # shift actual section
+			$sections->{$key} = {gge_utils::parse_functions($sec)};
+			my $end_kw = shift @matches;
+			print "done!\n";
 		}
-		elsif($key)
+		else
 		{
-			return {gge_utils::parse_functions($match)};
-		}
-		elsif($match )
-		{
-			warn "no key set for ".Dumper $match;
+			warn  "Expected [$kw] [name(s)]", Dumper $match;
+			die Dumper \@matches;
 		}
 	}
-	return $subsection;
+
+	#die Dumper $file_name, $sections;
+	return $sections; 
 }
+
 
 sub slurp_file
 {

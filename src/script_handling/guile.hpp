@@ -8,6 +8,7 @@ class Guile: public Script_engine
 	public:
 		Guile(GGE_API& ga);
 		void read_file(const string &);
+		bool run_game_loop_once(double delta);
 	private:
 		void add_gge_api_functions();
 
@@ -16,4 +17,5 @@ class Guile: public Script_engine
 		static SCM gge_init_wrapper(SCM module, ...);
 
 		SCM _scm;
+		SCM _game_loop_str;
 };

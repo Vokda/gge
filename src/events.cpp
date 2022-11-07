@@ -3,8 +3,8 @@
 #include "sdl_helper.hpp"
 using namespace std;
 
-Events::Events(SDL_helper& sdl_h):
-	GGE_module(EVENTS), _sdl_helper(sdl_h)
+Events::Events():
+	GGE_module(EVENTS)
 {
 	_sdl_helper.check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
 }

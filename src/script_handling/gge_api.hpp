@@ -2,6 +2,7 @@
 #define GGE_API_HPP
 #include "../sdl_helper.hpp"
 
+#include "../gge_module_initializer.hpp"
 #include <string>
 #include <SDL2/SDL.h>
 #include <vector>
@@ -10,6 +11,7 @@
 
 
 struct SDL_Point;
+class Script_engine;
 
 using namespace std;
 
@@ -18,21 +20,17 @@ class GGE_API
 	public:
 		GGE_API(Core& core);
 
+		void set_script_engine(shared_ptr<Script_engine> se) { _script_engine = se; }
 
 		SDL_KeyCode get_sdl_keycodes() const;
 
-		/* 
-		 * a bit to difficult to 
-		 * automatically export template functions
-		 */
-		template<typename ...Args>
-		void gge_init_module(rgm module, Args... args)
-		{
-			_core.init_module(module, args...);
-		}
-
-		/* gge_begin export */
 		void hello();
+
+		// module init
+		void init_graphics(const string& s, size_t, size_t);
+		void init_events();
+		void init_grid(size_t, size_t, int);
+		void init_game_loop();
 
 		// text
 		size_t create_text(const string& text, int view_port);
@@ -66,18 +64,20 @@ class GGE_API
 		void add_command(const string& command);
 		int get_module(const string& module);
 
-		/* gge_end export */
 
 		void create_shape(int shape, const vector<int>& p);
 
 	private:
 		Core& _core;
+		shared_ptr<Script_engine> _script_engine = nullptr;
 		SDL_helper _sdl_helper;
+		GGE_module_initializer _gge_init;
 
 		/*
 		 * change the mouse input position based on the amount scrolled
 		 */
  		void scroll_mouse(int& x, int& y);
+		void add_module(rgm m, shared_ptr<GGE_module> ptr);
 };
 
 #endif

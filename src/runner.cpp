@@ -56,16 +56,21 @@ void Runner::add_command(const string& cmd_str, Moduler& moduler)
 	}
 }
 
-void Runner::list_commands()
+int Runner::list_commands()
 {
-	cout << "Commands (module functions) executed in the following order:"<<endl;
+	cout << "Commands (GGE module member functions) executed in the following order:"<<endl;
 	int i = 0;
 	for(auto cmd: _commands)
 	{
 		// TODO
 		cout << i++ << ": " << "command" << endl;
 	}
+	if(_commands.size() == 0)
+	{
+		cerr << __FILE__ << ": No commands issued! Quitting early!" << endl;
+	}
 	cout << endl;
+	return _commands.size();
 }
 
 bool Runner::check_dependencies()

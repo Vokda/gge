@@ -20,7 +20,7 @@ class GGE_module
 			{
 				case(NONE):
 					return "<no module>";
-				// gge_begin cases
+					// gge_begin cases
 				case(GRAPHICS):
 					return "Graphics";
 				case(EVENTS):
@@ -31,8 +31,9 @@ class GGE_module
 					return "Scroller";
 				case(TEXTER):
 					return "Texter";
-
-// gge_end cases
+				case(GAME_LOOP):
+					return "Game_loop";
+					// gge_end cases
 				default:
 					return "<Unnamed GGE Module [" + to_string(m) + "]>";
 			}

@@ -7,14 +7,19 @@
 #include <sys/stat.h>
 
 #include "scripter.hpp"
-#include "gge_api.hpp"
+#include "script_engine.hpp"
 #include "guile.hpp"
-class GGE_API;
+#include "script_engine.hpp"
+#include "gge_api.hpp"
+//#include "../core.hpp"
+//class GGE_API;
 using namespace std;
 
 Scripter::Scripter(const string& game_dir, GGE_API& ga):
-	_gge_api(ga), _script_engine(make_unique<Guile>(ga))
+	_script_engine(make_shared<Guile>(ga))
 {
+	ga.set_script_engine(_script_engine);
+
 	// check if dir
 	struct stat file_stat;
 	stat(game_dir.c_str(), &file_stat);
@@ -30,21 +35,11 @@ Scripter::Scripter(const string& game_dir, GGE_API& ga):
 	string file_name = game_dir + "/init.scm";
 	_script_engine->read_file(file_name);
 
-	/*add_defaults(game_dir);
-	_chai.add(_module_ptr);
+}
 
-	// include chai files; first the init file
-	const string init_file = game_dir + "/" + "init.chai";
-	// to get a member function from chai to work
-	auto return_value = _chai.eval_file(init_file);
-	const string game_obj_name = chaiscript::boxed_cast<string>(return_value);
-	
-	// get game loop and/or event handle function
-	// assume both at the moment
-	Chai_object co(_chai, game_obj_name);
-	co.add_function("game_loop");
-	co.add_function("event_handle");
-	_gge_api.init_game_object(co);*/
+bool Scripter::is_script_engine_running()
+{ 
+	return _script_engine->is_running(); 
 }
 
 /*

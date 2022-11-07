@@ -1,0 +1,37 @@
+case GRAPHICS:
+{
+	SCM scm = va_arg(args, SCM);
+	char * c = scm_to_locale_string(scm);
+	const string s(c);
+	free(c);
+
+	scm = va_arg(args, SCM);
+	size_t w = scm_to_uint(scm);
+
+	scm = va_arg(args, SCM);
+	size_t h = scm_to_uint(scm);
+
+	printf("c string from scheme '%s\n'", c);
+	_gge_api->gge_init_module(m, s, w, h);
+}
+break;
+case EVENTS:
+{
+	_gge_api->gge_init_module(m);
+}
+break;
+case GRID:
+{
+	SCM scm = va_arg(args, SCM);
+	int hex_size = scm_to_int(scm);
+
+	scm = va_arg(args, SCM);
+	int w = scm_to_int(scm);
+
+	scm = va_arg(args, SCM);
+	int h = scm_to_uint(scm);
+
+	_gge_api->gge_init_module(m, hex_size, w, h);
+}
+break;
+

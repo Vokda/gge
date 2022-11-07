@@ -4,21 +4,21 @@
 #ifndef SCRIPTER_HPP
 #define SCRIPTER_HPP
 
-#include "gge_api.hpp"
-#include <functional>
-#include "script_engine.hpp"
+#include <string>
 #include <memory>
 using namespace std;
+
+class Script_engine;
+class GGE_API;
 
 class Scripter
 {
 	public:
-		Scripter(const string& game_directory, GGE_API& gge_api);
-		bool is_script_engine_runnig() { return _script_engine->is_running(); }
+		Scripter(const string& game_directory, GGE_API&);
+		bool is_script_engine_running();
 
 	private:
-		GGE_API& _gge_api;
-		unique_ptr<Script_engine> _script_engine;
+		shared_ptr<Script_engine> _script_engine; 
 };
 
 #endif

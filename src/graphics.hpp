@@ -18,7 +18,9 @@ class Shape;
 class Graphics: public GGE_module
 {
 	public:
+		// gge_begin export ctor
 		Graphics(const std::string& window_name, size_t width, size_t height);
+		// gge_end export ctor
 		~Graphics();
 
 		enum viewport {MAIN, BAR, SIDE_BAR};
