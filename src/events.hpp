@@ -39,8 +39,10 @@ class Events: public GGE_module
 		// gge_end export ctor
 		~Events() = default;
 
+		void poll_events();
 		const vector<int>& get_events();
-		// this is for the chaiscript 
+
+		// this is for external script
 		static SDL_KeyCode get_key_codes();
 
 		vector<int> get_mouse_position();

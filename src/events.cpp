@@ -9,7 +9,7 @@ Events::Events():
 	_sdl_helper.check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
 }
 
-const vector<int>& Events::get_events()
+void Events::poll_events()
 {
 	_events.clear();
 
@@ -26,6 +26,10 @@ const vector<int>& Events::get_events()
 				break;
 		}
 	}
+}
+
+const vector<int>& Events::get_events()
+{
 	return _events;
 }
 

@@ -7,7 +7,8 @@
 class Initializer;
 using namespace std;
 
-Core::Core()
+Core::Core():
+	_runner(_moduler, *this)
 {
 }
 
@@ -78,8 +79,8 @@ void Core::add_module(rgm m, shared_ptr<GGE_module> ptr)
 	_moduler.set_module(m, ptr);
 }
 
-void Core::add_command(const string & cmd)
+void Core::add_command(rgm module, int command)
 {
-	return _runner.add_command(cmd, _moduler);
+	return _runner.add_command(module, command, _moduler);
 }
 

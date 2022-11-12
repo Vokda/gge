@@ -1,21 +1,20 @@
 #include "game_loop_command.hpp"
+#include "../game_loop.hpp"
 
 Game_loop_command::Game_loop_command(
-				std::shared_ptr<GGE_module> m, 
-				std::shared_ptr<GGE_module> arg,
-				command cmd
-				):
-	Command(m, arg, cmd)
+				std::shared_ptr<Game_loop> gm, 
+				double& arg
+				): _arg(arg)
 {
-	_game_loop = static_pointer_cast<Game_loop>(m);
+	_game_loop = gm;
 }
 
 void Game_loop_command::execute()
 {
-	throw "Game loop error";
+	_game_loop->tick(_arg);
 }
 
-void Game_loop_command::execute(double d)
+const string Game_loop_command::get_command_string() const
 {
-	_game_loop->tick(d);
+	return "_game_loop->tick(delta)";
 }

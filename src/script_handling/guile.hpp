@@ -17,5 +17,5 @@ class Guile: public Script_engine
 		static SCM gge_init_wrapper(SCM module, ...);
 
 		SCM _scm;
-		SCM _game_loop_str;
+		SCM _scm_game_loop;
 };

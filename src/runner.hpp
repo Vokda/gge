@@ -3,6 +3,10 @@
 #include "commands/command.hpp"
 #include <memory>
 class Moduler;
+class GGE_module;
+class Core;
+#include "registered_gge_modules.hpp"
+using namespace std;
 /*
  * keeps order of which commands to run in what order
  */
@@ -10,13 +14,16 @@ class Moduler;
 class Runner
 {
 	public:
-		Runner();
+		Runner(Moduler& m, Core& c);
 		void exec_commands(); 
-		void add_command(const std::string& cmd, Moduler&);
+		void add_command(rgm module, int command, Moduler&);
 		bool check_dependencies(); // true if all dependencies are OK
 		// returns nr of commands
 		int list_commands();
 	private:
-		command string_to_command(const std::string& cmd_str);
+		shared_ptr<GGE_module> get_module(rgm module);
+
+		Core& _core;
+		Moduler& _moduler;
 		std::vector<std::shared_ptr<Command>> _commands;
 };

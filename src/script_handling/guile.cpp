@@ -1,4 +1,5 @@
 #include "guile.hpp"
+#include <stdexcept>
 #include <string>
 #include "gge_api.hpp"
 #include <cstdarg>
@@ -12,21 +13,30 @@ Guile::Guile(GGE_API& ga):
 	//putenv("GUILE_LOAD_PATH=");
 	scm_init_guile();
 
-	// scm_c_define_module("gge", NULL);
+	//scm_c_define_module("gge", NULL);
 	add_gge_api_functions();
-	// TODO make it less constant in the future
-	_game_loop_str = scm_from_locale_string("game_loop");
 }
 
 void Guile::read_file(const string& s)
 {
 	_scm = scm_c_primitive_load(s.c_str());
+	// game class should be included by now
+	_scm_game_loop = scm_variable_ref(scm_c_lookup("game:game_loop"));
+	if(_scm_game_loop == NULL)
+	{
+		runtime_error re("No game loop procedure set in Guile called 'game_loop'");
+		throw re;
+	}
 }
 
 bool Guile::run_game_loop_once(double delta)
 {
-	SCM ret = scm_apply_1(_game_loop_str, scm_from_double(delta), NULL);
-	return bool(scm_to_bool(ret));
+	cout << "game loop call; delta "<< delta << endl;
+	scm_call_1(_scm_game_loop, scm_from_double(delta));
+	//scm_call_0(_scm_game_loop);
+	//cout << "return" << endl;
+	//return bool(scm_to_bool(ret));
+	return true;
 }
 
 void Guile::add_gge_api_functions()
@@ -42,6 +52,8 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("init_grid", 3, 0, 0, (scm_t_subr) init_grid);
 	scm_c_define_gsubr("init_game_loop", 0, 0, 0, (scm_t_subr) init_game_loop);
 	scm_c_define_gsubr("game_loop", 0,0,0, (scm_t_subr) init_game_loop);
+
+	scm_c_define_gsubr("add_command", 1, 1, 0, (scm_t_subr) add_command);
 
 	//scm_c_define_gsubr("gge_init_module", 1, 3, 0, (scm_t_subr) guile_hello);
 	//scm_c_export("gge_init_module", NULL);

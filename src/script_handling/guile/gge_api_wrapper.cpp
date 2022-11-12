@@ -28,36 +28,68 @@ extern "C"
 		}
 	}
 
-
-	void init_events()
+	SCM init_events()
 	{
-		_gge_api->init_events();
+		return scm_from_int(
+			_gge_api->init_events()
+			);
 	}
 
-	void init_grid(SCM w, SCM h, SCM s)
+	SCM init_grid(SCM w, SCM h, SCM s)
 	{
-		_gge_api->init_grid(
-				scm_to_uint(w),
-				scm_to_uint(h),
-				scm_to_int(s)
+		return scm_from_int(
+				_gge_api->init_grid(
+					scm_to_uint(w),
+					scm_to_uint(h),
+					scm_to_int(s)
+					)
 				);
 	}
 
-	void init_game_loop()
+	SCM init_game_loop()
 	{
-		_gge_api->init_game_loop();
+		return scm_from_int(
+				_gge_api->init_game_loop()
+				);
+
+
+	}
+
+	void add_command(SCM module...)
+	{
+		va_list args;
+		va_start(args, module);
+		SCM scm = va_arg(args, SCM);
+		if(scm == NULL)
+		{
+			va_end(args);
+			_gge_api->add_command(
+					(rgm)scm_to_int(module),
+					-1
+					);
+		}
+		else
+		{
+			va_end(args);
+			_gge_api->add_command(
+					(rgm)scm_to_int(module),
+					scm_to_int(scm)
+					);
+		}
 	}
 
 } // extern C END
 
 // definition outside to handle C++ strings
-void init_graphics(SCM s, SCM w, SCM h)
+SCM init_graphics(SCM s, SCM w, SCM h)
 {
 	const char* c = scm_to_locale_string(s);
 	const string str(c);
 
-	_gge_api->init_graphics(str, 
-			scm_to_uint(w),
-			scm_to_uint(h)
+	return scm_from_int(
+			_gge_api->init_graphics(str, 
+				scm_to_uint(w),
+				scm_to_uint(h)
+				)
 			);
 }

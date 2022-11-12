@@ -27,10 +27,18 @@ class GGE_API
 		void hello();
 
 		// module init
-		void init_graphics(const string& s, size_t, size_t);
-		void init_events();
-		void init_grid(size_t, size_t, int);
-		void init_game_loop();
+		int init_graphics(const string& s, size_t, size_t);
+		int init_events();
+		int init_grid(size_t, size_t, int);
+		int init_game_loop();
+
+		// events
+		const std::vector<int>& get_events() const;
+		const int* c_get_events();
+		// mouse ctrls
+		std::vector<int> get_mouse_position();
+		bool scroll(vector<int>& mouse_position);
+
 
 		// text
 		size_t create_text(const string& text, int view_port);
@@ -50,18 +58,12 @@ class GGE_API
 
 		void set_hex_color(const vector<int>& c, size_t i);
 
-		// mouse ctrls
-		std::vector<int> get_mouse_position();
-		const std::vector<int>& get_events() const;
-
-		bool scroll(vector<int>& mouse_position);
-
 		// hex related 
 		// return index to hex in hex grid vector
 		int get_hex_from_mouse(int x, int y);
 
 		// TODO if possible depending on loaded modules
-		void add_command(const string& command);
+		void add_command(rgm module, int command);
 		int get_module(const string& module);
 
 
@@ -77,7 +79,7 @@ class GGE_API
 		 * change the mouse input position based on the amount scrolled
 		 */
  		void scroll_mouse(int& x, int& y);
-		void add_module(rgm m, shared_ptr<GGE_module> ptr);
+		int add_module(rgm m, shared_ptr<GGE_module> ptr);
 };
 
 #endif

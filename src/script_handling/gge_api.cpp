@@ -21,24 +21,24 @@ void GGE_API::hello()
 }
 
 // init 
-void GGE_API::init_graphics(const string& s, size_t w, size_t h)
+int GGE_API::init_graphics(const string& s, size_t w, size_t h)
 {
-	add_module(GRAPHICS, _gge_init.graphics(s, w, h));
+	return add_module(GRAPHICS, _gge_init.graphics(s, w, h));
 }
 
-void GGE_API::init_events()
+int GGE_API::init_events()
 {
-	add_module(EVENTS, _gge_init.events());
+	return add_module(EVENTS, _gge_init.events());
 }
 
-void GGE_API::init_grid(size_t w, size_t h, int s)
+int GGE_API::init_grid(size_t w, size_t h, int s)
 {
-	add_module(GRID, _gge_init.grid(w, h, s));
+	return add_module(GRID, _gge_init.grid(w, h, s));
 }
 
-void GGE_API::init_game_loop()
+int GGE_API::init_game_loop()
 {
-	add_module(GAME_LOOP, _gge_init.game_loop(*_script_engine, _core));
+	return add_module(GAME_LOOP, _gge_init.game_loop(*_script_engine, _core));
 }
 
 // init end
@@ -100,6 +100,12 @@ const std::vector<int>& GGE_API::get_events() const
 	return e->get_events();
 }
 
+const int* GGE_API::c_get_events()
+{
+	std::shared_ptr<Events> e = static_pointer_cast<Events>(_core.get_module(EVENTS));
+	return &(e->get_events()[0]);
+}
+
 int GGE_API::get_hex_from_mouse(int x, int y)
 {
 #ifdef DEBUG
@@ -155,12 +161,13 @@ void GGE_API::create_shape(int shape, const vector<int>& p)
 	cout <<"shape!" << endl;
 }
 
-void GGE_API::add_command(const string& cmd)
+void GGE_API::add_command(rgm module, int command)
 {
-	return _core.add_command(cmd);
+	_core.add_command(module, module);
 }
 
-void GGE_API::add_module(rgm m, shared_ptr<GGE_module> ptr)
+int GGE_API::add_module(rgm m, shared_ptr<GGE_module> ptr)
 {
 	_core.add_module(m, ptr);
+	return m;
 }

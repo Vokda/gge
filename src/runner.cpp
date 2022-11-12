@@ -3,15 +3,18 @@
 #include <iostream>
 // gge_begin import headers
 #include "commands/command.hpp"
+#include "commands/game_loop_command.hpp"
+#include "commands/events_command.hpp"
 // gge_end import headers
 #include <regex>
+#include <stdexcept>
 #include <algorithm>
 #include "moduler.hpp"
-#include <exception>
-
+#include "core.hpp"
 using namespace std;
 
-Runner::Runner()
+Runner::Runner(Moduler& m, Core& c):
+	_moduler(m), _core(c)
 {}
 
 void Runner::exec_commands()
@@ -22,38 +25,48 @@ void Runner::exec_commands()
 	}
 }
 
-void Runner::add_command(const string& cmd_str, Moduler& moduler)
+void Runner::add_command(rgm module, int command, Moduler& moduler)
 {
-	std::string s = cmd_str;
-	transform(s.begin(), s.end(), s.begin(), ::tolower);
-	regex e("(.+)\\.(.+)\\((.*)\\)");
-	std::smatch mr;
-	cout << "trying to add command '"<< s << "'" << endl;
-	if(std::regex_match(s, mr, e))
+	shared_ptr<GGE_module> m = get_module(module);
+	switch(module)
 	{
-		//cout << "number of matches" << endl;
-		//cout << mr.size() << endl;
-		string class_name = mr.str(1);
-		string function_name = mr.str(2);
-		string argument = mr.size() > 2 ? mr.str(3) : "";
-
-		cout << "matches:" << endl;
-		cout << "class_name " << class_name << endl;
-		cout << "function_name " << function_name << endl;
-		cout << "argument " << argument << endl;
-
-		shared_ptr<GGE_module> module = nullptr;
-		rgm module_type = NONE;
-		shared_ptr<GGE_module> arg = nullptr;
-
-#include "runner_add_command_switch.generated"
-
+		case EVENTS:
+			_commands.push_back(
+					make_shared<Events_command>(
+						static_pointer_cast<Events>(m)
+						)
+					);
+#ifdef DEBUG
+	cout << "events command created" << endl;
+#endif
+			break;
+		case GAME_LOOP:
+			_commands.push_back(make_shared<Game_loop_command>(
+						static_pointer_cast<Game_loop>(m), 
+						_core.get_delta_ref()
+						)
+					);
+			break;
+		default:
+			{
+				invalid_argument ia(throw_message(__FILE__, "Cannot create command for", module));
+				throw ia;
+			}
+			break;
 	}
-	else
+
+//#include "runner_add_command_switch.generated"
+}
+
+shared_ptr<GGE_module> Runner::get_module(rgm module)
+{
+	shared_ptr<GGE_module> m = _moduler[module];
+	if(m == nullptr)
 	{
-		std::string s = "command '" + cmd_str + "' not recognized!";
-		throw invalid_argument(s);
+		runtime_error e(throw_message(__FILE__, "module not initialized", module));
+		throw e;
 	}
+	return m;
 }
 
 int Runner::list_commands()
@@ -62,8 +75,7 @@ int Runner::list_commands()
 	int i = 0;
 	for(auto cmd: _commands)
 	{
-		// TODO
-		cout << i++ << ": " << "command" << endl;
+		cout << i++ << ": " << cmd->get_command_string() << endl;
 	}
 	if(_commands.size() == 0)
 	{
@@ -77,8 +89,3 @@ bool Runner::check_dependencies()
 {
 	return true;
 }
-
-/*int string_to_command(const string& cmd_str)
-{
-	return 
-}*/

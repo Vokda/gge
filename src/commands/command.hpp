@@ -1,42 +1,24 @@
 #pragma once
-#include <memory>
-class GGE_module;
-
-// gge_begin import commands
-
-enum command {CMD};
-
-// gge_end import commands
+#include <string>
+using namespace std;
 
 class Command
 {
 	public:
-// gge_begin export ctor
-		Command(
-				std::shared_ptr<GGE_module> m, 
-				std::shared_ptr<GGE_module> arg,
-				command cmd
-				);
-// gge_end export ctor
-
-		bool setup(std::shared_ptr<GGE_module> arg);
+		// if multiple commands set command to >= 0
+		Command(int command = -1);
 		virtual ~Command() = default;
-	
 
-		// do nothing unless defined
+		virtual const string get_command_string() const = 0;
 		virtual void execute() = 0;
-		// TODO special for Game_loop
-		virtual void execute(double d) {};
 
 		// gge_begin string_commands
 		// gge_end string_commands
 	protected:
-		std::shared_ptr<GGE_module> _module; // caller
-		std::shared_ptr<GGE_module> _arg; // might be used as argument by caller
 
 		/*
-		 * specific command to be executetd
+		 * specific command to be executed
 		 * in case of command containting multiple functions to execute
 		 */
-		command _cmd;
+		int _cmd;
 };

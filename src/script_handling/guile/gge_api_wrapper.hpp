@@ -12,10 +12,10 @@ extern "C"
 	//void gge_init_module(SCM module...);
 
 	// init
-	void init_graphics(SCM string, SCM w, SCM h);
-	void init_events();
-	void init_grid(SCM w, SCM h, SCM size);
-	void init_game_loop();
+	SCM init_graphics(SCM string, SCM w, SCM h);
+	SCM init_events();
+	SCM init_grid(SCM w, SCM h, SCM size);
+	SCM init_game_loop();
 
-	//void add_command()
+	void add_command(SCM module...);
 }
