@@ -11,9 +11,6 @@ class Command
 
 		virtual const string get_command_string() const = 0;
 		virtual void execute() = 0;
-
-		// gge_begin string_commands
-		// gge_end string_commands
 	protected:
 
 		/*

@@ -1,6 +1,7 @@
 #include "core.hpp"
 #include <iostream>
 #include <chrono>
+#include <thread>
 #include <stdexcept>
 #include <algorithm>
 #include "gge_module.hpp"
@@ -28,6 +29,13 @@ void Core::run()
 		// calculate delta
 		std::chrono::duration<double> elapsed_seconds = end - start;
 		_delta = elapsed_seconds.count();
+		
+		// TODO max fps 
+		double d = MAX_DELTA - _delta;
+		if(d > 0)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(long(d*1000)));
+		}
 	}
 }
 

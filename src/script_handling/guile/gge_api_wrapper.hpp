@@ -18,4 +18,6 @@ extern "C"
 	SCM init_game_loop();
 
 	void add_command(SCM module...);
+
+	void quit();
 }

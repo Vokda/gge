@@ -39,6 +39,9 @@ class GGE_API
 		std::vector<int> get_mouse_position();
 		bool scroll(vector<int>& mouse_position);
 
+		// core command
+		void quit();
+
 
 		// text
 		size_t create_text(const string& text, int view_port);

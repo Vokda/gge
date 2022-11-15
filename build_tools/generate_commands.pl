@@ -66,17 +66,11 @@ eod
 		);
 	}
 }
-die;
-my $cmds = join(', ', sort(@commands));
-my $enum = <<enum;
-enum command {$cmds};
-enum
-ggeb::expand_section(\$command_hpp, 'import commands', $enum);
-ggeb::write_to_file($command_hpp, 'commands/command.hpp');
 
 # runner switch generation
-#die Dumper $gge_modules;
-parse_templates::process_template('runner_switch.tmpl', {modules => $gge_modules}, );
+die Dumper $gge_modules->{TEXTER};
+#parse_templates::process_template('runner_switch.tmpl', {modules => $gge_modules} );
+
 
 sub make_command_enum
 {

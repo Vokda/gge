@@ -78,6 +78,11 @@ extern "C"
 		}
 	}
 
+	void quit()
+	{
+		_gge_api->quit();
+	}
+
 } // extern C END
 
 // definition outside to handle C++ strings

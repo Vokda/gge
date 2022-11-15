@@ -171,3 +171,8 @@ int GGE_API::add_module(rgm m, shared_ptr<GGE_module> ptr)
 	_core.add_module(m, ptr);
 	return m;
 }
+
+void GGE_API::quit()
+{
+	_core.quit();
+}

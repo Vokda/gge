@@ -31,12 +31,10 @@ void Guile::read_file(const string& s)
 
 bool Guile::run_game_loop_once(double delta)
 {
-	cout << "game loop call; delta "<< delta << endl;
 	scm_call_1(_scm_game_loop, scm_from_double(delta));
-	//scm_call_0(_scm_game_loop);
-	//cout << "return" << endl;
-	//return bool(scm_to_bool(ret));
-	return true;
+	SCM scm = scm_call_1(_scm_game_loop, scm_from_double(delta));
+	bool quit = scm_to_bool(scm);
+	return quit;
 }
 
 void Guile::add_gge_api_functions()
@@ -53,6 +51,7 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("init_game_loop", 0, 0, 0, (scm_t_subr) init_game_loop);
 	scm_c_define_gsubr("game_loop", 0,0,0, (scm_t_subr) init_game_loop);
 
+	scm_c_define_gsubr("gge_quit",0,0,0, (scm_t_subr) quit);
 	scm_c_define_gsubr("add_command", 1, 1, 0, (scm_t_subr) add_command);
 
 	//scm_c_define_gsubr("gge_init_module", 1, 3, 0, (scm_t_subr) guile_hello);

@@ -33,7 +33,7 @@
 (add_command events -1)
 (add_command game_loop -1)
 
-(game:game_loop -1)
+;(game:game_loop -1)
 
 (display 
   (string-append  "end of: " (current-filename) "\n")

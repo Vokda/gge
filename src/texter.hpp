@@ -22,7 +22,9 @@ struct Text: public Base_component
 class Texter: public Componenter, public GGE_module
 {
 	public:
+		// gge_begin export ctor
 		Texter(shared_ptr<Graphics> g);
+		// gge_end export ctor
 		~Texter();
 
 		size_t create_text(

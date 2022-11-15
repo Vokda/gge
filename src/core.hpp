@@ -37,6 +37,7 @@ class Core
 	private:
 		bool _quit = false;
 		double _delta = 1.0/60.0; // just some hard coded value to start things out
+		double MAX_DELTA = 1.0/60.0; // TODO max 60 fps
 		Moduler _moduler;
 		Runner _runner;
 		SDL_helper _sdl_helper;
