@@ -83,6 +83,12 @@ extern "C"
 		_gge_api->quit();
 	}
 
+	SCM get_next_event()
+	{
+		int event = _gge_api->pop_event();
+		return scm_from_int(event);
+	}
+
 } // extern C END
 
 // definition outside to handle C++ strings

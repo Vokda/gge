@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{listings}
 \usepackage{adjustbox}
+\usepackage{graphicx}
 
 \title{GGE Manual}
 \author{Daniel Johansson}
@@ -10,9 +11,9 @@
 \maketitle
 \tableofcontents
 \part{GGE in short}
-GGE stands for Grid Game Engine. It is inteded to be used as a game engine for grid based games such as chess or Sid Meier's Civilization. It is not only restricted to turn based games.
+GGE stands for Grid Game Engine (very creative, I know). It is inteded to be used as a game engine for grid based games such as chess or Sid Meier's Civilization. It is not only restricted to turn based games.
 
-The engine itself is written in C/C++ and depends on SDL2. Games for the engine are written in Chai script, a C++-header scripting language.
+The engine itself is written in C++ and depends on SDL2. Games for the engine are written in Guile, a variant of lisp.
 
 There are tools for generating code written in Perl5 though they are not necessary for using the engine.
 
@@ -21,192 +22,10 @@ The following two parts will cover the inner and outer workings of the engine.
 The inner working of the engine is not strictly necessary to know when writing a game but it may help understand what happens under the hood. 
 This part should be helpful in case of modifying the engine or adding custom game engine modules.
 
-The outer working of the engine is the (chai) scripting part of it. This is necessary for understanding the processes of making a game.
+The outer working of the engine is the (Guile) scripting part of it. This is necessary for understanding the process of making a game.
 It will also thuroughly describe the example "game" provided.
 
-\part{Inner Workings}
-
-\section{Coding Standards}
-Or rather the lack there of. Before anyone gets an aneurysm from reading the code, be aware that this is a project that has been spanning years during which I have developed and changed. What I thought was good coding at the begninning of the
-project may not be something I think holds true anymore. 
-
-So why have a whole section on it? 
-Aside from personal change there are also two other big contributing factors that I think are important to consider before you burn me at the stake.
-
-First of all there is the fact that my job is to work with ancient legacy Perl code that is almost as old as I am. 
-Trying to force coding standards on decade old code where there are none will either take a life time or drive you insane.
-Which leads me to the second factor.
-
-In order to not go insane from the jungle that legacy code can be, especially in a language like Perl, I have a Taoist approach.
-Rather than forcing what I consider "good" upon the code I adjust and try my best to the standard(s) of the file(s) I'm currently working in.
-Rather than pulling my hair because I can't understand what stupid idiot wrote this piece of shit code I take a deep breath I accept that this might just be what was best at the time of writing. 
-Adapt to the structures that are there already.
-Be like water.
-The downside with this approach that sometimes a suboptimal structure remains longer that necessary because the workaround is still easier to work with than to actually properly solve the problem. 
-But every once in a while the water will be a tsunami.
-
-The little code standards that exists:
-\begin{tabular}{c|c}
-	Type & Style \\
-	Class & \verb|Class_name| \\
-	Variable & \verb|variable_name| \\
-	Const & \verb|CONST_NAME| \\
-	Function & \verb|function_name| 
-\end{tabular}
-
-Data reference standards:
-\begin{enumerate}
-	\item Reference (not for storage)
-	\item Smart pointer
-	\item Pointer (for SDL related data only) (only one object is responsible for freeing the memory pointed to)
-\end{enumerate}
-I could of course try to make SDL work with smart pointers but using normal pointers works fine. It is not that much of an issue to use. Just keep of track of the pointer. How hard can it be?
-
-\section{The Core}
-At the core of GGE is the Core object. The core in of itself does not do much in the way of running a game, for that
-modules are used such as the graphics module. However, without the core none of the many parts of GGE would be able
-to function.
-
-\section{Chai - GGE Communication}
-Communication between the game, written in Chai script, and GGE is done via the \verb|Scripter| object. 
-This is done by exposing the \verb|GGE_API| object to the chai script which in turn communicates with the rest of
-GGE.
-
-\section{Modules} \label{inner modules}
-GGE performs anything but the bare essentials through modules. An example of a module is the graphics module. It handles all the graphics related functionality of the engine such as rendering graphics on the screen.
-
-If the game does not initializes any modules nothing can happen. 
-If the game does not add any commands (see \ref{adding a command}) for initalized modules nothing will happen.
-You will not even be able to quit the game since no event module that handles input exists.
-In order for the game to make use of a module in the game engine
-\begin{enumerate}
-	\item Initialize the module to be used.
-	\item Add a command for the module if necessary.
-\end{enumerate}
-
-The standard modules that can be used. Internal module name and class names are only used within the engine. 
-In the script the external module name is used, sometimes as a suffix (e.g. \verb|init_events|).
-
-\begin{tabular}{|c|c||c|}
-	Internal Module Name & Class Name & External Module Name \\
-	\hline
-	GRAPHICS & \verb|Graphics| & graphics \\
-	EVENTS & \verb|Events| & events \\
-	GRID & \verb|Hex_grid| & grid \\
-	SCROLLER & \verb|Scroller| & scroller \\
-	TEXTER & \verb|Texter| & texter \\
-\end{tabular}
-
-\subsection{Registering a Module}
-In order for GGE to run modules they must be registerd in the file \verb|registerd_gge_modules.hpp|.
-Next modules must be initializable, either via another module's initialization function or its own initialization
-function. These functions should reside in the \verb|GGE_API| for exposure outside.
-
-Now the module can be loaded by the engine. In order to actually make use of the module it is necessary to create
-command classes that make use of the module's member functions.
-
-In order to create command classes one can either write them manually or use the Perl scripts to generate the code
-needed. See the section \ref{generating code} for how to do so.
-
-\subsection{Command Classes} 
-In order for GGE to know what functions to call of what module in which order the command pattern is used.
-Each module should have a so-called command class that inherits from the class \verb|Command|.
-For example, the \verb|Graphics| module has a \verb|Graphics_command| class.
-
-This command class should contain all the functions one can call from the Chai script. 
-This enables GGE to call these functions in the desired order given by the Chai script.
-
-The class \verb|Command| contains
-\begin{itemize}
-	\item a pointer to the module.
-	\item a pointer (that may be null) to the argument.
-	\item command.
-\end{itemize}
-These can be used by its children.
-
-These command classes are used by the \verb|Runner| object by calling each command class' \verb|exeute()| function.
-This function will run whichever command it was set to execute when the command class was instantiated.
-
-A command class may contain multiple functions that can be called, but only one can be executed by each command class.
-Thus several of each command class my be needed in order to call different functions of the same module.
-
-\subsection{Module Handling}
-Once all modules are registered, their functions exposed through the GGE API and have the corresponding 
-the command classes they can now be used in the chai script. First one needs to specifiy in chai script which modules
-to use and in what order the modules functions are to be called. 
-
-Module memory management is handled by the \verb|Moduler| class.
-Module function execution order is handled by the \verb|Runner| class.
-
-GGE will check to ensure the initialization and call order is correct. 
-A failed check will result in an error. 
-If the check passed the game will start and GGE will run the modules in the given order.
-First the modules' commands are executed then the game loop, the one defined in Chai script, will be executed.
-
-\section{Generating Code} \label{generating code}
-Perl5 is used to generate a bunch of code. This is not necessary in order to run the engine. 
-While not strictly necessary to use when modding the engine there are unfortunately some places of the code that
-require repetitive coding which can be skipped with the scripts in \verb|build_tools/|.
-Simply run all scripts ending in \verb|.pl| and all necessary code will be generated. 
-The table below describes the different scripts and their functions.
-
-\begin{adjustbox}{width=\paperwidth}
-\begin{tabular}{|c|c|l|}
-	Script Name & Writes to & Description \\
-	\verb|expand_gge_module.pl| & \verb|gge_module.hpp| & Generates cases for stringifying a modules name \\
-	\verb|expand_modules.pl| & \verb|moduler.hpp| and \verb|moduler.cpp| & 
-	Generates getters and setters for modules \\
-	\verb|expand_modules.pl| & \verb|moduler.hpp| and \verb|moduler.cpp| & 
-	Generates getters and setters for modules in the Moduler object as well as necessary includes \\
-	\verb|generate_commands.pl| & \verb|commands/<specific_command>.hpp| & 
-	Generates classes for specific commands\\
-	\verb|generate_get_gge_modules.pl| & \verb|generated_get_gge_modules| & 
-	DEPRECATED \\
-	\verb|generate_gge_api_defaults.pl| & \verb|gge_api_defaults.generated| & 
-	Generates template code for exposing functions in the \verb|GGE_API| to chai script \\
-\end{tabular}
-\end{adjustbox}
-
-\textit{
-	Note: the Perl scripts to not check for errors nor always generate nicely formated code.
-	Make sure your code is correct or finding erros will be a hassle.
-}
-
-
-
-
-
-
-
-\part{Outer Workings}
-
-\section{Chai script}
-The games for GGE are written in Chai script. 
-
-The game should be all contained in one directory. This directory should be used as a parameter to GGE.
-
-GGE will be looking for a file called \verb|init.chai|. This is where module initialization of modules should take place.
-It should return a string containing the name of the object where the main loop of the game is, i.e. where game
-logic takes place. This object's function \verb|game_loop| will be called by GGE.
-
-\section{Modules}
-
-If you want to use a non-standard module please read through section \ref{inner modules}.
-
-\subsection{Initializing a Module}
-Modules are initialized through the \verb|gge_api| functions beginning with \verb|init_| e.g.
-\verb|init_graphics(<ARGUMENTS>)|. 
-Some modules are initialized together with the same function such as graphics and scrolling modules. 
-This will be changed or made more clear in the future.
-
-\subsection{Adding a Command} \label{adding a command}
-Once modules have been initiated commands can be added to the module through the \verb|gge_api| function
-\verb|add_command|
-The argument is a string in the form of \verb|<CLASS_NAME>.<CLASS_FUNCTION>(ARGUMENT)|.
-\\
-Example: \verb|gge_api.add_command("graphics.draw(grid)")|
-
-GGE will check to ensure the initialization and call order is correct. 
-A failed check will result in an error and not continue running the script.
+\include{inner_workings.tex}
+\include{outer_workings.tex}
 
 \end{document}

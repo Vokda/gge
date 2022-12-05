@@ -18,4 +18,5 @@ class Guile: public Script_engine
 
 		SCM _scm;
 		SCM _scm_game_loop;
+		SCM _current_module;
 };

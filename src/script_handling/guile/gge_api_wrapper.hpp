@@ -20,4 +20,6 @@ extern "C"
 	void add_command(SCM module...);
 
 	void quit();
+
+	SCM get_next_event();
 }

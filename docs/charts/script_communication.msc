@@ -1,0 +1,24 @@
+# calls made between game and GGE
+msc {
+	hscale = "4";
+
+	game [label="Game (written in Guile)"], 
+	guile [label="Guile"], 
+	gge_api_wrapper [label="gge_api_wrapper"],
+	#scripter [label="Scripter"], 
+	gge_api[label="GGE_API"], 
+	gge[label="<any GGE-module whose functions are exposed to the GGE API>"];
+
+	game=>guile [label="(gge:init_graphics <some parameters>)"];
+	guile=>gge_api_wrapper [label="translate Guile call to C with libguile.h"];
+	gge_api_wrapper=>gge_api [label="translate C call to C++ call"];
+	gge_api=>gge [label="perform some function in GGE, in this example: 
+	initialize graphics module and return graphics module ID"];
+	gge => gge_api [label="Return from C++ function"];
+	gge_api => gge_api_wrapper [label="translate C++ return value to C in needed e.g. string to char*"];
+	gge_api_wrapper => guile [label="translate C value to Guile value"];
+	guile => game [label="GGE function call completed and returned value can now be used by the game"];
+
+
+	
+}

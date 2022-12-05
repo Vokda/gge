@@ -6,6 +6,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <vector>
+#include <queue>
 #include "../registered_gge_modules.hpp"
 #include "../core.hpp"
 
@@ -33,8 +34,8 @@ class GGE_API
 		int init_game_loop();
 
 		// events
-		const std::vector<int>& get_events() const;
-		const int* c_get_events();
+		const std::queue<int>& get_events() const;
+		int pop_event();
 		// mouse ctrls
 		std::vector<int> get_mouse_position();
 		bool scroll(vector<int>& mouse_position);

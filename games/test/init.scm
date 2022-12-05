@@ -8,33 +8,31 @@
 
 (add-to-load-path (dirname (current-filename)))
 (display %load-path)
-(use-modules ( (game)
-			  #:prefix game:)
+
+(use-modules ( (gge)
+			  #:prefix gge:)
 			 )
-(gge_hello)
+
+(newline)
+(display (module-uses (current-module)))
+(newline)
+
+
+
+(gge:hello)
 
 ; initialize modules wanted
 ; each init method returns an unsigned integer corresponding to the modules enum
 (display "Initialize modules \n")
 (define graphics
-  (init_graphics "GGE Test" 640 480))
+  (gge:init_graphics "GGE Test" 640 480))
 (define events
-  (init_events))
+  (gge:init_events))
 (define grid
-  (init_grid 2 3 60))
+  (gge:init_grid 2 3 60))
 (define game_loop
-  (init_game_loop))
+  (gge:init_game_loop))
 
-(if (exact-integer? game_loop)
-	(display "is int\n")
-	(display "is NOT int\n")
-	)
 (display "Add commands \n")
-(add_command events -1)
-(add_command game_loop -1)
-
-;(game:game_loop -1)
-
-(display 
-  (string-append  "end of: " (current-filename) "\n")
-  )
+(gge:add_command events -1)
+(gge:add_command game_loop -1)

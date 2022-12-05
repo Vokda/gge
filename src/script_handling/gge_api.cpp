@@ -85,6 +85,10 @@ bool GGE_API::modify_text(size_t i, int v)
 	return texter->modify_text(i, v);
 }
 
+/*
+ * EVENTS
+ */
+
 std::vector<int> GGE_API::get_mouse_position()
 {
 	std::shared_ptr<Events> e = static_pointer_cast<Events>(_core.get_module(EVENTS));
@@ -94,16 +98,15 @@ std::vector<int> GGE_API::get_mouse_position()
 }
 
 
-const std::vector<int>& GGE_API::get_events() const
+const std::queue<int>& GGE_API::get_events() const
 {
 	std::shared_ptr<Events> e = static_pointer_cast<Events>(_core.get_module(EVENTS));
 	return e->get_events();
 }
 
-const int* GGE_API::c_get_events()
+int GGE_API::pop_event()
 {
-	std::shared_ptr<Events> e = static_pointer_cast<Events>(_core.get_module(EVENTS));
-	return &(e->get_events()[0]);
+	return static_pointer_cast<Events>(_core.get_module(EVENTS))->pop_event();
 }
 
 int GGE_API::get_hex_from_mouse(int x, int y)

@@ -11,7 +11,7 @@ Events::Events():
 
 void Events::poll_events()
 {
-	_events.clear();
+	//_events.clear();
 
 	while( SDL_PollEvent(&_event) != 0)
 	{
@@ -19,18 +19,31 @@ void Events::poll_events()
 		{
 			case SDL_MOUSEBUTTONDOWN:
 			//case SDL_MOUSEBUTTONUP:
-				_events.push_back(_event.button.button);
+				_events.push(_event.button.button);
 				break;
 			case SDL_KEYDOWN:
-				_events.push_back(_event.key.keysym.sym);
+				//cout << "gge:event: " << _event.key.keysym.sym <<endl;
+				_events.push(_event.key.keysym.sym);
 				break;
 		}
 	}
 }
 
-const vector<int>& Events::get_events()
+const queue<int>& Events::get_events()
 {
 	return _events;
+}
+
+int Events::pop_event()
+{
+	if(_events.empty())
+		return 0;
+	else
+	{
+		int e = _events.front();
+		_events.pop();
+		return e;
+	}
 }
 
 SDL_KeyCode Events::get_key_codes()

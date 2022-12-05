@@ -9,7 +9,7 @@ use gge_utils;
 
 # just a catch all c++ code
 our $cpp_code = '[.\/\"#\n\t\w\d,\s&*<>(){}\[\]:=;]+';
-my @key_words = qw(make import export);
+my @key_words = qw(make import export read write);
 my $kw = join('|', @key_words);
 
 my %sections;

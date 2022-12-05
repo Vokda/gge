@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <queue>
 #include <SDL2/SDL.h>
 #include "gge_module.hpp"
 #include "sdl_helper.hpp"
@@ -40,7 +40,8 @@ class Events: public GGE_module
 		~Events() = default;
 
 		void poll_events();
-		const vector<int>& get_events();
+		const queue<int>& get_events();
+		int pop_event(); // returns most recent event
 
 		// this is for external script
 		static SDL_KeyCode get_key_codes();
@@ -49,7 +50,7 @@ class Events: public GGE_module
 
 	private:
 		SDL_Event _event; 
-		vector<int> _events; // so that the vector doesn't need to be recreated each time
+		queue<int> _events; // so that the queue doesn't need to be recreated each time
 		SDL_helper _sdl_helper;
 };
 

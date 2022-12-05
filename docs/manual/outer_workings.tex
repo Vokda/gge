@@ -1,0 +1,28 @@
+\part{Outer Workings}
+
+\section{Guile}
+The games for GGE are written in Guile is an implementation of Scheme, which is a dialect of Lisp. 
+
+The game should be all contained in one directory. This directory should be used as a parameter to GGE.
+
+GGE will be looking for a two important files.
+
+First \verb|init.scm|. This is where module initialization of modules and addition of commands should take place.
+
+Second \verb|game.scm| where a function called \verb|game_loop| should exist. In this function game logic should reside.
+
+\section{Modules}
+
+If you want to use a non-standard module please read through section \ref{inner modules}.
+
+\subsection{Initializing a Module}
+Modules are initialized through the \verb|gge_api| functions found in the \verb|gge| module.
+The function will return an integer that represents the ID (enum) of the module used inside GGE. This can be useful for when adding commands.
+Example: \verb|(init_graphics "GGE Test" 640 480))|
+
+\subsection{Adding a Command} \label{adding a command}
+Once modules have been initiated commands can be added to the module through the \verb|gge_api| function \verb|add_command|
+Example: \verb|(add_command game_loop)|
+
+GGE will check to ensure the initialization and call order is correct. 
+A failed check will result in an error and not continue running the script.

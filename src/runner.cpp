@@ -36,9 +36,6 @@ void Runner::add_command(rgm module, int command, Moduler& moduler)
 						static_pointer_cast<Events>(m)
 						)
 					);
-#ifdef DEBUG
-	cout << "events command created" << endl;
-#endif
 			break;
 		case GAME_LOOP:
 			_commands.push_back(make_shared<Game_loop_command>(

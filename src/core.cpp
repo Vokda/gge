@@ -17,6 +17,9 @@ Core::Core():
 
 void Core::run()
 {
+#ifdef DEBUG
+	cout << "Core: running first loop" << endl;
+#endif
 	// main loop
 	while(not _quit)
 	{

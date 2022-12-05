@@ -4,7 +4,13 @@
 #include "core.hpp"
 #include <cstdlib>
 #include "gge.hpp"  // just a big ascii of "GGE"
+#include <csignal>
 using namespace std;
+
+// signal handling
+Core* c;
+void quit(int sig);
+
 
 int main(int argc, char* argv[])
 {
@@ -23,12 +29,17 @@ int main(int argc, char* argv[])
 	try
 	{
 		Core core;
+		c = &core;
 
 		GGE_API gge_api(core);
 		Scripter scripter(argv[1], gge_api);
 
 		core.check_modules_initiated();
 		core.check_commands_order();
+
+		signal(SIGINT, quit);
+		signal(SIGTERM, quit);
+		signal(SIGABRT, quit);
 
 		core.run();
 	}
@@ -41,4 +52,9 @@ int main(int argc, char* argv[])
 
 	cout << "Thanks for using" << endl << GGE_ASCII << endl;
 	return 0;
+}
+
+void quit(int sig)
+{
+	c->quit();
 }
