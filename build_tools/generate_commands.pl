@@ -50,26 +50,40 @@ switch(_cmd)
 	$def_fns
 };
 eod
-		$gge_modules->{$_}->{make_commands}->{execute} = {
+		$gge_modules->{$_}->{make_commands}->{execute} = 
+		{
 			return_value => 'void',
 			formal_parameters => '',
 			parameters_names => '',
-			definition => $definition};
+			definition => $definition
+		};
 
+		my $member = lc $_;
 		class_builder::create_class(
-			'commands/'.lc($class_name), 
-			$class_name, 
-			['../'.lc($class_callee), 'command'], 
-			['../'.lc($class_callee), lc($class_callee) . '_command'],
-			{ parent => 'Command', ctor => $gge_modules->{$_}->{parent_command_ctor} },
-			%{ $gge_modules->{$_}->{make_commands} }
+			file_name_base => 'commands/'.lc($class_name), 
+			class_name => $class_name, 
+			header_deps => ['../'.lc($class_callee), 'command'], 
+			src_deps => ['../'.lc($class_callee)],
+			parent => { parent => 'Command', ctor => $gge_modules->{$_}->{parent_command_ctor} },
+			class_spec => {
+				fns => $gge_modules->{$_}->{make_commands},
+				members => {
+					$member => {
+						type => 'shared_ptr<'. $class_callee . '>',
+						name => '_' . lc $_
+					},
+					ptr => {
+						type => 'int',
+						name => '_cmd'
+					}
+				}
+			}
 		);
 	}
 }
 
 # runner switch generation
-die Dumper $gge_modules->{TEXTER};
-#parse_templates::process_template('runner_switch.tmpl', {modules => $gge_modules} );
+parse_templates::process_template('runner_switch.tmpl', {modules => $gge_modules}, 'src/runner_add_command_switch.generated' );
 
 
 sub make_command_enum
@@ -82,9 +96,9 @@ sub make_command_enum
 
 sub define_command
 {
-	my ($class_name, $fn_name, $fns) = @_;
+	my ($module_name, $fn_name, $fns) = @_;
 	my $arg = $fns->{parameters_names};
-	my $out = "static_pointer_cast<$class_name>(_module)->$fn_name($arg);";
+	my $out = "$module_name->$fn_name($arg);";
 }
 
 sub def_command
@@ -92,7 +106,7 @@ sub def_command
 	my ($fn_name, $fn_names, $class_name) = @_;
 	$fn_name = gge_utils::demangle_name($fn_name);
 	my $arg = "$fn_names";
-	my $out = "static_pointer_cast<$class_name>(_module)->$fn_name($arg);";
+	my $out = "_module->$fn_name($arg);";
 	my ($param_names) = split('_', $fn_names);
 	my $command = $class_name;
 	$command .= '_' . $fn_name;
@@ -114,7 +128,7 @@ sub mk_defs
 	// $_
 	case($cmd): 
 	{
-		$fn_name(static_pointer_cast<$type>(arg_));
+		$fn_name(static_pointer_cast<$type>(_arg));
 		break;
 	};
 defs

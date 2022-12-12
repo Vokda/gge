@@ -5,6 +5,8 @@
 #include "commands/command.hpp"
 #include "commands/game_loop_command.hpp"
 #include "commands/events_command.hpp"
+#include "commands/graphics_command.hpp"
+#include "graphics.hpp"
 // gge_end import headers
 #include <regex>
 #include <stdexcept>
@@ -25,25 +27,36 @@ void Runner::exec_commands()
 	}
 }
 
-void Runner::add_command(rgm module, int command, Moduler& moduler)
+void Runner::add_command(rgm module, int command, rgm arg)
 {
 	shared_ptr<GGE_module> m = get_module(module);
+	shared_ptr<GGE_module> parameter = get_module(arg);
+	
 	switch(module)
 	{
 		case EVENTS:
 			_commands.push_back(
 					make_shared<Events_command>(
-						static_pointer_cast<Events>(m)
+						static_pointer_cast<Events>(m) // change to be the same as the other command classes
 						)
 					);
 			break;
 		case GAME_LOOP:
 			_commands.push_back(make_shared<Game_loop_command>(
-						static_pointer_cast<Game_loop>(m), 
+						static_pointer_cast<Game_loop>(m),  // change to be the same as the other command classes
 						_core.get_delta_ref()
 						)
 					);
 			break;
+		case GRAPHICS:
+			_commands.push_back(
+					make_shared<Graphics_command>(
+						m,
+						command,
+						parameter)
+					);
+			break;
+//#include "runner_add_command_switch.generated"
 		default:
 			{
 				invalid_argument ia(throw_message(__FILE__, "Cannot create command for", module));
@@ -52,7 +65,6 @@ void Runner::add_command(rgm module, int command, Moduler& moduler)
 			break;
 	}
 
-//#include "runner_add_command_switch.generated"
 }
 
 shared_ptr<GGE_module> Runner::get_module(rgm module)

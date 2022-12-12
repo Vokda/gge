@@ -16,7 +16,7 @@ class Runner
 	public:
 		Runner(Moduler& m, Core& c);
 		void exec_commands(); 
-		void add_command(rgm module, int command, Moduler&);
+		void add_command(rgm module, int command, rgm arg);
 		bool check_dependencies(); // true if all dependencies are OK
 		// returns nr of commands
 		int list_commands();

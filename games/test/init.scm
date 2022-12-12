@@ -34,5 +34,9 @@
   (gge:init_game_loop))
 
 (display "Add commands \n")
-(gge:add_command events -1)
-(gge:add_command game_loop -1)
+; add_command <module to execute command> <command number, -1 = there is only one to pick (change to 0?)> <id to module used as parameter, 0 = None>
+(gge:add_command graphics 0 0) ; clear screen
+(gge:add_command events -1 0)
+(gge:add_command game_loop -1 0)
+(gge:add_command graphics 1 grid) ; draw
+(gge:add_command graphics 2 0) ;  render

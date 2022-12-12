@@ -27,5 +27,6 @@ class GGE_module_initializer
 		shared_ptr<GGE_module> events();
 		shared_ptr<GGE_module> grid(size_t, size_t, int);
 		shared_ptr<GGE_module> game_loop(Script_engine&, Core&);
+		shared_ptr<GGE_module> none();
 		// gge_end import ctor_decl
 };

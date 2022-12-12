@@ -90,8 +90,8 @@ void Core::add_module(rgm m, shared_ptr<GGE_module> ptr)
 	_moduler.set_module(m, ptr);
 }
 
-void Core::add_command(rgm module, int command)
+void Core::add_command(rgm module, int command, rgm arg)
 {
-	return _runner.add_command(module, command, _moduler);
+	return _runner.add_command(module, command, arg);
 }
 

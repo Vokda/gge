@@ -29,7 +29,7 @@ class Core
 		Moduler& get_moduler() { return _moduler; };
 
 		void add_module(rgm module, shared_ptr<GGE_module> ptr);
-		void add_command(rgm module, int command);
+		void add_command(rgm module, int command, rgm arg);
 
 		double get_delta() { return _delta; };
 		double& get_delta_ref() { return _delta; };

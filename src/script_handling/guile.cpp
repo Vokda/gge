@@ -63,7 +63,7 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("game_loop", 0,0,0, (scm_t_subr) init_game_loop);
 
 	scm_c_define_gsubr("quit",0,0,0, (scm_t_subr) quit);
-	scm_c_define_gsubr("add_command", 1, 1, 0, (scm_t_subr) add_command);
+	scm_c_define_gsubr("add_command", 1, 2, 0, (scm_t_subr) add_command);
 
 	scm_c_define_gsubr("get_next_event", 0,0,0,(scm_t_subr) get_next_event);
 	// gge_end read subs

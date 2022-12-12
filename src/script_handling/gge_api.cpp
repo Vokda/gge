@@ -13,7 +13,9 @@ using namespace std;
 
 GGE_API::GGE_API(Core& core):
 	_core(core)
-{}
+{
+	add_module(NONE, _gge_init.none());
+}
 
 void GGE_API::hello()
 {
@@ -164,9 +166,9 @@ void GGE_API::create_shape(int shape, const vector<int>& p)
 	cout <<"shape!" << endl;
 }
 
-void GGE_API::add_command(rgm module, int command)
+void GGE_API::add_command(rgm module, int command, rgm arg)
 {
-	_core.add_command(module, module);
+	_core.add_command(module, command, arg);
 }
 
 int GGE_API::add_module(rgm m, shared_ptr<GGE_module> ptr)

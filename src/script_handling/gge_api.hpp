@@ -67,7 +67,7 @@ class GGE_API
 		int get_hex_from_mouse(int x, int y);
 
 		// TODO if possible depending on loaded modules
-		void add_command(rgm module, int command);
+		void add_command(rgm module, int command, rgm arg);
 		int get_module(const string& module);
 
 

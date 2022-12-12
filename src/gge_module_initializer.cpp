@@ -9,6 +9,7 @@
 #include "texter.hpp"
 #include "hex/orientation.hpp"
 #include "game_loop.hpp"
+#include "none.hpp"
 // gge_end import includes
 
 /*GGE_module_initializer::GGE_module_initializer(Moduler& m):
@@ -75,6 +76,11 @@ shared_ptr<GGE_module> GGE_module_initializer::grid(size_t w, size_t h, int s)
 shared_ptr<GGE_module> GGE_module_initializer::game_loop(Script_engine& se, Core& c)
 {
 	return make_shared<Game_loop>(se, c);
+}
+
+shared_ptr<GGE_module> GGE_module_initializer::none()
+{
+	return make_shared<None>();
 }
 
 // gge_begin import ctor_def

@@ -27,13 +27,11 @@ class Graphics: public GGE_module
 
 		void load_image(const std::string& path);
 
-		// gge_begin make commands
 		void clear_screen();
 		void render();
 
 		// always draws to _main_view
 		void draw(const shared_ptr<GGE_module> grid);
-		// gge_end make commands
 
 		SDL_Renderer* get_renderer() { return _sdl_renderer; }
 		int get_screen_width() { return _screen_width; }

@@ -65,16 +65,31 @@ extern "C"
 			va_end(args);
 			_gge_api->add_command(
 					(rgm)scm_to_int(module),
-					-1
+					-1,
+					(rgm)-1
 					);
 		}
-		else
+		else // assume there might be an arg
 		{
+			int cmd = scm_to_int(scm); 
+			scm = va_arg(args, SCM);
+			if(scm == NULL)
+			{
+				_gge_api->add_command(
+						(rgm)scm_to_int(module),
+						cmd,
+						(rgm)-1
+						);
+			}
+			else
+			{
+				_gge_api->add_command(
+						(rgm)scm_to_int(module),
+						cmd,
+						(rgm)scm_to_int(scm)
+						);
+			}
 			va_end(args);
-			_gge_api->add_command(
-					(rgm)scm_to_int(module),
-					scm_to_int(scm)
-					);
 		}
 	}
 
