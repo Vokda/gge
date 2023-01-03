@@ -3,8 +3,11 @@
 
 Game_loop_command::Game_loop_command(
 				std::shared_ptr<Game_loop> gm, 
-				double& arg
-				): _arg(arg)
+				std::shared_ptr<GGE_module> command_arg, // should be None
+				double& arg // should NOT be None
+				): 
+	Command(gm, command_arg), // special case for game loop where arg is NOT stored in Command class TODO see manual
+	_arg(arg)
 {
 	_game_loop = gm;
 }

@@ -2,9 +2,10 @@
 
 Graphics_command::Graphics_command(
 		shared_ptr<GGE_module> g, 
-		int command,
-		shared_ptr<GGE_module> arg):
-	Command(command, arg) 
+		shared_ptr<GGE_module> arg,
+		int command
+		):
+	Command(g,  arg, command) 
 {
 	_graphics = static_pointer_cast<Graphics>(g);
 }
@@ -45,8 +46,14 @@ const string Graphics_command::get_command_string() const
 			break;
 		case RENDER:
 			s += "render()";
+			break;
 		default:
-			return "graphics command weird";
+			return "graphics command weird! cmd: " + to_string(_cmd);
 	}
 	return s;
+}
+
+bool Graphics_command::is_valid_command() const
+{
+	return _cmd < NR_COMMANDS and _cmd > -1;
 }

@@ -2,6 +2,7 @@
 #include "gge_module.hpp"
 class Script_engine;
 class Core;
+class Graphics;
 
 class GGE_module_initializer
 {
@@ -28,5 +29,6 @@ class GGE_module_initializer
 		shared_ptr<GGE_module> grid(size_t, size_t, int);
 		shared_ptr<GGE_module> game_loop(Script_engine&, Core&);
 		shared_ptr<GGE_module> none();
+		shared_ptr<GGE_module> texter(shared_ptr<Graphics> g);
 		// gge_end import ctor_decl
 };

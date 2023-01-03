@@ -29,7 +29,7 @@ void Runner::exec_commands()
 
 void Runner::add_command(rgm module, int command, rgm arg)
 {
-	shared_ptr<GGE_module> m = get_module(module);
+	shared_ptr<GGE_module> gge_module = get_module(module);
 	shared_ptr<GGE_module> parameter = get_module(arg);
 	
 	switch(module)
@@ -37,13 +37,15 @@ void Runner::add_command(rgm module, int command, rgm arg)
 		case EVENTS:
 			_commands.push_back(
 					make_shared<Events_command>(
-						static_pointer_cast<Events>(m) // change to be the same as the other command classes
+						static_pointer_cast<Events>(gge_module), // change to be the same as the other command classes
+						get_module(NONE)
 						)
 					);
 			break;
 		case GAME_LOOP:
 			_commands.push_back(make_shared<Game_loop_command>(
-						static_pointer_cast<Game_loop>(m),  // change to be the same as the other command classes
+						static_pointer_cast<Game_loop>(gge_module),  // change to be the same as the other command classes
+						get_module(NONE),
 						_core.get_delta_ref()
 						)
 					);
@@ -51,9 +53,9 @@ void Runner::add_command(rgm module, int command, rgm arg)
 		case GRAPHICS:
 			_commands.push_back(
 					make_shared<Graphics_command>(
-						m,
-						command,
-						parameter)
+						gge_module,
+						parameter,
+						command)
 					);
 			break;
 //#include "runner_add_command_switch.generated"
@@ -96,5 +98,39 @@ int Runner::list_commands()
 
 bool Runner::check_dependencies()
 {
+	bool error = false;
+	stringstream ss;
+	for(auto cmd: _commands)
+	{
+
+		int cmd_command = cmd->get_command();
+
+		shared_ptr<GGE_module> gge_module_ptr = cmd->get_module();
+		if(gge_module_ptr == nullptr or _moduler[gge_module_ptr->get_type()] == nullptr)
+		{
+			ss << __FILE__ << ": module not initiated for command " << cmd->get_command_string() << endl;
+			error = true;
+		}
+
+		gge_module_ptr = cmd->get_argument();
+		if(gge_module_ptr == nullptr or _moduler[gge_module_ptr->get_type()] == nullptr)		
+		{
+			ss << __FILE__ << ": module for argument not initiated for command " << cmd->get_command_string() << endl;
+			error = true;
+		}
+
+		if(not cmd->is_valid_command())
+		{
+			ss << __FILE__ <<  ": command "+to_string(cmd_command)+" not valid for " << cmd->get_command_string() << endl;
+			error = true;
+		}
+	}
+
+	if(error)
+	{
+		logic_error le(ss.str());
+		throw(le);
+		return false;
+	}
 	return true;
 }

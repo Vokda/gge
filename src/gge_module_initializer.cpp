@@ -83,5 +83,11 @@ shared_ptr<GGE_module> GGE_module_initializer::none()
 	return make_shared<None>();
 }
 
+
+shared_ptr<GGE_module> GGE_module_initializer::texter(shared_ptr<Graphics> g)
+{
+	return make_shared<Texter>(g);
+}
+
 // gge_begin import ctor_def
 // gge_end import ctor_def

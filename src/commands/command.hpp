@@ -8,11 +8,18 @@ class Command
 {
 	public:
 		// if multiple commands set command to >= 0
-		Command(int command = -1, shared_ptr<GGE_module> arg = nullptr);
+		Command(shared_ptr<GGE_module> module,  shared_ptr<GGE_module> arg, int command = -1);
 		virtual ~Command() = default;
 
 		virtual const string get_command_string() const = 0;
 		virtual void execute() = 0;
+
+		int get_command();
+		shared_ptr<GGE_module> get_argument();
+		shared_ptr<GGE_module> get_module();
+
+		virtual bool is_valid_command() const;
+
 	protected:
 
 		/*
@@ -21,4 +28,6 @@ class Command
 		 */
 		int _cmd;
 		shared_ptr<GGE_module> _arg;
+		shared_ptr<GGE_module> _module;
+
 };

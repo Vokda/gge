@@ -32,6 +32,7 @@ class GGE_API
 		int init_events();
 		int init_grid(size_t, size_t, int);
 		int init_game_loop();
+		int init_texter();
 
 		// events
 		const std::queue<int>& get_events() const;
@@ -42,7 +43,6 @@ class GGE_API
 
 		// core command
 		void quit();
-
 
 		// text
 		size_t create_text(const string& text, int view_port);

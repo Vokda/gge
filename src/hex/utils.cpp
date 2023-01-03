@@ -83,7 +83,7 @@ cube_coord Utils::offset_coord_to_cube(int col, int row) const
 			r = row - (col - (col&1)) / 2;
 			break;
 		default: 
-			throw "ERROR coordinate system not implemented";
+			throw runtime_error("ERROR coordinate system not implemented");
 	}
 	return cube_coord(q, r, -q-r);
 }
@@ -102,7 +102,7 @@ SDL_Point Utils::calc_center_point(cube_coord cc) const
 			p.y = _layout.size * _layout.orientation.f[3] * (row + 0.5 * (col&1));
 			break;
 		default: 
-			throw "ERROR coordinate system not implemented";
+			throw runtime_error("ERROR coordinate system not implemented");
 	}
 #ifdef DEBUG
 #include <iostream>

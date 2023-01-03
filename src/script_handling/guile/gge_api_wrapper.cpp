@@ -1,5 +1,6 @@
 #include "gge_api_wrapper.hpp"
 #include <string>
+#include <vector>
 
 extern "C"
 {
@@ -102,6 +103,53 @@ extern "C"
 	{
 		int event = _gge_api->pop_event();
 		return scm_from_int(event);
+	}
+
+	SCM init_texter()
+	{
+		return scm_from_int(
+				_gge_api->init_texter()
+				);
+	}
+
+	SCM create_text(SCM text, SCM scm_x, SCM scm_y, SCM ms, SCM view_port)
+	{
+		const char* c = scm_to_locale_string(text);
+		const string str(c);
+		int x = scm_to_int(scm_x);
+		int y = scm_to_int(scm_y);
+
+		return scm_from_uint(
+				_gge_api->create_text(
+					str,
+					{255,255,255,255},
+					{x,y,-1,-1},
+					scm_to_int(ms),
+					scm_to_int(view_port)
+					)
+				);
+	}
+
+	void set_hex_color(SCM r, SCM g, SCM b, SCM index)
+	{
+		_gge_api->set_hex_color(
+				{scm_to_int(r), scm_to_int(g),scm_to_int(b),},
+				scm_to_uint(index));
+	}
+
+	SCM get_hex_from_mouse(SCM x, SCM y)
+	{
+		return scm_from_int(
+				_gge_api->get_hex_from_mouse(
+					scm_to_int(x),
+					scm_to_int(y)
+					));
+	}
+
+	SCM get_mouse_position()
+	{
+		std::vector<int> mp = _gge_api->get_mouse_position();
+		return scm_list_2(scm_from_int(mp[0]), scm_from_int(mp[1]));
 	}
 
 } // extern C END

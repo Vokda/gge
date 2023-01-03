@@ -32,6 +32,8 @@
   (gge:init_grid 2 3 60))
 (define game_loop
   (gge:init_game_loop))
+(define texter
+  (gge:init_texter))
 
 (display "Add commands \n")
 ; add_command <module to execute command> <command number, -1 = there is only one to pick (change to 0?)> <id to module used as parameter, 0 = None>
@@ -39,4 +41,5 @@
 (gge:add_command events -1 0)
 (gge:add_command game_loop -1 0)
 (gge:add_command graphics 1 grid) ; draw
+(gge:add_command graphics 1 texter)
 (gge:add_command graphics 2 0) ;  render

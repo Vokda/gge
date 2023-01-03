@@ -16,10 +16,28 @@ extern "C"
 	SCM init_events();
 	SCM init_grid(SCM w, SCM h, SCM size);
 	SCM init_game_loop();
+	SCM init_texter();
 
 	void add_command(SCM module...);
 
 	void quit();
 
+	//SCM create_text(SCM text, SCM view_port);
+	SCM create_text(
+			SCM text, 
+			/* TODO color */
+			SCM x,
+			SCM y,
+			/* TODO size */
+			SCM ms,
+			SCM view_port
+			);
+
 	SCM get_next_event();
+
+	void set_hex_color(SCM r, SCM g, SCM b, SCM index);
+
+	SCM get_hex_from_mouse(SCM x, SCM y);
+
+	SCM get_mouse_position();
 }

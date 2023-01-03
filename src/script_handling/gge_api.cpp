@@ -43,13 +43,25 @@ int GGE_API::init_game_loop()
 	return add_module(GAME_LOOP, _gge_init.game_loop(*_script_engine, _core));
 }
 
+int GGE_API::init_texter()
+{
+	return add_module(TEXTER, _gge_init.texter(
+				static_pointer_cast<Graphics>(_core.get_module(GRAPHICS))
+				));
+}
+
 // init end
 
 
 
 size_t GGE_API::create_text(const string& text, int view_port)
 {
-	return create_text(text, view_port);
+	return create_text(
+			text, 
+			{255,255,255,255},
+			{0,0,100,100},
+			1000,
+			view_port);
 }
 
 size_t GGE_API::create_text(const string& text, int view_port, int ms = 1000, int x = -1, int y = -1)

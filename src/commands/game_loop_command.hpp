@@ -9,6 +9,7 @@ class Game_loop_command: public Command
 	public:
 		Game_loop_command(
 				std::shared_ptr<Game_loop> m, 
+				std::shared_ptr<GGE_module> a, 
 				double& arg
 				);
 

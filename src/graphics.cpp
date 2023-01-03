@@ -82,9 +82,7 @@ void Graphics::draw(const shared_ptr<GGE_module> module)
 			draw_text(static_pointer_cast<Texter>(module));
 			break;
 		default:
-			string s = "Cannot draw ";
-			s += module->get_type();
-			throw s;
+			throw domain_error(throw_message(__FILE__, "cannot draw", module->get_type()));
 	}
 }
 
