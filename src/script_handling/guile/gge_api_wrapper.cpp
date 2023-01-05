@@ -132,9 +132,11 @@ extern "C"
 
 	void set_hex_color(SCM r, SCM g, SCM b, SCM index)
 	{
+		int i = scm_to_int(index);
+		if(i < 0) return;
 		_gge_api->set_hex_color(
 				{scm_to_int(r), scm_to_int(g),scm_to_int(b),},
-				scm_to_uint(index));
+				i);
 	}
 
 	SCM get_hex_from_mouse(SCM x, SCM y)

@@ -84,6 +84,9 @@ class GGE_API
 		 */
  		void scroll_mouse(int& x, int& y);
 		int add_module(rgm m, shared_ptr<GGE_module> ptr);
+#ifdef DEBUG
+		int _x, _y = 0;
+#endif
 };
 
 #endif

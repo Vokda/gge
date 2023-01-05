@@ -87,7 +87,9 @@ void Guile::add_gge_api_functions()
 			"get_next_event", 
 			"init_texter",
 			"create_text",
-			"get_mouse_position", NULL);
+			"get_mouse_position",
+			"get_hex_from_mouse",
+			"set_hex_color", NULL);
 	// gge_end write subs
 
 	scm_set_current_module(prev_module); // Top module is reset

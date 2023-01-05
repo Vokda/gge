@@ -6,6 +6,7 @@
 #include "commands/game_loop_command.hpp"
 #include "commands/events_command.hpp"
 #include "commands/graphics_command.hpp"
+#include "commands/ticker_command.hpp"
 #include "graphics.hpp"
 // gge_end import headers
 #include <regex>
@@ -58,6 +59,15 @@ void Runner::add_command(rgm module, int command, rgm arg)
 						command)
 					);
 			break;
+		case TEXTER:
+			_commands.push_back(
+					make_shared<Ticker_command>(
+						gge_module,
+						get_module(NONE),
+						command
+						));
+			break;
+
 //#include "runner_add_command_switch.generated"
 		default:
 			{

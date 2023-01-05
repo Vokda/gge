@@ -40,6 +40,7 @@
 (gge:add_command graphics 0 0) ; clear screen
 (gge:add_command events -1 0)
 (gge:add_command game_loop -1 0)
+(gge:add_command texter 0 0) ; ticker
 (gge:add_command graphics 1 grid) ; draw
 (gge:add_command graphics 1 texter)
 (gge:add_command graphics 2 0) ;  render

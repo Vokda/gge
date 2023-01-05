@@ -31,17 +31,17 @@ Graphics::Graphics(
 			_screen_height,
 			SDL_WINDOW_SHOWN); 
 	_sdl_helper.check_null("SDL window", _window);
-
+/* TODO remove viewports temporarily
 	// create viewports
 	// _bar_view (on top to begin with)
 	_bar_view.x = _bar_view.y = 0;
 	_bar_view.w = _screen_width;
 	_bar_view.h = 50; // hard coded
-
+*/
 	_main_view.x = 0;
-	_main_view.y = _bar_view.h;
+	_main_view.y = 0; // _bar_view.h;
 	_main_view.w = _screen_width;
-	_main_view.h = _screen_height - _bar_view.h;
+	_main_view.h = _screen_height; // - _bar_view.h;
 
 	// create renderer
 	_sdl_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);

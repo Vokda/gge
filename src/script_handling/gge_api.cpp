@@ -126,16 +126,22 @@ int GGE_API::pop_event()
 int GGE_API::get_hex_from_mouse(int x, int y)
 {
 #ifdef DEBUG
-	cout << "DEBUG: raw input [" << x << ", " << y <<"]" << endl;
+	if(_x != x and _y != y)
+	{
+		cout << "DEBUG: raw input [" << x << ", " << y <<"]" << endl;
+		_x = x;
+		_y = y;
+	}
 #endif
 
 	auto grid = static_pointer_cast<Hex_grid>(_core.get_module(GRID));
+	/* TODO only scroll if instantiated
 	auto graphics = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
 	// TODO if top bar add top bar size to y
 	y -= graphics->get_viewport(1).h; 
 	// test for scroll
 	scroll_mouse(x, y);
-	y += graphics->get_viewport(1).h; 
+	y += graphics->get_viewport(1).h; */
 	cube_coord cc = grid->_utils.axial_to_cube(grid->_utils.xy_to_axial(x, y));
 	int i = grid->get_hex_index(cc);
 
