@@ -152,8 +152,7 @@ void GGE_API::set_hex_color(const vector<int>& c, size_t hex_i)
 {
 	vector<Uint8> v(c.begin(), c.end());
 	SDL_Color color = {v[0], v[1], v[2], v[3]};
-	shared_ptr<Hex_grid> grid = static_pointer_cast<Hex_grid>(_core.get_module(GRID));
-	Hex& hex = grid->get_hex(hex_i);
+	Hex& hex = get_hex(hex_i);
 	hex.set_color(color);
 }
 
@@ -198,4 +197,60 @@ int GGE_API::add_module(rgm m, shared_ptr<GGE_module> ptr)
 void GGE_API::quit()
 {
 	_core.quit();
+}
+
+void GGE_API::set_hex_custom_data(size_t hex_i, const string& name, void* data)
+{
+#ifdef DEBUG
+	cout << "saving data " << data << " as " << name << " to hex " << hex_i << endl;
+#endif
+	auto& hex = get_hex(hex_i);
+	hex[name] = data;
+}
+
+void* GGE_API::get_hex_custom_data(size_t hex_i, const string& name)
+{
+#ifdef DEBUG
+	cout << "reading data " << name << " from hex " << hex_i << endl;
+#endif
+	auto hex = get_hex(hex_i);
+	return hex[name];
+}
+
+/*
+void GGE_API::set_hex_data_number(const string& name, double d, size_t i)
+{
+	Hex& hex = get_hex(i);
+	//hex.set_custom_data(name, new(sizeof(d)));
+}
+
+void* GGE_API::get_hex_data_number(const string& name, size_t i)
+{
+	Hex& hex = get_hex(i);
+	//return hex.get_custom_data(name);
+}
+
+
+void GGE_API::set_hex_data_text(const string& name, const string& text, size_t i)
+{
+	Hex& hex = get_hex(i);
+	//hex.set_custom_data(name, new(sizeof(text));
+}
+
+void GGE_API::get_hex_data_text(const string& name, size_t i)
+{
+	Hex& hex = get_hex(i);
+	//hex.get_custom_data(name));
+}
+*/
+
+
+
+/*
+ * PRIVATE FUNCTIONS
+ */
+Hex& GGE_API::get_hex(size_t i)
+{
+	auto grid = static_pointer_cast<Hex_grid>(_core.get_module(GRID));
+	return grid->get_hex(i);
 }

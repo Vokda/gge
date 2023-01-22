@@ -154,6 +154,23 @@ extern "C"
 		return scm_list_2(scm_from_int(mp[0]), scm_from_int(mp[1]));
 	}
 
+	void set_hex_custom_data(SCM index, SCM name, SCM data)
+	{
+		int i = scm_to_int(index);
+		const char *c = scm_to_locale_string(name);
+		const string str(c);
+		void* d = scm_to_pointer(data);
+		_gge_api->set_hex_custom_data(i, str, d);
+	}
+
+	SCM get_hex_custom_data(SCM index, SCM name)
+	{
+		int i = scm_to_int(index);
+		const char *c = scm_to_locale_string(name);
+		const string str(c);
+		return scm_from_pointer( _gge_api->get_hex_custom_data(i, str), NULL );
+	}
+
 } // extern C END
 
 // definition outside to handle C++ strings

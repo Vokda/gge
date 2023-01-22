@@ -73,6 +73,9 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("set_hex_color", 4,0,0, (scm_t_subr) set_hex_color);
 	scm_c_define_gsubr("get_hex_from_mouse", 2,0,0, (scm_t_subr) get_hex_from_mouse);
 	scm_c_define_gsubr("get_mouse_position", 0,0,0, (scm_t_subr) get_mouse_position);
+
+	scm_c_define_gsubr("set_hex_custom_data", 3,0,0, (scm_t_subr) set_hex_custom_data);
+	scm_c_define_gsubr("get_hex_custom_data", 2,0,0, (scm_t_subr) get_hex_custom_data);
 	// gge_end read subs
 
 	// gge_begin write subs
@@ -89,7 +92,10 @@ void Guile::add_gge_api_functions()
 			"create_text",
 			"get_mouse_position",
 			"get_hex_from_mouse",
-			"set_hex_color", NULL);
+			"set_hex_color",
+			"set_hex_custom_data",
+			"get_hex_custom_data", 
+			NULL);
 	// gge_end write subs
 
 	scm_set_current_module(prev_module); // Top module is reset

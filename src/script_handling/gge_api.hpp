@@ -13,6 +13,7 @@
 
 struct SDL_Point;
 class Script_engine;
+class Hex;
 
 using namespace std;
 
@@ -60,11 +61,22 @@ class GGE_API
 				int value
 				);
 
-		void set_hex_color(const vector<int>& c, size_t i);
 
 		// hex related 
 		// return index to hex in hex grid vector
 		int get_hex_from_mouse(int x, int y);
+		void set_hex_color(const vector<int>& c, size_t i);
+
+		void set_hex_custom_data(size_t index, const string& name, void* data);
+		void* get_hex_custom_data(size_t index, const string& name);
+
+		// number
+		/*void set_hex_data_number(const string& name, double data, size_t index);
+		double get_hex_data_number(const string& name, size_t index);
+
+		// text
+		void set_hex_data_text(const string& name, const string& text, size_t index);
+		const string& get_hex_data_text( size_t index, const string& name);*/
 
 		// TODO if possible depending on loaded modules
 		void add_command(rgm module, int command, rgm arg);
@@ -83,7 +95,10 @@ class GGE_API
 		 * change the mouse input position based on the amount scrolled
 		 */
  		void scroll_mouse(int& x, int& y);
+
 		int add_module(rgm m, shared_ptr<GGE_module> ptr);
+
+		Hex& get_hex(size_t i);
 #ifdef DEBUG
 		int _x, _y = 0;
 #endif

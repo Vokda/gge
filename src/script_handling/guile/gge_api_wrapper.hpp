@@ -40,4 +40,7 @@ extern "C"
 	SCM get_hex_from_mouse(SCM x, SCM y);
 
 	SCM get_mouse_position();
+
+	void set_hex_custom_data(SCM i, SCM name, SCM data);
+	SCM get_hex_custom_data(SCM index, SCM name);
 }
