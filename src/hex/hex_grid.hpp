@@ -26,7 +26,7 @@ class Hex_grid: public GGE_module
 		const std::vector<Hex>& get_grid() const { return _grid; }
 
 		Hex& get_hex(int q, int  r, int s);
-		Hex& get_hex(size_t i) { return _grid[i]; };
+		Hex& get_hex(size_t i);
 		int get_hex_index(cube_coord c);
 		
 		/* ugly special case for the gge api 
@@ -43,6 +43,8 @@ class Hex_grid: public GGE_module
 
 		void map_cube_to_i(cube_coord, size_t i);
 		int hash_cube_coord(int q, int r, int s);
+
+		bool legal_hex_index(size_t i);
 
 		// vars
 		std::vector<Hex> _grid;

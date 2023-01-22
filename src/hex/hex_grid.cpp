@@ -63,10 +63,29 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 	return Hex(c_a.q + c_b.q, c_a.r + c_b.r, c_a.s + c_b.s, _hex_size);
 }*/
 
+Hex& Hex_grid::get_hex(size_t i)
+{
+	if(legal_hex_index(i))
+	{
+		return _grid[i];
+	}
+	else
+	{
+		throw out_of_range(throw_message(
+					__FILE__, 
+					"cannot access hex " + to_string(i) + "! Out of range for grid (0-"+to_string(_grid.size()-1)+")",
+					GRID));
+	}
+}
+
 Hex& Hex_grid::get_hex(int q, int r, int s)
 {
-	size_t i = _cube_coords_to_i_map[hash_cube_coord(q,r,s)];
-	return _grid[i];
+	return get_hex(_cube_coords_to_i_map[hash_cube_coord(q,r,s)]);
+}
+
+bool Hex_grid::legal_hex_index(size_t i)
+{
+	return i >= 0 and i < _grid.size();
 }
 
 int Hex_grid::get_hex_index(cube_coord cc)

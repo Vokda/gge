@@ -6,6 +6,8 @@
 
 ; a simple hello, no functionallity aside from that
 
+(use-modules (system foreign))
+
 (add-to-load-path (dirname (current-filename)))
 (display %load-path)
 
@@ -28,8 +30,10 @@
   (gge:init_graphics "GGE Test" 640 480))
 (define events
   (gge:init_events))
+(define grid_x 2)
+(define grid_y 3)
 (define grid
-  (gge:init_grid 2 3 60))
+  (gge:init_grid grid_x grid_y 60))
 (define game_loop
   (gge:init_game_loop))
 (define texter
@@ -44,3 +48,8 @@
 (gge:add_command graphics 1 grid) ; draw
 (gge:add_command graphics 1 texter)
 (gge:add_command graphics 2 0) ;  render
+
+; set data to hexes
+(do ((i 0 (1+ i)))
+  ((>= i (* grid_x grid_y)))
+   (gge:set_hex_custom_data i "name" (string->pointer (string-append "hex " (number->string i)) ) ))

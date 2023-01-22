@@ -6,6 +6,7 @@
 (use-modules ( (gge)
 			  #:prefix gge:)
 			 )
+(use-modules (system foreign))
 
 (define delta_string "delta: ")
 (define i 0) ; to show delta every 60th frame
@@ -33,7 +34,7 @@
 
 (define mouse_on_hex?
   (lambda ()
-	(cond ((> -1 (apply gge:get_hex_from_mouse (gge:get_mouse_position))) #t)
+	(cond ((< -1 (apply gge:get_hex_from_mouse (gge:get_mouse_position))) #t)
 		  (else #f))
 	))
 
@@ -42,9 +43,13 @@
   (lambda ()
 	(if (mouse_on_hex?)
 	  (gge:create_text 
-		(number->string (apply gge:get_hex_from_mouse (gge:get_mouse_position)))
-		(inexact->exact (car (gge:get_mouse_position))) 
-		(inexact->exact (cadr (gge:get_mouse_position)))
+		(pointer->string (gge:get_hex_custom_data 
+						  (apply gge:get_hex_from_mouse (gge:get_mouse_position))
+						  "name"
+						  )) ; text ( hex data 'name)
+		;(number->string (apply gge:get_hex_from_mouse (gge:get_mouse_position))) ; text (# of hex)
+		(inexact->exact (car (gge:get_mouse_position))) ; x position
+		(inexact->exact (cadr (gge:get_mouse_position))) ; y position
 		1000 ; life
 		0) ; viewport
 	  )

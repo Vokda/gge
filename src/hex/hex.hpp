@@ -3,7 +3,8 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "coords.hpp"
-#include <memory>
+#include <map>
+using namespace std;
 
 class Hex
 {
@@ -16,6 +17,8 @@ class Hex
 				int size,
 				SDL_Color c = {255, 255, 255, 255}
 		   );
+
+		//~Hex();
 
 		// old implementation
 		//Hex(int row, int col, int size, SDL_Point offset, const Utils& u);
@@ -35,10 +38,14 @@ class Hex
 
 		void set_color(const SDL_Color c) {_hex_color = c;}
 
+		// custom hex data
+		//void set_custom_data(const string&, void* data, size_t size);
+		//void* get_custom_data(const string&);
+		map<string,void*>::mapped_type& operator[](const string& name) { return _hex_data[name]; }
+
 	private:
 		cube_coord _cube_coordinate; // cube coordinates
 		SDL_Point _position; // center point position x y
-
 
 		std::vector<SDL_Point> _corners;
 
@@ -48,10 +55,7 @@ class Hex
 		// hex properties
 		SDL_Color _hex_color;
 		bool blink = false;
-
-		//std::shared_ptr<Chai_object> _in_hex_data = nullptr;
-		//std::shared_ptr<Chai_object> _on_hex_data = nullptr;
-
+		map<string, void*> _hex_data;
 };
 
 std::ostream& operator<<(std::ostream& ost, const Hex&);
