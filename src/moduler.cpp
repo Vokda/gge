@@ -1,5 +1,5 @@
 #include "moduler.hpp"
-#include "gge_module.hpp"
+#include "gge_modules/gge_module.hpp"
 #include <iostream>
 using namespace std;
 Moduler::Moduler()

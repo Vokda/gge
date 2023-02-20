@@ -1,11 +1,13 @@
-#include "script_handling/scripter.hpp"
-#include "script_handling/gge_api.hpp"
 #include <iostream>
-#include "core.hpp"
 #include <cstdlib>
-#include "gge.hpp"  // just a big ascii of "GGE"
 #include <csignal>
 using namespace std;
+
+#include "script_handling/scripter.hpp"
+#include "script_handling/gge_api.hpp"
+#include "gge.hpp"  // just a big ascii of "GGE"
+#include "core.hpp"
+#include "filer.hpp"
 
 // signal handling
 Core* c;
@@ -28,15 +30,19 @@ int main(int argc, char* argv[])
 	// init 
 	try
 	{
-		Core core;
-		c = &core;
+		// handle path to game given
+		Filer filer(argv[1]);
+
+		Core core(filer);
+		c = &core; // for signal handling
 
 		GGE_API gge_api(core);
-		Scripter scripter(argv[1], gge_api);
+		Scripter scripter(filer, gge_api);
 
 		core.check_modules_initiated();
 		core.check_commands_order();
 
+		// signal handling
 		signal(SIGINT, quit);
 		signal(SIGTERM, quit);
 		signal(SIGABRT, quit);

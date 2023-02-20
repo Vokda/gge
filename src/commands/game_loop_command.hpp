@@ -1,8 +1,9 @@
 #pragma once
 #include "command.hpp"
 #include <memory>
-#include "../game_loop.hpp"
+#include "../gge_modules/game_loop.hpp"
 using namespace std;
+
 
 class Game_loop_command: public Command
 {

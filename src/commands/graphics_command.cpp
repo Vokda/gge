@@ -1,4 +1,5 @@
 #include "graphics_command.hpp"
+#include "../gge_modules/graphics.hpp"
 
 Graphics_command::Graphics_command(
 		shared_ptr<GGE_module> g, 

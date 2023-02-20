@@ -3,11 +3,13 @@
 #include <vector>
 #include <iostream>
 
-#include "../texter.hpp"
-#include "../events.hpp"
-#include "../graphics.hpp"
+#include "../filer.hpp"
+#include "../gge_modules/texter.hpp"
+#include "../gge_modules/events.hpp"
+#include "../gge_modules/graphics.hpp"
 #include "../hex/hex_grid.hpp"
-#include "../scroller.hpp"
+#include "../gge_modules/spriter.hpp"
+#include "../gge_modules/scroller.hpp"
 
 using namespace std;
 
@@ -48,6 +50,12 @@ int GGE_API::init_texter()
 	return add_module(TEXTER, _gge_init.texter(
 				static_pointer_cast<Graphics>(_core.get_module(GRAPHICS))
 				));
+}
+
+int GGE_API::init_spriter()
+{
+	return add_module(SPRITER, _gge_init.spriter(
+				static_pointer_cast<Graphics>(_core.get_module(GRAPHICS))));
 }
 
 // init end
@@ -244,6 +252,22 @@ void GGE_API::get_hex_data_text(const string& name, size_t i)
 }
 */
 
+size_t GGE_API::load_image(const string& s)
+{
+	auto graphics = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
+	Filer& filer = _core.get_filer();
+	return graphics->load_image(filer.in_game_dir(s));
+}
+
+size_t GGE_API::create_sprite(size_t t, int x, int y)
+{
+	auto graphics = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
+	auto spriter  = static_pointer_cast<Spriter>(_core.get_module(SPRITER));
+	SDL_Point p;
+	p.x = x;
+	p.y = y;
+	return spriter->create_sprite(t, p, -1);
+}
 
 
 /*

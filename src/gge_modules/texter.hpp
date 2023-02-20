@@ -5,7 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "componenter.hpp"
 #include "gge_module.hpp"
-#include "sdl_helper.hpp"
+#include "../sdl_helper.hpp"
 class Graphics;
 using namespace std;
 

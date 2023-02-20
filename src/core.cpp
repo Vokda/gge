@@ -4,12 +4,14 @@
 #include <thread>
 #include <stdexcept>
 #include <algorithm>
-#include "gge_module.hpp"
+#include "gge_modules/gge_module.hpp"
+#include "filer.hpp"
 class Initializer;
 using namespace std;
 
-Core::Core():
-	_runner(_moduler, *this)
+Core::Core(Filer& f):
+	_runner(_moduler, *this),
+	_filer(f)
 {
 }
 

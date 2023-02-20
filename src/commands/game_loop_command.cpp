@@ -1,5 +1,5 @@
 #include "game_loop_command.hpp"
-#include "../game_loop.hpp"
+#include "../gge_modules/game_loop.hpp"
 
 Game_loop_command::Game_loop_command(
 				std::shared_ptr<Game_loop> gm, 

@@ -17,6 +17,7 @@ extern "C"
 	SCM init_grid(SCM w, SCM h, SCM size);
 	SCM init_game_loop();
 	SCM init_texter();
+	SCM init_spriter();
 
 	void add_command(SCM module...);
 
@@ -43,4 +44,7 @@ extern "C"
 
 	void set_hex_custom_data(SCM i, SCM name, SCM data);
 	SCM get_hex_custom_data(SCM index, SCM name);
+
+	SCM load_image(SCM path);
+	SCM create_sprite(SCM texture, SCM x, SCM y);
 }

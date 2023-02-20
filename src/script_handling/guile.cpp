@@ -61,6 +61,7 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("init_grid", 3, 0, 0, (scm_t_subr) init_grid);
 	scm_c_define_gsubr("init_game_loop", 0, 0, 0, (scm_t_subr) init_game_loop);
 	scm_c_define_gsubr("init_texter", 0, 0, 0, (scm_t_subr) init_texter);
+	scm_c_define_gsubr("init_spriter", 0, 0, 0, (scm_t_subr) init_spriter);
 	scm_c_define_gsubr("game_loop", 0,0,0, (scm_t_subr) init_game_loop);
 
 	scm_c_define_gsubr("quit",0,0,0, (scm_t_subr) quit);
@@ -76,6 +77,10 @@ void Guile::add_gge_api_functions()
 
 	scm_c_define_gsubr("set_hex_custom_data", 3,0,0, (scm_t_subr) set_hex_custom_data);
 	scm_c_define_gsubr("get_hex_custom_data", 2,0,0, (scm_t_subr) get_hex_custom_data);
+
+	scm_c_define_gsubr("load_image", 1,0,0, (scm_t_subr) load_image);
+	scm_c_define_gsubr("create_sprite", 3,0,0, (scm_t_subr) create_sprite);
+
 	// gge_end read subs
 
 	// gge_begin write subs
@@ -89,12 +94,15 @@ void Guile::add_gge_api_functions()
 			"add_command",
 			"get_next_event", 
 			"init_texter",
+			"init_spriter",
 			"create_text",
 			"get_mouse_position",
 			"get_hex_from_mouse",
 			"set_hex_color",
 			"set_hex_custom_data",
 			"get_hex_custom_data", 
+			"load_image",
+			"create_sprite",
 			NULL);
 	// gge_end write subs
 

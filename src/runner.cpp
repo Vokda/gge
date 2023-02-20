@@ -1,5 +1,5 @@
 #include "runner.hpp"
-#include "gge_module.hpp"
+#include "gge_modules/gge_module.hpp"
 #include <iostream>
 // gge_begin import headers
 #include "commands/command.hpp"
@@ -7,11 +7,9 @@
 #include "commands/events_command.hpp"
 #include "commands/graphics_command.hpp"
 #include "commands/ticker_command.hpp"
-#include "graphics.hpp"
 // gge_end import headers
-#include <regex>
 #include <stdexcept>
-#include <algorithm>
+#include <sstream>
 #include "moduler.hpp"
 #include "core.hpp"
 using namespace std;

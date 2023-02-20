@@ -1,11 +1,12 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <iostream>
 #include "graphics.hpp"
 #include <unistd.h>
 #include <cstdint>
 #include "texter.hpp"
-#include "sdl_helper.hpp"
-#include "hex/hex_grid.hpp"
+#include "spriter.hpp"
+#include "../hex/hex_grid.hpp"
 #include <memory>
 #include "scroller.hpp"
 using namespace std;
@@ -21,6 +22,7 @@ Graphics::Graphics(
 	auto pixel_format = SDL_PIXELFORMAT_RGBA8888;
 
 	_sdl_helper.check_null("SDL initialization", SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS));
+	//_sdl_helper.check_null("SDL Image initialization", IMG_INIT(IMG_INIT_PNG));
 
 	// create window
 	_window = SDL_CreateWindow(
@@ -56,6 +58,10 @@ Graphics::~Graphics()
 {
 	SDL_DestroyRenderer(_sdl_renderer);
 	SDL_DestroyWindow(_window);
+	for(auto* texture : _textures)
+	{
+		SDL_DestroyTexture(texture);
+	}
 	SDL_Quit();
 }
 
@@ -81,10 +87,24 @@ void Graphics::draw(const shared_ptr<GGE_module> module)
 		case TEXTER:
 			draw_text(static_pointer_cast<Texter>(module));
 			break;
+		case SPRITER:
+			draw_sprites(static_pointer_cast<Spriter>(module));
+			break;
 		default:
 			throw domain_error(throw_message(__FILE__, "cannot draw", module->get_type()));
 	}
 }
+
+void Graphics::draw_sprites(const shared_ptr<Spriter> spriter)
+{
+	for(auto s: spriter->get_components())
+	{
+		shared_ptr<Sprite> sprite = static_pointer_cast<Sprite>(s);
+		set_viewport(static_cast<viewport>(sprite->view_port));
+		SDL_RenderCopy(_sdl_renderer, sprite->texture, NULL, &sprite->size);
+	}
+}
+
 
 /*void Graphics::draw(const Shape& shape)
 {
@@ -153,6 +173,10 @@ void Graphics::draw_grid(const shared_ptr<Hex_grid> grid)
 	}
 }
 
-//void Graphics::load_image(const std::string& path)
-//{
-	
+size_t Graphics::load_image(const std::string& path)
+{
+	SDL_Texture* texture = IMG_LoadTexture(_sdl_renderer, path.c_str());
+	_textures.push_back(texture);
+	_sdl_helper.check_null("Creating texture: " + path, texture);
+	return _textures.size() - 1;
+}

@@ -2,12 +2,12 @@
 #define GGE_API_HPP
 #include "../sdl_helper.hpp"
 
-#include "../gge_module_initializer.hpp"
+#include "../gge_modules/gge_module_initializer.hpp"
 #include <string>
 #include <SDL2/SDL.h>
 #include <vector>
 #include <queue>
-#include "../registered_gge_modules.hpp"
+#include "../gge_modules/registered_gge_modules.hpp"
 #include "../core.hpp"
 
 
@@ -28,12 +28,13 @@ class GGE_API
 
 		void hello();
 
-		// module init
+		// module init returns ID of module
 		int init_graphics(const string& s, size_t, size_t);
 		int init_events();
 		int init_grid(size_t, size_t, int);
 		int init_game_loop();
 		int init_texter();
+		int init_spriter();
 
 		// events
 		const std::queue<int>& get_events() const;
@@ -82,8 +83,11 @@ class GGE_API
 		void add_command(rgm module, int command, rgm arg);
 		int get_module(const string& module);
 
-
 		void create_shape(int shape, const vector<int>& p);
+
+		// load and image from path
+		size_t load_image(const string& s);
+		size_t create_sprite(size_t texture, int x, int y);
 
 	private:
 		Core& _core;

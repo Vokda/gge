@@ -1,8 +1,8 @@
 #include "scroller.hpp"
 #include <SDL2/SDL.h>
 #include <memory>
-#include "hex/hex_grid.hpp"
-#include "sdl_helper.hpp"
+#include "../hex/hex_grid.hpp"
+#include "../sdl_helper.hpp"
 using namespace std;
 
 Scroller::Scroller(int w, int h, SDL_Rect* max_scroll ):

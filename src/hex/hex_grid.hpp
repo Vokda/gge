@@ -7,7 +7,7 @@
 #include "hex.hpp"
 #include "orientation.hpp"
 #include "utils.hpp"
-#include "../gge_module.hpp"
+#include "../gge_modules/gge_module.hpp"
 
 
 using namespace std;

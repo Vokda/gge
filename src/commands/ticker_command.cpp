@@ -2,7 +2,7 @@
 #include <concepts>
 #include <sstream>
 #include <stdexcept>
-#include "../texter.hpp"
+#include "../gge_modules/texter.hpp"
 
 Ticker_command::Ticker_command(
 				shared_ptr<GGE_module> tickable_module, 

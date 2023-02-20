@@ -1,6 +1,5 @@
 #include "events.hpp"
 #include <iostream>
-#include "sdl_helper.hpp"
 using namespace std;
 
 Events::Events():

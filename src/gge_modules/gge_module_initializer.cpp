@@ -4,12 +4,13 @@
 // gge_begin import includes
 #include "events.hpp"
 #include "graphics.hpp"
-#include "hex/hex_grid.hpp"
+#include "../hex/hex_grid.hpp"
 #include "scroller.hpp"
 #include "texter.hpp"
-#include "hex/orientation.hpp"
+#include "../hex/orientation.hpp"
 #include "game_loop.hpp"
 #include "none.hpp"
+#include "spriter.hpp"
 // gge_end import includes
 
 /*GGE_module_initializer::GGE_module_initializer(Moduler& m):
@@ -87,6 +88,11 @@ shared_ptr<GGE_module> GGE_module_initializer::none()
 shared_ptr<GGE_module> GGE_module_initializer::texter(shared_ptr<Graphics> g)
 {
 	return make_shared<Texter>(g);
+}
+
+shared_ptr<GGE_module> GGE_module_initializer::spriter(shared_ptr<Graphics> g)
+{
+	return make_shared<Spriter>(g);
 }
 
 // gge_begin import ctor_def

@@ -2,7 +2,9 @@
 #include <string>
 #include <memory>
 using namespace std;
-#include "../gge_module.hpp"
+//#include "../gge_module.hpp"
+
+class GGE_module;
 
 class Command
 {

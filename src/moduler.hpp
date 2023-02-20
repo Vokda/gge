@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <map>
-#include "registered_gge_modules.hpp"
+#include "gge_modules/registered_gge_modules.hpp"
 class GGE_module;
 using namespace std;
 

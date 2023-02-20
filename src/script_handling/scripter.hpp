@@ -10,15 +10,17 @@ using namespace std;
 
 class Script_engine;
 class GGE_API;
+class Filer;
 
 class Scripter
 {
 	public:
-		Scripter(const string& game_directory, GGE_API&);
+		Scripter(Filer& filer, GGE_API&);
 		bool is_script_engine_running();
 
 	private:
 		shared_ptr<Script_engine> _script_engine; 
+		Filer& _filer;
 };
 
 #endif

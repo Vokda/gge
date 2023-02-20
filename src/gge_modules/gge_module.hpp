@@ -33,6 +33,8 @@ class GGE_module
 					return "Texter";
 				case(GAME_LOOP):
 					return "Game_loop";
+				case(SPRITER):
+					return "Spriter";
 					// gge_end cases
 				default:
 					return "<Unnamed GGE Module [" + to_string(m) + "]>";

@@ -1,6 +1,5 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include "sdl_helper.hpp"
 #include "texter.hpp"
 #include "graphics.hpp"
 #include <memory>

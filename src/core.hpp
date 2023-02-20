@@ -6,15 +6,15 @@
 class GGE_module;
 #include "moduler.hpp"
 #include "runner.hpp"
+class Filer;
 
 class Core
 {
 	public:
 
-		Core();
+		Core(Filer& f);
 
-		// for loading graphics (and sound and stuff too)
-		void load_graphics(const string& path);
+		Filer& get_filer() { return _filer; }
 
 		// quit the game
 		void quit();
@@ -40,6 +40,7 @@ class Core
 		double MAX_DELTA = 1.0/60.0; // TODO max 60 fps
 		Moduler _moduler;
 		Runner _runner;
+		Filer& _filer;
 		SDL_helper _sdl_helper;
 };
 

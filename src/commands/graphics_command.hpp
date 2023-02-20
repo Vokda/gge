@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../graphics.hpp"
 #include "command.hpp"
+
+class Graphics;
 
 class Graphics_command: public Command{
 	public:

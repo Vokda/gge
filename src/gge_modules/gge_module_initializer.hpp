@@ -30,5 +30,6 @@ class GGE_module_initializer
 		shared_ptr<GGE_module> game_loop(Script_engine&, Core&);
 		shared_ptr<GGE_module> none();
 		shared_ptr<GGE_module> texter(shared_ptr<Graphics> g);
+		shared_ptr<GGE_module> spriter(shared_ptr<Graphics> g);
 		// gge_end import ctor_decl
 };

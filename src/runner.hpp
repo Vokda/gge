@@ -5,7 +5,7 @@
 class Moduler;
 class GGE_module;
 class Core;
-#include "registered_gge_modules.hpp"
+#include "gge_modules/registered_gge_modules.hpp"
 using namespace std;
 /*
  * keeps order of which commands to run in what order

@@ -1,8 +1,8 @@
 #pragma once
 #include "command.hpp"
 #include <memory>
-#include "../events.hpp"
 #include <string>
+#include "../gge_modules/events.hpp"
 using namespace std;
 
 class Events_command: public Command

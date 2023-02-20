@@ -112,6 +112,12 @@ extern "C"
 				);
 	}
 
+	SCM init_spriter()
+	{
+		return scm_from_int(
+				_gge_api->init_spriter()
+				);
+	}
 	SCM create_text(SCM text, SCM scm_x, SCM scm_y, SCM ms, SCM view_port)
 	{
 		const char* c = scm_to_locale_string(text);
@@ -169,6 +175,23 @@ extern "C"
 		const char *c = scm_to_locale_string(name);
 		const string str(c);
 		return scm_from_pointer( _gge_api->get_hex_custom_data(i, str), NULL );
+	}
+
+	SCM load_image(SCM path)
+	{
+		const char *c = scm_to_locale_string(path);
+		const string str(c);
+		return scm_from_int(_gge_api->load_image(str));
+	}
+
+	SCM create_sprite(SCM texture, SCM x, SCM y)
+	{
+		return scm_from_int(
+				_gge_api->create_sprite(
+					scm_to_int(texture),
+					scm_to_int(x),
+					scm_to_int(y)
+					));
 	}
 
 } // extern C END

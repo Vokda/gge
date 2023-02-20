@@ -38,16 +38,25 @@
   (gge:init_game_loop))
 (define texter
   (gge:init_texter))
+(define spriter
+  (gge:init_spriter))
 
 (display "Add commands \n")
 ; add_command <module to execute command> <command number, -1 = there is only one to pick (change to 0?)> <id to module used as parameter, 0 = None>
+; could it be less intuitive?
 (gge:add_command graphics 0 0) ; clear screen
 (gge:add_command events -1 0)
 (gge:add_command game_loop -1 0)
 (gge:add_command texter 0 0) ; ticker
-(gge:add_command graphics 1 grid) ; draw
+; draw stuff
+(gge:add_command graphics 1 grid) 
 (gge:add_command graphics 1 texter)
+(gge:add_command graphics 1 spriter)
 (gge:add_command graphics 2 0) ;  render
+
+(define placeholder
+  (gge:load_image "sprites/placeholder.png"))
+(gge:create_sprite placeholder 0 0)
 
 ; set data to hexes
 (do ((i 0 (1+ i)))

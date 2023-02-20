@@ -3,7 +3,7 @@
 #include <queue>
 #include <SDL2/SDL.h>
 #include "gge_module.hpp"
-#include "sdl_helper.hpp"
+#include "../sdl_helper.hpp"
 using namespace std;
 
 enum device {KEYBOARD, MOUSE};

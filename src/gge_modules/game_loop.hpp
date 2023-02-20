@@ -1,7 +1,7 @@
 #pragma once
 #include "gge_module.hpp"
-#include "script_handling/script_engine.hpp"
-#include "core.hpp"
+#include "../script_handling/script_engine.hpp"
+#include "../core.hpp"
 
 /*
  * a small class to call the game loop

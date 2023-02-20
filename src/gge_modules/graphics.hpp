@@ -3,7 +3,8 @@
 #include "gge_module.hpp"
 #include <memory>
 #include <SDL2/SDL.h>
-#include "sdl_helper.hpp"
+#include "../sdl_helper.hpp"
+#include <vector>
 using namespace std;
 
 struct SDL_Window;
@@ -14,6 +15,7 @@ class Hex_grid;
 class Texter;
 class Scroller;
 class Shape;
+class Spriter;
 
 class Graphics: public GGE_module
 {
@@ -25,7 +27,8 @@ class Graphics: public GGE_module
 
 		enum viewport {MAIN, BAR, SIDE_BAR};
 
-		void load_image(const std::string& path);
+		size_t load_image(const std::string& path);
+		SDL_Texture* get_texture(size_t index) { return _textures[index]; }
 
 		void clear_screen();
 		void render();
@@ -43,6 +46,7 @@ class Graphics: public GGE_module
 	private:
 		void draw_grid(const shared_ptr<Hex_grid> grid);
 		void draw_text(const shared_ptr<Texter>);
+		void draw_sprites(const shared_ptr<Spriter>);
 		// flushes renderer if viewport changes
 		void set_viewport(viewport v);
 
@@ -61,4 +65,7 @@ class Graphics: public GGE_module
 		viewport _current_viewport = MAIN;
 
 		SDL_helper _sdl_helper;
+
+		// textures
+		vector<SDL_Texture*> _textures;
 };
