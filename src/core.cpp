@@ -49,7 +49,7 @@ void Core::check_modules_initiated()
 	_moduler.list_modules();
 
 	// probably important modules
-	vector<registered_gge_module> important = {GRAPHICS, EVENTS, GRID, GAME_LOOP};
+	vector<registered_gge_module> important = {GRAPHICS, EVENTS, GRIDER, GAME_LOOP};
 	for(auto m: important)
 	{
 		if(_moduler[m] == nullptr)

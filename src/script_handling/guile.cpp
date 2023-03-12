@@ -58,7 +58,7 @@ void Guile::add_gge_api_functions()
 
 	scm_c_define_gsubr("init_graphics", 3, 0, 0, (scm_t_subr) init_graphics);
 	scm_c_define_gsubr("init_events", 0, 0, 0, (scm_t_subr) init_events);
-	scm_c_define_gsubr("init_grid", 3, 0, 0, (scm_t_subr) init_grid);
+	scm_c_define_gsubr("init_grider", 4, 0, 0, (scm_t_subr) init_grider);
 	scm_c_define_gsubr("init_game_loop", 0, 0, 0, (scm_t_subr) init_game_loop);
 	scm_c_define_gsubr("init_texter", 0, 0, 0, (scm_t_subr) init_texter);
 	scm_c_define_gsubr("init_spriter", 0, 0, 0, (scm_t_subr) init_spriter);
@@ -71,12 +71,12 @@ void Guile::add_gge_api_functions()
 
 	scm_c_define_gsubr("create_text", 5,0,0, (scm_t_subr) create_text);
 
-	scm_c_define_gsubr("set_hex_color", 4,0,0, (scm_t_subr) set_hex_color);
-	scm_c_define_gsubr("get_hex_from_mouse", 2,0,0, (scm_t_subr) get_hex_from_mouse);
+	scm_c_define_gsubr("set_tile_color", 4,0,0, (scm_t_subr) set_tile_color);
+	scm_c_define_gsubr("get_tile_from_mouse", 2,0,0, (scm_t_subr) get_tile_from_mouse);
 	scm_c_define_gsubr("get_mouse_position", 0,0,0, (scm_t_subr) get_mouse_position);
 
-	scm_c_define_gsubr("set_hex_custom_data", 3,0,0, (scm_t_subr) set_hex_custom_data);
-	scm_c_define_gsubr("get_hex_custom_data", 2,0,0, (scm_t_subr) get_hex_custom_data);
+	scm_c_define_gsubr("set_tile_custom_data", 3,0,0, (scm_t_subr) set_tile_custom_data);
+	scm_c_define_gsubr("get_tile_custom_data", 2,0,0, (scm_t_subr) get_tile_custom_data);
 
 	scm_c_define_gsubr("load_image", 1,0,0, (scm_t_subr) load_image);
 	scm_c_define_gsubr("create_sprite", 3,0,0, (scm_t_subr) create_sprite);
@@ -87,7 +87,7 @@ void Guile::add_gge_api_functions()
 	scm_c_export("hello",
 			"init_graphics",
 			"init_events",
-			"init_grid",
+			"init_grider",
 			"init_game_loop",
 			"game_loop",
 			"quit",
@@ -97,10 +97,10 @@ void Guile::add_gge_api_functions()
 			"init_spriter",
 			"create_text",
 			"get_mouse_position",
-			"get_hex_from_mouse",
-			"set_hex_color",
-			"set_hex_custom_data",
-			"get_hex_custom_data", 
+			"get_tile_from_mouse",
+			"set_tile_color",
+			"set_tile_custom_data",
+			"get_tile_custom_data", 
 			"load_image",
 			"create_sprite",
 			NULL);

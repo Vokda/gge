@@ -4,6 +4,7 @@
 #include "gge_module.hpp"
 using namespace std;
 class Hex_grid;
+class Grider;
 
 class Scroller: public GGE_module
 {
@@ -23,7 +24,7 @@ class Scroller: public GGE_module
 		// actually move the grid
 
 		// gge_begin make commands
-		void scroll_grid(shared_ptr<Hex_grid> grid);
+		void scroll_grid(shared_ptr<Grider> grid);
 		// gge_end make commands
 
 		const SDL_Point& get_scrolled() const {return _scrolled;}

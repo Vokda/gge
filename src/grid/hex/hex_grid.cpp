@@ -1,24 +1,22 @@
 #include "hex_grid.hpp"
 #include "hex.hpp"
 #include <iostream>
-#include "utils.hpp"
+#include "hex_utils.hpp"
 #include <stdexcept>
 #include "coords.hpp"
 using namespace std;
 
 
-Hex_grid::Hex_grid(const Hex_grid& hg):
-	GGE_module(GRID),
+/*Hex_grid::Hex_grid(const Hex_grid& hg):
 	_hex_size(hg._hex_size),
 	_layout(hg._layout),
 	_utils(hg._layout)
 {
-}
+}*/
 
 Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho, Coordinate_system cs):
-	GGE_module(GRID),
-	_hex_size(size), 
 	_layout(Orientation(ho, size), cs), 
+	Grid(),
 	_utils(_layout)
 {
 	size_t k = 1;
@@ -35,13 +33,12 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 			{
 				cube_coord cc = _utils.offset_coord_to_cube(h, w);
 				SDL_Point center_point = _utils.calc_center_point(cc);
-				_grid.push_back(
-						Hex(h, w, cc, center_point, size)
-						);
+				shared_ptr<Hex> hex = make_shared<Hex>(cc, center_point, size, _utils);
+				_grid.push_back(hex);
 				int i = _grid.size() - 1;
 #ifdef DEBUG
-				cout << "Made hex ["<< i << "] at " << _grid.back();
-				map_cube_to_i(_grid.back().get_cube_coords(), i);
+				cout << "Made hex ["<< i << "] at " << hex;
+				map_cube_to_i(hex->get_cube_coords(), i);
 #endif
 			}
 			catch(char const* e)
@@ -63,32 +60,12 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 	return Hex(c_a.q + c_b.q, c_a.r + c_b.r, c_a.s + c_b.s, _hex_size);
 }*/
 
-Hex& Hex_grid::get_hex(size_t i)
-{
-	if(legal_hex_index(i))
-	{
-		return _grid[i];
-	}
-	else
-	{
-		throw out_of_range(throw_message(
-					__FILE__, 
-					"cannot access hex " + to_string(i) + "! Out of range for grid (0-"+to_string(_grid.size()-1)+")",
-					GRID));
-	}
-}
-
-Hex& Hex_grid::get_hex(int q, int r, int s)
+/*Hex& Hex_grid::get_hex(int q, int r, int s)
 {
 	return get_hex(_cube_coords_to_i_map[hash_cube_coord(q,r,s)]);
-}
+}*/
 
-bool Hex_grid::legal_hex_index(size_t i)
-{
-	return i >= 0 and i < _grid.size();
-}
-
-int Hex_grid::get_hex_index(cube_coord cc)
+size_t Hex_grid::get_hex_index(cube_coord cc)
 {
 	try
 	{
@@ -98,6 +75,13 @@ int Hex_grid::get_hex_index(cube_coord cc)
 	{
 		return -1;
 	}
+}
+
+size_t Hex_grid::get_tile(int x, int y)
+{
+	return get_hex_index(
+			_utils.axial_to_cube(
+				_utils.xy_to_axial(x, y)));
 }
 
 // PRIVATE MEMBERS

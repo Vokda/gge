@@ -16,6 +16,7 @@ class Texter;
 class Scroller;
 class Shape;
 class Spriter;
+class Grider;
 
 class Graphics: public GGE_module
 {
@@ -44,7 +45,7 @@ class Graphics: public GGE_module
 		const SDL_Rect& get_viewport(viewport vp);
 
 	private:
-		void draw_grid(const shared_ptr<Hex_grid> grid);
+		void draw_grid(const shared_ptr<Grider> grider);
 		void draw_text(const shared_ptr<Texter>);
 		void draw_sprites(const shared_ptr<Spriter>);
 		// flushes renderer if viewport changes

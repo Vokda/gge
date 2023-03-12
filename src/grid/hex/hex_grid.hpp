@@ -6,35 +6,25 @@
 //class Hex;
 #include "hex.hpp"
 #include "orientation.hpp"
-#include "utils.hpp"
-#include "../gge_modules/gge_module.hpp"
+#include "../grid.hpp"
 
 
 using namespace std;
 
-class Hex_grid: public GGE_module
+class Hex_grid: public Grid
 {
 	public:
 
 		Hex_grid(size_t w, size_t h, double hex_size, Hex_orientation ho, Coordinate_system cs);
-		Hex_grid(const Hex_grid& hg);
+		//Hex_grid(const Hex_grid& hg);
 
 		//Hex hex_add(const Hex& a, const Hex& b);
 
-		// getters
-		std::vector<Hex>& get_grid() { return _grid; };
-		const std::vector<Hex>& get_grid() const { return _grid; }
+		/*Hex get_hex(int q, int  r, int s);
+		Hex& get_hex(size_t i);*/
+		size_t get_hex_index(cube_coord c);
 
-		Hex& get_hex(int q, int  r, int s);
-		Hex& get_hex(size_t i);
-		int get_hex_index(cube_coord c);
-		
-		/* ugly special case for the gge api 
-		 * so you can do something like
-		 * grid = core.get_grid()
-		 * grid->_utils.<grid_related stuff>();
-		 */
-		Utils _utils;
+		size_t get_tile(int mouse_x, int mouse_y);
 
 	private:
 		// used to map qrs coords to index in vector
@@ -44,12 +34,16 @@ class Hex_grid: public GGE_module
 		void map_cube_to_i(cube_coord, size_t i);
 		int hash_cube_coord(int q, int r, int s);
 
-		bool legal_hex_index(size_t i);
 
 		// vars
-		std::vector<Hex> _grid;
-		int _hex_size;
 		Layout _layout;
+		
+		/* ugly special case for the gge api 
+		 * so you can do something like
+		 * grid = core.get_grid()
+		 * grid->_utils.<grid_related stuff>();
+		 */
+		Hex_utils _utils;
 
 		/*
 		   Hex hex_subtract(Hex a, Hex b)

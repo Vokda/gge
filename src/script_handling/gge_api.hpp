@@ -13,7 +13,7 @@
 
 struct SDL_Point;
 class Script_engine;
-class Hex;
+class Tile;
 
 using namespace std;
 
@@ -31,7 +31,7 @@ class GGE_API
 		// module init returns ID of module
 		int init_graphics(const string& s, size_t, size_t);
 		int init_events();
-		int init_grid(size_t, size_t, int);
+		int init_grider(int grid_type, int w, int h, int tile_size);
 		int init_game_loop();
 		int init_texter();
 		int init_spriter();
@@ -63,13 +63,15 @@ class GGE_API
 				);
 
 
-		// hex related 
-		// return index to hex in hex grid vector
-		int get_hex_from_mouse(int x, int y);
-		void set_hex_color(const vector<int>& c, size_t i);
+		// grid related 
+		// create grid TODO paramaterize more
+		int create_grid(size_t, size_t, int);
+		// return index to tile in grid vector
+		size_t get_tile_from_mouse(int x, int y);
+		void set_tile_color(const vector<int>& c, size_t i);
 
-		void set_hex_custom_data(size_t index, const string& name, void* data);
-		void* get_hex_custom_data(size_t index, const string& name);
+		void set_tile_custom_data(size_t index, const string& name, void* data);
+		void* get_tile_custom_data(size_t index, const string& name);
 
 		// number
 		/*void set_hex_data_number(const string& name, double data, size_t index);
@@ -102,7 +104,7 @@ class GGE_API
 
 		int add_module(rgm m, shared_ptr<GGE_module> ptr);
 
-		Hex& get_hex(size_t i);
+		shared_ptr<Tile> get_tile(size_t i);
 #ifdef DEBUG
 		int _x, _y = 0;
 #endif

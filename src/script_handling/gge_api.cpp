@@ -7,7 +7,7 @@
 #include "../gge_modules/texter.hpp"
 #include "../gge_modules/events.hpp"
 #include "../gge_modules/graphics.hpp"
-#include "../hex/hex_grid.hpp"
+#include "../gge_modules/grider.hpp"
 #include "../gge_modules/spriter.hpp"
 #include "../gge_modules/scroller.hpp"
 
@@ -35,9 +35,9 @@ int GGE_API::init_events()
 	return add_module(EVENTS, _gge_init.events());
 }
 
-int GGE_API::init_grid(size_t w, size_t h, int s)
+int GGE_API::init_grider(int gt, int w, int h, int ts)
 {
-	return add_module(GRID, _gge_init.grid(w, h, s));
+	return add_module(GRIDER, _gge_init.grider(gt, w, h, ts));
 }
 
 int GGE_API::init_game_loop()
@@ -131,7 +131,7 @@ int GGE_API::pop_event()
 	return static_pointer_cast<Events>(_core.get_module(EVENTS))->pop_event();
 }
 
-int GGE_API::get_hex_from_mouse(int x, int y)
+size_t GGE_API::get_tile_from_mouse(int x, int y)
 {
 #ifdef DEBUG
 	if(_x != x and _y != y)
@@ -142,7 +142,7 @@ int GGE_API::get_hex_from_mouse(int x, int y)
 	}
 #endif
 
-	auto grid = static_pointer_cast<Hex_grid>(_core.get_module(GRID));
+	auto grid = static_pointer_cast<Grider>(_core.get_module(GRIDER));
 	/* TODO only scroll if instantiated
 	auto graphics = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
 	// TODO if top bar add top bar size to y
@@ -150,18 +150,16 @@ int GGE_API::get_hex_from_mouse(int x, int y)
 	// test for scroll
 	scroll_mouse(x, y);
 	y += graphics->get_viewport(1).h; */
-	cube_coord cc = grid->_utils.axial_to_cube(grid->_utils.xy_to_axial(x, y));
-	int i = grid->get_hex_index(cc);
-
-	return i;
+	//cube_coord cc = grid->_utils.axial_to_cube(grid->_utils.xy_to_axial(x, y));
+	return grid->get_tile(x, y);
 }
 
-void GGE_API::set_hex_color(const vector<int>& c, size_t hex_i)
+void GGE_API::set_tile_color(const vector<int>& c, size_t tile_i)
 {
 	vector<Uint8> v(c.begin(), c.end());
 	SDL_Color color = {v[0], v[1], v[2], v[3]};
-	Hex& hex = get_hex(hex_i);
-	hex.set_color(color);
+	shared_ptr<Tile> tile = get_tile(tile_i);
+	tile->set_color(color);
 }
 
 bool GGE_API::scroll(vector<int>& mouse_pos)
@@ -207,50 +205,23 @@ void GGE_API::quit()
 	_core.quit();
 }
 
-void GGE_API::set_hex_custom_data(size_t hex_i, const string& name, void* data)
+void GGE_API::set_tile_custom_data(size_t tile_i, const string& name, void* data)
 {
 #ifdef DEBUG
-	cout << "saving data " << data << " as " << name << " to hex " << hex_i << endl;
+	cout << "saving data " << data << " as '" << name << "' to tile " << tile_i << endl;
 #endif
-	auto& hex = get_hex(hex_i);
-	hex[name] = data;
+	auto tile = get_tile(tile_i);
+	(*tile)[name] = data;
 }
 
-void* GGE_API::get_hex_custom_data(size_t hex_i, const string& name)
+void* GGE_API::get_tile_custom_data(size_t tile_i, const string& name)
 {
 #ifdef DEBUG
-	cout << "reading data " << name << " from hex " << hex_i << endl;
+	cout << "reading data " << name << " from tile " << tile_i << endl;
 #endif
-	auto hex = get_hex(hex_i);
-	return hex[name];
+	auto tile = get_tile(tile_i);
+	return (*tile)[name];
 }
-
-/*
-void GGE_API::set_hex_data_number(const string& name, double d, size_t i)
-{
-	Hex& hex = get_hex(i);
-	//hex.set_custom_data(name, new(sizeof(d)));
-}
-
-void* GGE_API::get_hex_data_number(const string& name, size_t i)
-{
-	Hex& hex = get_hex(i);
-	//return hex.get_custom_data(name);
-}
-
-
-void GGE_API::set_hex_data_text(const string& name, const string& text, size_t i)
-{
-	Hex& hex = get_hex(i);
-	//hex.set_custom_data(name, new(sizeof(text));
-}
-
-void GGE_API::get_hex_data_text(const string& name, size_t i)
-{
-	Hex& hex = get_hex(i);
-	//hex.get_custom_data(name));
-}
-*/
 
 size_t GGE_API::load_image(const string& s)
 {
@@ -273,8 +244,15 @@ size_t GGE_API::create_sprite(size_t t, int x, int y)
 /*
  * PRIVATE FUNCTIONS
  */
-Hex& GGE_API::get_hex(size_t i)
+shared_ptr<Tile> GGE_API::get_tile(size_t i)
 {
-	auto grid = static_pointer_cast<Hex_grid>(_core.get_module(GRID));
-	return grid->get_hex(i);
+	auto grider = static_pointer_cast<Grider>(_core.get_module(GRIDER));
+	auto grid = grider->get_grid();
+	if(grid.empty())
+	{
+		stringstream ss;
+		ss << "Cannot get tile " << i << " from unitialized grid!"<< endl;
+		throw runtime_error(ss.str());
+	}
+	return grid[i];
 }

@@ -14,7 +14,7 @@ extern "C"
 	// init
 	SCM init_graphics(SCM string, SCM w, SCM h);
 	SCM init_events();
-	SCM init_grid(SCM w, SCM h, SCM size);
+	SCM init_grider(SCM gt, SCM w, SCM h, SCM size);
 	SCM init_game_loop();
 	SCM init_texter();
 	SCM init_spriter();
@@ -36,14 +36,14 @@ extern "C"
 
 	SCM get_next_event();
 
-	void set_hex_color(SCM r, SCM g, SCM b, SCM index);
+	void set_tile_color(SCM r, SCM g, SCM b, SCM index);
 
-	SCM get_hex_from_mouse(SCM x, SCM y);
+	SCM get_tile_from_mouse(SCM x, SCM y);
 
 	SCM get_mouse_position();
 
-	void set_hex_custom_data(SCM i, SCM name, SCM data);
-	SCM get_hex_custom_data(SCM index, SCM name);
+	void set_tile_custom_data(SCM i, SCM name, SCM data);
+	SCM get_tile_custom_data(SCM index, SCM name);
 
 	SCM load_image(SCM path);
 	SCM create_sprite(SCM texture, SCM x, SCM y);

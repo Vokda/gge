@@ -25,3 +25,14 @@ void Componenter::tick()
 		}
 	}
 }
+
+component Componenter::get_component(size_t i)
+{
+	list<component>::iterator itr;
+	size_t counter = 0;
+	for(itr = _components.begin(); itr != _components.end() or counter < i; ++itr)
+	{
+		++counter;
+	}
+	return (*itr);
+}

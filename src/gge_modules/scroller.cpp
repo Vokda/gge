@@ -1,7 +1,7 @@
 #include "scroller.hpp"
 #include <SDL2/SDL.h>
 #include <memory>
-#include "../hex/hex_grid.hpp"
+#include "grider.hpp"
 #include "../sdl_helper.hpp"
 using namespace std;
 
@@ -41,14 +41,14 @@ bool Scroller::scroll(SDL_Point p)
 	return true;
 }
 
-void Scroller::scroll_grid(shared_ptr<Hex_grid> grid)
+void Scroller::scroll_grid(shared_ptr<Grider> grid)
 {
 	if(not _have_scrolled)
 		return;
 
-	for (auto& tile : grid->get_grid())
+	for (auto tile : grid->get_grid())
 	{
-		for(SDL_Point& corner : tile.get_corners())
+		for(SDL_Point& corner : tile->get_corners())
 		{
 			corner.x += _scrolled.x;
 			corner.y += _scrolled.y;

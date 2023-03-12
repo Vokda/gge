@@ -27,7 +27,7 @@ class Componenter
 
 		const list<component>& get_components() const { return _components; }
 
-		//shared_ptr<component> operator[](void*);
+		component get_component(size_t i);
 
 		// gge_begin make commands
 		void tick();

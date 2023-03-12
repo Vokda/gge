@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include "hex_utils.hpp"
 #include <SDL2/SDL.h>
 #include "coords.hpp"
 #include <tuple>
@@ -9,12 +9,12 @@ SDL_Point cube_to_evenq(const Cube_coordinate& cube)
     return {cube.q, (cube.s + (cube.q + cube.q&1)) / 2};
 }
 
-Utils::Utils(const Layout& o):
+Hex_utils::Hex_utils(const Layout& o):
 	_layout(o)
 {
 }
 
-axial_coord Utils::xy_to_axial(int x, int y) const
+axial_coord Hex_utils::xy_to_axial(int x, int y) const
 {
 	//b_i * x y / size = q r
 	axial_coord axial = matrix_vector_mul(_layout.orientation.b, x, y);
@@ -24,18 +24,18 @@ axial_coord Utils::xy_to_axial(int x, int y) const
 	return axial;
 }
 
-axial_coord Utils::matrix_vector_mul(const std::vector<double>& m, double x, double y) const
+axial_coord Hex_utils::matrix_vector_mul(const std::vector<double>& m, double x, double y) const
 {
 	return {m[0] * x + m[1] * y, m[2] * x + m[3] * y};
 }
 
-cube_coord Utils::axial_to_cube(axial_coord p) const
+cube_coord Hex_utils::axial_to_cube(axial_coord p) const
 {
 	cube_coord cc(cube_coord_round(p.q, p.r, -p.q-p.r));
 	return cc;
 }
 
-cube_coord Utils::cube_coord_round(double q, double r, double s) const
+cube_coord Hex_utils::cube_coord_round(double q, double r, double s) const
 {
 	int iq = round(q);
 	int ir = round(r);
@@ -61,19 +61,19 @@ cube_coord Utils::cube_coord_round(double q, double r, double s) const
 	return cube_coord(iq, ir, is);
 }
 
-axial_coord Utils::cube_to_axial(cube_coord cc) const
+axial_coord Hex_utils::cube_to_axial(cube_coord cc) const
 {
 	return {cc.q, cc.r};
 }
 
-SDL_Point Utils::axial_to_pixel(axial_coord ac) const
+SDL_Point Hex_utils::axial_to_pixel(axial_coord ac) const
 {
 	axial_coord tac = matrix_vector_mul(_layout.orientation.b, ac.q, ac.r);
 	tac *= _layout.size;
 	return {(int)tac.q, (int)tac.r};
 }
 
-cube_coord Utils::offset_coord_to_cube(int col, int row) const
+cube_coord Hex_utils::offset_coord_to_cube(int col, int row) const
 {
 	double q = col;
 	double r = row;
@@ -88,7 +88,7 @@ cube_coord Utils::offset_coord_to_cube(int col, int row) const
 	return cube_coord(q, r, -q-r);
 }
 
-SDL_Point Utils::calc_center_point(cube_coord cc) const
+SDL_Point Hex_utils::calc_center_point(cube_coord cc) const
 {
 	//SDL_Point p = axial_to_pixel(cube_to_axial(cc));
 	SDL_Point p;
@@ -111,7 +111,7 @@ SDL_Point Utils::calc_center_point(cube_coord cc) const
 	return p;
 }
 
-SDL_Point Utils::offset_to_pixel(cube_coord cc) const
+SDL_Point Hex_utils::offset_to_pixel(cube_coord cc) const
 {
 	SDL_Point p;
 	p.x = 0;

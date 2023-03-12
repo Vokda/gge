@@ -10,10 +10,10 @@ struct axial_coord;
 SDL_Point cube_to_evenq(const Cube_coordinate& );
 
 
-class Utils
+class Hex_utils
 {
 	public:
-		Utils(const Layout& l);
+		Hex_utils(const Layout& l);
 
 		axial_coord xy_to_axial(int x, int y) const;
 		SDL_Point axial_to_pixel(axial_coord) const;

@@ -36,12 +36,13 @@ extern "C"
 			);
 	}
 
-	SCM init_grid(SCM w, SCM h, SCM s)
+	SCM init_grider(SCM gt, SCM w, SCM h, SCM s)
 	{
 		return scm_from_int(
-				_gge_api->init_grid(
-					scm_to_uint(w),
-					scm_to_uint(h),
+				_gge_api->init_grider(
+					scm_to_int(gt),
+					scm_to_int(w),
+					scm_to_int(h),
 					scm_to_int(s)
 					)
 				);
@@ -136,19 +137,19 @@ extern "C"
 				);
 	}
 
-	void set_hex_color(SCM r, SCM g, SCM b, SCM index)
+	void set_tile_color(SCM r, SCM g, SCM b, SCM index)
 	{
 		int i = scm_to_int(index);
 		if(i < 0) return;
-		_gge_api->set_hex_color(
+		_gge_api->set_tile_color(
 				{scm_to_int(r), scm_to_int(g),scm_to_int(b),},
 				i);
 	}
 
-	SCM get_hex_from_mouse(SCM x, SCM y)
+	SCM get_tile_from_mouse(SCM x, SCM y)
 	{
 		return scm_from_int(
-				_gge_api->get_hex_from_mouse(
+				_gge_api->get_tile_from_mouse(
 					scm_to_int(x),
 					scm_to_int(y)
 					));
@@ -160,21 +161,21 @@ extern "C"
 		return scm_list_2(scm_from_int(mp[0]), scm_from_int(mp[1]));
 	}
 
-	void set_hex_custom_data(SCM index, SCM name, SCM data)
+	void set_tile_custom_data(SCM index, SCM name, SCM data)
 	{
 		int i = scm_to_int(index);
 		const char *c = scm_to_locale_string(name);
 		const string str(c);
 		void* d = scm_to_pointer(data);
-		_gge_api->set_hex_custom_data(i, str, d);
+		_gge_api->set_tile_custom_data(i, str, d);
 	}
 
-	SCM get_hex_custom_data(SCM index, SCM name)
+	SCM get_tile_custom_data(SCM index, SCM name)
 	{
 		int i = scm_to_int(index);
 		const char *c = scm_to_locale_string(name);
 		const string str(c);
-		return scm_from_pointer( _gge_api->get_hex_custom_data(i, str), NULL );
+		return scm_from_pointer( _gge_api->get_tile_custom_data(i, str), NULL );
 	}
 
 	SCM load_image(SCM path)

@@ -4,10 +4,9 @@
 // gge_begin import includes
 #include "events.hpp"
 #include "graphics.hpp"
-#include "../hex/hex_grid.hpp"
+#include "grider.hpp"
 #include "scroller.hpp"
 #include "texter.hpp"
-#include "../hex/orientation.hpp"
 #include "game_loop.hpp"
 #include "none.hpp"
 #include "spriter.hpp"
@@ -68,10 +67,9 @@ shared_ptr<GGE_module> GGE_module_initializer::events()
 {
 	return make_shared<Events>();
 }
-shared_ptr<GGE_module> GGE_module_initializer::grid(size_t w, size_t h, int s)
+shared_ptr<GGE_module> GGE_module_initializer::grider(int gt, int width, int height, int tile_size)
 {
-	// TODO the last two arguments need to be parameterizable
-	return make_shared<Hex_grid>(w, h, s, FLAT_TOP, RECT_ODD_Q);
+	return make_shared<Grider>((grid_type)gt, width, height, tile_size);
 }
 
 shared_ptr<GGE_module> GGE_module_initializer::game_loop(Script_engine& se, Core& c)

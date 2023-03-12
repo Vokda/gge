@@ -25,8 +25,8 @@ class GGE_module
 					return "Graphics";
 				case(EVENTS):
 					return "Events";
-				case(GRID):
-					return "Hex_grid";
+				case(GRIDER):
+					return "Grider";
 				case(SCROLLER):
 					return "Scroller";
 				case(TEXTER):
