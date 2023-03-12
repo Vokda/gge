@@ -32,8 +32,9 @@
   (gge:init_events))
 (define grid_x 2)
 (define grid_y 3)
+(define grid_type 0) ; hex type
 (define grid
-  (gge:init_grid grid_x grid_y 60))
+  (gge:init_grider grid_type grid_x grid_y 60))
 (define game_loop
   (gge:init_game_loop))
 (define texter
@@ -55,10 +56,10 @@
 (gge:add_command graphics 2 0) ;  render
 
 (define placeholder
-  (gge:load_image "sprites/placeholder.png"))
+  (gge:load_image "sprites/placeholder_white.png"))
 (gge:create_sprite placeholder 0 0)
 
 ; set data to hexes
 (do ((i 0 (1+ i)))
   ((>= i (* grid_x grid_y)))
-   (gge:set_hex_custom_data i "name" (string->pointer (string-append "hex " (number->string i)) ) ))
+   (gge:set_tile_custom_data i "name" (string->pointer (string-append "hex " (number->string i)) ) ))

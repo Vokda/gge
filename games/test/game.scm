@@ -34,7 +34,7 @@
 
 (define mouse_on_hex?
   (lambda ()
-	(cond ((< -1 (apply gge:get_hex_from_mouse (gge:get_mouse_position))) #t)
+	(cond ((< -1 (apply gge:get_tile_from_mouse (gge:get_mouse_position))) #t)
 		  (else #f))
 	))
 
@@ -43,8 +43,8 @@
   (lambda ()
 	(if (mouse_on_hex?)
 	  (gge:create_text 
-		(pointer->string (gge:get_hex_custom_data 
-						  (apply gge:get_hex_from_mouse (gge:get_mouse_position))
+		(pointer->string (gge:get_tile_custom_data 
+						  (apply gge:get_tile_from_mouse (gge:get_mouse_position))
 						  "name"
 						  )) ; text ( hex data 'name)
 		;(number->string (apply gge:get_hex_from_mouse (gge:get_mouse_position))) ; text (# of hex)
@@ -70,12 +70,12 @@
 (define mouse_hovering
   (lambda ()
 	(begin
-	  (set! current_hex (apply gge:get_hex_from_mouse (gge:get_mouse_position)))
+	  (set! current_hex (apply gge:get_tile_from_mouse (gge:get_mouse_position)))
 	  ; color new hex
-	  (gge:set_hex_color 255 0 0 current_hex)
+	  (gge:set_tile_color 255 0 0 current_hex)
 	  ; decolor old hex
 	  (if (not (= prev_hex current_hex))
-		  (gge:set_hex_color 255 255 255 prev_hex))
+		  (gge:set_tile_color 255 255 255 prev_hex))
 	  (set! prev_hex current_hex)
 	  )
 	))
