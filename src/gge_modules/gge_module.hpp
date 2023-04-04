@@ -11,6 +11,7 @@ class GGE_module
 {
 	public:
 		GGE_module(rgm m);
+		GGE_module();
 		GGE_module(const GGE_module& m);
 		virtual ~GGE_module() {};
 
@@ -35,6 +36,8 @@ class GGE_module
 					return "Game_loop";
 				case(SPRITER):
 					return "Spriter";
+				case(AGENTER):
+					return "Agenter";
 					// gge_end cases
 				default:
 					return "<Unnamed GGE Module [" + to_string(m) + "]>";

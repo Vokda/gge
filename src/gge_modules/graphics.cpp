@@ -96,32 +96,6 @@ void Graphics::draw(const shared_ptr<GGE_module> module)
 	}
 }
 
-void Graphics::draw_sprites(const shared_ptr<Spriter> spriter)
-{
-	for(auto s: spriter->get_components())
-	{
-		shared_ptr<Sprite> sprite = static_pointer_cast<Sprite>(s);
-		set_viewport(static_cast<viewport>(sprite->view_port));
-		SDL_RenderCopy(_sdl_renderer, sprite->texture, NULL, &sprite->size);
-	}
-}
-
-
-/*void Graphics::draw(const Shape& shape)
-{
-	// TODO
-}*/
-
-void Graphics::draw_text(const shared_ptr<Texter> texter)
-{
-	for(auto c: texter->get_components())
-	{
-		shared_ptr<Text> text = static_pointer_cast<Text>(c);
-		set_viewport(static_cast<viewport>(text->view_port));
-		SDL_RenderCopy(_sdl_renderer, text->texture, NULL, &text->size);
-	}
-}
-
 void Graphics::set_viewport(viewport vp)
 {
 	switch(vp)
@@ -180,4 +154,30 @@ size_t Graphics::load_image(const std::string& path)
 	_textures.push_back(texture);
 	_sdl_helper.check_null("Creating texture: " + path, texture);
 	return _textures.size() - 1;
+}
+
+void Graphics::draw_sprites(const shared_ptr<Spriter> spriter)
+{
+	for(auto s: spriter->get_components())
+	{
+		shared_ptr<Sprite> sprite = static_pointer_cast<Sprite>(s);
+		set_viewport(static_cast<viewport>(sprite->view_port));
+		SDL_RenderCopy(_sdl_renderer, sprite->texture, NULL, &sprite->size);
+	}
+}
+
+
+/*void Graphics::draw(const Shape& shape)
+{
+	// TODO
+}*/
+
+void Graphics::draw_text(const shared_ptr<Texter> texter)
+{
+	for(auto c: texter->get_components())
+	{
+		shared_ptr<Text> text = static_pointer_cast<Text>(c);
+		set_viewport(static_cast<viewport>(text->view_port));
+		SDL_RenderCopy(_sdl_renderer, text->texture, NULL, &text->size);
+	}
 }

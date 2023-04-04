@@ -18,6 +18,7 @@ extern "C"
 	SCM init_game_loop();
 	SCM init_texter();
 	SCM init_spriter();
+	SCM init_agenter();
 
 	void add_command(SCM module...);
 
@@ -47,4 +48,10 @@ extern "C"
 
 	SCM load_image(SCM path);
 	SCM create_sprite(SCM texture, SCM x, SCM y);
+
+	SCM create_agent(SCM sprite, SCM tile);
+	SCM get_agents(SCM tile);
+
+	SCM make_list(SCM* e);
+
 }

@@ -62,6 +62,7 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("init_game_loop", 0, 0, 0, (scm_t_subr) init_game_loop);
 	scm_c_define_gsubr("init_texter", 0, 0, 0, (scm_t_subr) init_texter);
 	scm_c_define_gsubr("init_spriter", 0, 0, 0, (scm_t_subr) init_spriter);
+	scm_c_define_gsubr("init_agenter", 0, 0, 0, (scm_t_subr) init_agenter);
 	scm_c_define_gsubr("game_loop", 0,0,0, (scm_t_subr) init_game_loop);
 
 	scm_c_define_gsubr("quit",0,0,0, (scm_t_subr) quit);
@@ -81,6 +82,10 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("load_image", 1,0,0, (scm_t_subr) load_image);
 	scm_c_define_gsubr("create_sprite", 3,0,0, (scm_t_subr) create_sprite);
 
+	scm_c_define_gsubr("create_agent", 2,0,0, (scm_t_subr) create_agent);
+
+
+
 	// gge_end read subs
 
 	// gge_begin write subs
@@ -89,6 +94,7 @@ void Guile::add_gge_api_functions()
 			"init_events",
 			"init_grider",
 			"init_game_loop",
+			"init_agenter",
 			"game_loop",
 			"quit",
 			"add_command",
@@ -103,6 +109,7 @@ void Guile::add_gge_api_functions()
 			"get_tile_custom_data", 
 			"load_image",
 			"create_sprite",
+			"create_agent",
 			NULL);
 	// gge_end write subs
 

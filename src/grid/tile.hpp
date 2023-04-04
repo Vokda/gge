@@ -5,9 +5,13 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <memory>
+#include <list>
 using namespace std;
 
-class Tile
+class Agent;
+
+class Tile: public enable_shared_from_this<Tile>
 {
 	public:
 		Tile(SDL_Point center_point, int size, SDL_Color c);
@@ -26,6 +30,11 @@ class Tile
 		// get coordinate string (mainly for <<-op)
 		virtual string coord_to_string() const = 0;
 
+		void place_agent(shared_ptr<Agent>);
+		shared_ptr<Agent> remove_agent(shared_ptr<Agent>);
+		bool move_agent(shared_ptr<Agent> agent, shared_ptr<Tile> dest);
+		list<shared_ptr<Agent>> get_agents() const { return _tile_agents; }
+
 	protected:
 		virtual void calculate_corners(SDL_Point& c, int s) = 0;
 		virtual SDL_Point calculate_corner(SDL_Point& center, int, int ) = 0;
@@ -36,6 +45,7 @@ class Tile
 		SDL_Color _color;
 		bool blink = false;
 		map<string, void*> _tile_data;
+		list<shared_ptr<Agent>> _tile_agents; // agents on the tile
 
 };
 

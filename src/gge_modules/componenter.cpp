@@ -30,9 +30,17 @@ component Componenter::get_component(size_t i)
 {
 	list<component>::iterator itr;
 	size_t counter = 0;
-	for(itr = _components.begin(); itr != _components.end() or counter < i; ++itr)
+	for(itr = _components.begin(); itr != _components.end() and counter < i; ++itr)
 	{
 		++counter;
 	}
-	return (*itr);
+#ifdef DEBUG
+	if(itr == _components.end())
+	{
+		cout << "counter " << counter << endl;
+		cout << "component "<< i << " not found" << endl;
+		cout << "components available: " << _components.size() << endl;
+	}
+#endif
+	return itr != _components.end() ? (*itr) : nullptr;
 }

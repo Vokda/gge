@@ -3,6 +3,7 @@
 class Script_engine;
 class Core;
 class Graphics;
+class Agenter;
 
 class GGE_module_initializer
 {
@@ -31,5 +32,6 @@ class GGE_module_initializer
 		shared_ptr<GGE_module> none();
 		shared_ptr<GGE_module> texter(shared_ptr<Graphics> g);
 		shared_ptr<GGE_module> spriter(shared_ptr<Graphics> g);
+		shared_ptr<GGE_module> agenter();
 		// gge_end import ctor_decl
 };

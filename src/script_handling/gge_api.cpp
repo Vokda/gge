@@ -10,6 +10,7 @@
 #include "../gge_modules/grider.hpp"
 #include "../gge_modules/spriter.hpp"
 #include "../gge_modules/scroller.hpp"
+#include "../gge_modules/agenter.hpp"
 
 using namespace std;
 
@@ -56,6 +57,12 @@ int GGE_API::init_spriter()
 {
 	return add_module(SPRITER, _gge_init.spriter(
 				static_pointer_cast<Graphics>(_core.get_module(GRAPHICS))));
+}
+
+
+int GGE_API::init_agenter()
+{
+	return add_module(AGENTER, _gge_init.agenter());
 }
 
 // init end
@@ -232,12 +239,61 @@ size_t GGE_API::load_image(const string& s)
 
 size_t GGE_API::create_sprite(size_t t, int x, int y)
 {
-	auto graphics = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
 	auto spriter  = static_pointer_cast<Spriter>(_core.get_module(SPRITER));
 	SDL_Point p;
 	p.x = x;
 	p.y = y;
 	return spriter->create_sprite(t, p, -1);
+}
+
+size_t GGE_API::create_agent(size_t texture, size_t tile)
+{
+	// get modules
+	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
+	auto spriter = static_pointer_cast<Spriter>(_core.get_module(SPRITER));
+
+	auto tile_ptr = get_tile(tile);
+	const SDL_Point& p = tile_ptr->get_position();
+	size_t sprite_i = create_sprite(texture, p.x, p.y);
+
+	auto component =spriter->get_component(sprite_i);
+	auto sprite = static_pointer_cast<Sprite>(component);
+#ifdef DEBUG
+	cout << "Creating agent @ " << p << endl;
+	cout << "tile " << tile << endl;
+	cout << "spriter " <<spriter << endl;
+	cout << "component " <<component<< endl;
+	cout << "sprite " << sprite_i << endl;
+	cout << "tile_ptr " << tile_ptr << endl;
+	cout << "sprite_ptr " << sprite << endl;
+#endif
+	return agenter->create_agent(tile_ptr, sprite);
+}
+
+bool GGE_API::move_agent(size_t a, size_t to_tile)
+{
+	auto agent = get_agent(a);
+	shared_ptr<Tile> from_tile = agent->tile;
+	return from_tile->move_agent(agent, get_tile(to_tile));
+}
+
+void GGE_API::remove_agent(size_t a)
+{
+	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
+	agenter->remove_agent(a);
+}
+
+vector<int> GGE_API::get_agents(size_t i)
+{
+	auto tile = get_tile(i);
+	list<shared_ptr<Agent>> agents_on_tile = tile->get_agents();
+	vector<int> agents_i(agents_on_tile.size());
+	size_t a_i = 0;
+	for(auto a: agents_on_tile)
+	{
+		agents_i[a_i++] = a->index;
+	}
+	return  agents_i;
 }
 
 
@@ -255,4 +311,11 @@ shared_ptr<Tile> GGE_API::get_tile(size_t i)
 		throw runtime_error(ss.str());
 	}
 	return grid[i];
+}
+
+shared_ptr<Agent> GGE_API::get_agent(size_t a)
+{
+	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
+	shared_ptr<Agent> agent = static_pointer_cast<Agent>(agenter->get_component(a));
+	return agent;
 }

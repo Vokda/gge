@@ -1,6 +1,7 @@
 #include "gge_api_wrapper.hpp"
 #include <string>
 #include <vector>
+#include <cstdarg>
 
 extern "C"
 {
@@ -113,6 +114,13 @@ extern "C"
 				);
 	}
 
+	SCM init_agenter()
+	{
+		return scm_from_int(
+				_gge_api->init_agenter()
+				);
+	}
+	
 	SCM init_spriter()
 	{
 		return scm_from_int(
@@ -195,7 +203,37 @@ extern "C"
 					));
 	}
 
+	SCM create_agent(SCM sprite, SCM tile)
+	{
+		return scm_from_int(
+				_gge_api->create_agent(
+					scm_to_int(sprite),
+					scm_to_int(tile)
+					));
+	}
+
+
 } // extern C END
+
+SCM get_agents(SCM tile)
+{
+	vector<int> agents = _gge_api->get_agents(scm_to_int(tile));
+	SCM* scm_agents = (SCM*)malloc(sizeof(SCM) * agents.size());
+	return make_list(scm_agents);
+}
+
+SCM make_list(SCM* e_p)
+{
+	if(e_p == NULL)
+	{
+		return SCM_UNDEFINED;
+	}
+	else
+	{
+		SCM e = *e_p;
+		return scm_list_2(e, make_list(++e_p));
+	}
+}
 
 // definition outside to handle C++ strings
 SCM init_graphics(SCM s, SCM w, SCM h)

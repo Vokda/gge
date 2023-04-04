@@ -1,25 +1,29 @@
 #pragma once 
 #include "gge_module.hpp"
 #include "componenter.hpp"
+#include <memory>
 
-struct Sprite;
+class Sprite;
+class Tile;
 
 struct Agent: public Base_component
 {
-	size_t sprite;
-	size_t tile; 
+	shared_ptr<Tile> tile; 
+	shared_ptr<Sprite> sprite;
+	size_t index;
 };
 
-class Agenter: public GGE_module, public Componenter
+class Agenter:  public Componenter, public GGE_module
 {
 	public:
+		Agenter();
+		~Agenter() = default;
 		size_t create_agent(
-				size_t tile,
-				size_t sprite
+				shared_ptr<Tile> tile,
+				shared_ptr<Sprite> sprite
 				);
 
-		void move_agent(size_t agent, size_t tile);
-		void navigate(size_t agent, size_t tile);
+		void move_agent(size_t agent, shared_ptr<Tile> tile);
+		void navigate(size_t agent, shared_ptr<Tile> tile);
 		void remove_agent(size_t agent);
-	private:
 };

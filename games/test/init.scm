@@ -35,19 +35,21 @@
 (define grid_type 0) ; hex type
 (define grid
   (gge:init_grider grid_type grid_x grid_y 60))
-(define game_loop
+(define gge_game_loop
   (gge:init_game_loop))
 (define texter
   (gge:init_texter))
 (define spriter
   (gge:init_spriter))
+(define agenter
+  (gge:init_agenter))
 
 (display "Add commands \n")
 ; add_command <module to execute command> <command number, -1 = there is only one to pick (change to 0?)> <id to module used as parameter, 0 = None>
 ; could it be less intuitive?
 (gge:add_command graphics 0 0) ; clear screen
 (gge:add_command events -1 0)
-(gge:add_command game_loop -1 0)
+(gge:add_command gge_game_loop -1 0)
 (gge:add_command texter 0 0) ; ticker
 ; draw stuff
 (gge:add_command graphics 1 grid) 
@@ -57,9 +59,14 @@
 
 (define placeholder
   (gge:load_image "sprites/placeholder_white.png"))
-(gge:create_sprite placeholder 0 0)
-
 ; set data to hexes
 (do ((i 0 (1+ i)))
   ((>= i (* grid_x grid_y)))
    (gge:set_tile_custom_data i "name" (string->pointer (string-append "hex " (number->string i)) ) ))
+
+(use-modules ( (game)
+			  #:prefix test_game:)
+			 )
+
+(append test_game:agents
+  (gge:create_agent placeholder 1))

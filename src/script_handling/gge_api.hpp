@@ -14,6 +14,7 @@
 struct SDL_Point;
 class Script_engine;
 class Tile;
+class Agent;
 
 using namespace std;
 
@@ -35,6 +36,7 @@ class GGE_API
 		int init_game_loop();
 		int init_texter();
 		int init_spriter();
+		int init_agenter();
 
 		// events
 		const std::queue<int>& get_events() const;
@@ -73,13 +75,9 @@ class GGE_API
 		void set_tile_custom_data(size_t index, const string& name, void* data);
 		void* get_tile_custom_data(size_t index, const string& name);
 
-		// number
-		/*void set_hex_data_number(const string& name, double data, size_t index);
-		double get_hex_data_number(const string& name, size_t index);
-
 		// text
 		void set_hex_data_text(const string& name, const string& text, size_t index);
-		const string& get_hex_data_text( size_t index, const string& name);*/
+		const string& get_hex_data_text( size_t index, const string& name);
 
 		// TODO if possible depending on loaded modules
 		void add_command(rgm module, int command, rgm arg);
@@ -90,6 +88,12 @@ class GGE_API
 		// load and image from path
 		size_t load_image(const string& s);
 		size_t create_sprite(size_t texture, int x, int y);
+
+		// agent related
+		size_t create_agent(size_t texture, size_t tile);
+		bool move_agent(size_t agent, size_t to_tile);
+		void remove_agent(size_t agent);
+		vector<int> get_agents(size_t tile);
 
 	private:
 		Core& _core;
@@ -105,6 +109,7 @@ class GGE_API
 		int add_module(rgm m, shared_ptr<GGE_module> ptr);
 
 		shared_ptr<Tile> get_tile(size_t i);
+		shared_ptr<Agent> get_agent(size_t a);
 #ifdef DEBUG
 		int _x, _y = 0;
 #endif

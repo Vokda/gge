@@ -1,6 +1,9 @@
 #include "spriter.hpp"
 #include "graphics.hpp"
 
+#include <iostream>
+using namespace std;
+
 Spriter::Spriter(shared_ptr<Graphics> g):
 	GGE_module(SPRITER)
 {
@@ -25,5 +28,16 @@ size_t Spriter::create_sprite(size_t t, const SDL_Point& p, int ms)
 	sprite.size = rect;
 
 	_components.push_back(make_shared<Sprite>(sprite));
+	cout << "Created sprite @ " << p << endl;
+#ifdef DEBUG
+	cout << "Sprite index: " << _components.size() - 1 << endl;
+	cout << "sprites stored {" << endl;
+	for(auto comp: _components)
+	{
+		cout << "\tsprite " <<comp << endl;
+	}
+	cout << '}' << endl;
+#endif
+
 	return _components.size() -1;
 }

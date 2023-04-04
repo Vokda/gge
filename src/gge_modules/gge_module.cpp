@@ -4,11 +4,13 @@ using namespace std;
 
 GGE_module::GGE_module(rgm m)
 {
-	if(m == NONE)
-	{
-		cerr << "WARNING: module type set to NONE!" << endl;
-	}
 	_module = m;
+}
+
+GGE_module::GGE_module()
+{
+	cerr << "WARNING: module type set to NONE that shouldn't be NONE!" << endl;
+	_module = NONE; // just set to something
 }
 
 GGE_module::GGE_module(const GGE_module& m)

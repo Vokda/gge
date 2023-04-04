@@ -1,23 +1,25 @@
 (define-module (game)
-			   #:export (game_loop)
+			   #:export (game_loop agents)
 			   #:duplicates (check)
 			   )
 
 (use-modules ( (gge)
 			  #:prefix gge:)
 			 )
-(use-modules (system foreign))
+(use-modules (system foreign ))
 
 (define delta_string "delta: ")
 (define i 0) ; to show delta every 60th frame
 (define prev_hex -1) ; used to recolor hex from hovering
 (define current_hex -1) ; hex hovered over
+(define selected_agent -1) ; -1 = none selected 
 (define count_frame
   (lambda ()
 	(set! i (+ i 1) )
 	i
 	)
   )
+(define agents (list ))
 
 (define (catch-all thunk)
   (with-exception-handler
@@ -38,20 +40,24 @@
 		  (else #f))
 	))
 
+(define display_hex
+  (lambda ()
+	(gge:create_text 
+	  (pointer->string (gge:get_tile_custom_data 
+						 (apply gge:get_tile_from_mouse (gge:get_mouse_position))
+						 "name"
+						 )) ; text ( hex data 'name)
+	  ;(number->string (apply gge:get_hex_from_mouse (gge:get_mouse_position))) ; text (# of hex)
+	  (inexact->exact (car (gge:get_mouse_position))) ; x position
+	  (inexact->exact (cadr (gge:get_mouse_position))) ; y position
+	  1000 ; life
+	  0); viewport
+	))
 
 (define mouse_click
   (lambda ()
 	(if (mouse_on_hex?)
-	  (gge:create_text 
-		(pointer->string (gge:get_tile_custom_data 
-						  (apply gge:get_tile_from_mouse (gge:get_mouse_position))
-						  "name"
-						  )) ; text ( hex data 'name)
-		;(number->string (apply gge:get_hex_from_mouse (gge:get_mouse_position))) ; text (# of hex)
-		(inexact->exact (car (gge:get_mouse_position))) ; x position
-		(inexact->exact (cadr (gge:get_mouse_position))) ; y position
-		1000 ; life
-		0) ; viewport
+		(display_hex)
 	  )
 	))
 

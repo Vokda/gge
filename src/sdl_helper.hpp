@@ -16,7 +16,7 @@ class SDL_helper
 
 static std::ostream& operator<<(std::ostream& ost, const SDL_Point& p)
 {
-	ost << '[' << p.x << ", " << p.y << ']' << std::endl;
+	ost << '[' << p.x << ", " << p.y << ']';
 	return ost;
 }
 
@@ -24,7 +24,7 @@ static std::ostream& operator<<(std::ostream& ost, const SDL_Rect& r)
 {
 	ost << '[';
 	ost << r.x << ", " << r.y << ", " << r.w << ", " << r.h;
-	ost << ']' << std::endl;
+	ost << ']'; 
 	return ost;
 }
 
@@ -32,6 +32,6 @@ static std::ostream& operator<<(std::ostream& ost, const SDL_Color& c)
 {
 	ost << '[';
 	ost << c.r << ", " << c.g << ", " << c.b << ", " << c.a;
-	ost << ']' << std::endl;
+	ost << ']';
 	return ost;
 }

@@ -10,6 +10,7 @@
 #include "game_loop.hpp"
 #include "none.hpp"
 #include "spriter.hpp"
+#include "agenter.hpp"
 // gge_end import includes
 
 /*GGE_module_initializer::GGE_module_initializer(Moduler& m):
@@ -91,6 +92,11 @@ shared_ptr<GGE_module> GGE_module_initializer::texter(shared_ptr<Graphics> g)
 shared_ptr<GGE_module> GGE_module_initializer::spriter(shared_ptr<Graphics> g)
 {
 	return make_shared<Spriter>(g);
+}
+
+shared_ptr<GGE_module> GGE_module_initializer::agenter()
+{
+	return make_shared<Agenter>();
 }
 
 // gge_begin import ctor_def
