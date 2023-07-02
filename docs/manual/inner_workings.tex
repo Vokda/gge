@@ -148,6 +148,37 @@ GGE will check to ensure the initialization and call order is correct.
 A failed check will result in an error. 
 If the check passed the game will start and GGE will run the modules in the given order.
 
+\subsection{Modules Containing Components}
+There are multiple classes making use of the module \verb|Componenter| in order to handle multiple sub structures.
+Each class manages the memory of its sub structure. 
+These classes can be seen in the table below.
+\begin{tabular}{|c|c|}
+	Class & sub structure\\
+	\verb|Agenter| & \verb|Agent| \\
+	\verb|Spriter| & \verb|Sprite| \\
+	\verb|Texter| & \verb|Text| \\
+\end{tabular}
+
+The class, or file to be more specific \verb|componenter.hpp|, defines the parent structure \verb|Base_component| that is inherited by the sub structures mentioned above. 
+The parent structure contains three variables. A boolean that determines if the structure is permanent or not. If it is permanent it will not be checked for removal and the other variables are irrelevant.
+A variable that contains the moment of creation and one that contains the life time. 
+
+\subsubsection{Moving an Agent}
+This process is a bit wonky. Multiple objects needs to change with the movement of an agent.
+First, the Agent structure contains a pointer to the hex it is standing on and a pointer to its sprite.
+Second, the tile the agent is placed on also has a pointer to the agents standing on it. 
+
+When an agent is to be moved the following steps must take place.
+\begin{itemize}
+	\item The new tile must point to the agent.
+	\item The old tile must not point to the agent anymore.
+	\item The agent must point to the new tile it is moving to.
+	\item The agent's sprite must be repositioned to the new tile so that the move can be seen graphically.
+\end{itemize}
+
+There is an internal class, \verb|Move_agent|, within the Agent class that handles these steps. 
+
+\subsection{Grid and Tile}
 
 
 \section{Generating Code} \label{generating code}
