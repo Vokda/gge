@@ -11,6 +11,7 @@ using namespace std;
 Agenter::Agenter():
 	GGE_module(AGENTER) 
 {
+	cout << "size of list " << _components.size() << endl;
 }
 
 size_t Agenter::create_agent(
@@ -45,15 +46,23 @@ size_t Agenter::create_agent(
 #endif 
 	cout << _components.size() << endl;
 	_components.push_back(make_shared<Agent>(agent));
-
+	agent.tile->place_agent(static_pointer_cast<Agent>(_components.back()));
 	return _components.size() -1;
 }
 
-void Agenter::move_agent(size_t a, shared_ptr<Tile> to)
+bool Agenter::move_agent(size_t a, shared_ptr<Tile> to)
 {
 	auto agent = static_pointer_cast<Agent>(get_component(a));
-	auto from = agent->tile;
-	from->move_agent(agent, to);
+#ifdef DEBUG
+	cout << "Moving agent";
+	cout << " to " << to;
+	cout << " old sprite postion " << agent->sprite->position;
+	cout << " new sprite postion " << to->get_position();
+	cout << endl;
+#endif 
+
+	Move_agent move(agent, to);
+	return move();
 }
 
 void Agenter::navigate(size_t agent, shared_ptr<Tile> tile)
@@ -68,3 +77,19 @@ void Agenter::remove_agent(size_t a)
 	agent->milliseconds = 0;
 }
 
+bool Agenter::Move_agent::operator()()
+{
+	auto old_tile = _agent->tile;
+	// if successful move on tile was made do the rest of agent movement
+	if( _agent->tile->move_agent(_agent, _tile) )
+	{
+		_agent->tile = _tile;
+		auto pos = _agent->tile->get_position();
+		// TODO for stacking sprites, not yet done for placing
+		// pos.y -= (float)_agent->tile->get_agents().size() * _agent->sprite->size.h * 0.5;
+		_agent->sprite->set_position(pos);
+		return true;
+	}
+	else
+		return false;
+}

@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <cstdarg>
+#include <iostream>
+using namespace std;
 
 extern "C"
 {
@@ -215,25 +217,45 @@ extern "C"
 
 } // extern C END
 
+void move_agent(SCM agent, SCM tile)
+{
+	_gge_api->move_agent(
+			scm_to_int(agent),
+			scm_to_int(tile)
+			);
+}
+
+void remove_agent(SCM agent)
+{
+	_gge_api->remove_agent(scm_to_int(agent));
+}
+					
+
 SCM get_agents(SCM tile)
 {
 	vector<int> agents = _gge_api->get_agents(scm_to_int(tile));
-	SCM* scm_agents = (SCM*)malloc(sizeof(SCM) * agents.size());
-	return make_list(scm_agents);
+	std::cout << "agents size " << agents.size() << std::endl;
+	if(agents.size() > 0)
+		return make_list(&agents[0], agents.size());
+	else
+		return scm_list_n(SCM_UNDEFINED);
 }
 
-SCM make_list(SCM* e_p)
+SCM make_list(int* agents, size_t size)
 {
-	if(e_p == NULL)
+	if(size > 0)
 	{
-		return SCM_UNDEFINED;
+		int agent = *agents;
+		cout << "cons agent " << agent << endl;
+		return scm_cons(scm_from_int(agent), make_list(++agents, --size));
 	}
 	else
 	{
-		SCM e = *e_p;
-		return scm_list_2(e, make_list(++e_p));
+		cout << "end of list!" << endl;
+		return scm_list_n(SCM_UNDEFINED);
 	}
 }
+
 
 // definition outside to handle C++ strings
 SCM init_graphics(SCM s, SCM w, SCM h)

@@ -270,11 +270,14 @@ size_t GGE_API::create_agent(size_t texture, size_t tile)
 	return agenter->create_agent(tile_ptr, sprite);
 }
 
-bool GGE_API::move_agent(size_t a, size_t to_tile)
+void GGE_API::move_agent(size_t a, size_t to_tile)
 {
-	auto agent = get_agent(a);
-	shared_ptr<Tile> from_tile = agent->tile;
-	return from_tile->move_agent(agent, get_tile(to_tile));
+	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
+
+#ifdef DEBUG
+	cout << "moving agent " << a << " to " << to_tile << endl;
+#endif
+	agenter->move_agent(a, get_tile(to_tile));
 }
 
 void GGE_API::remove_agent(size_t a)
@@ -285,6 +288,9 @@ void GGE_API::remove_agent(size_t a)
 
 vector<int> GGE_API::get_agents(size_t i)
 {
+#ifdef DEBUG
+	cout << "get agents from tile " << i << endl;
+#endif
 	auto tile = get_tile(i);
 	list<shared_ptr<Agent>> agents_on_tile = tile->get_agents();
 	vector<int> agents_i(agents_on_tile.size());
@@ -293,6 +299,12 @@ vector<int> GGE_API::get_agents(size_t i)
 	{
 		agents_i[a_i++] = a->index;
 	}
+#ifdef DEBUG
+	if(agents_i.empty())
+		cout << "no agents on tile" << endl;
+	else
+		cout << agents_i.size() << " found on tile" << endl;
+#endif
 	return  agents_i;
 }
 

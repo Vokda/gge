@@ -6,20 +6,23 @@
 (use-modules ( (gge)
 			  #:prefix gge:)
 			 )
-(use-modules (system foreign ))
+
+(use-modules ( (agent)
+			  #:prefix agent:))
+(use-modules (system foreign))
 
 (define delta_string "delta: ")
 (define i 0) ; to show delta every 60th frame
 (define prev_hex -1) ; used to recolor hex from hovering
 (define current_hex -1) ; hex hovered over
-(define selected_agent -1) ; -1 = none selected 
 (define count_frame
   (lambda ()
 	(set! i (+ i 1) )
 	i
 	)
   )
-(define agents (list ))
+
+;; functions
 
 (define (catch-all thunk)
   (with-exception-handler
@@ -35,39 +38,61 @@
 	(gge:quit)))
 
 (define mouse_on_hex?
-  (lambda ()
-	(cond ((< -1 (apply gge:get_tile_from_mouse (gge:get_mouse_position))) #t)
-		  (else #f))
-	))
+  (lambda (mouse_pos)
+	(begin 
+	  (if (< -1 (apply gge:get_tile_from_mouse mouse_pos))
+		  #t
+		  #f
+		  ))))
 
 (define display_hex
-  (lambda ()
+  (lambda (hex)
+	(if (null? hex) (display "no hex display")
 	(gge:create_text 
 	  (pointer->string (gge:get_tile_custom_data 
-						 (apply gge:get_tile_from_mouse (gge:get_mouse_position))
+						 hex
 						 "name"
 						 )) ; text ( hex data 'name)
 	  ;(number->string (apply gge:get_hex_from_mouse (gge:get_mouse_position))) ; text (# of hex)
 	  (inexact->exact (car (gge:get_mouse_position))) ; x position
 	  (inexact->exact (cadr (gge:get_mouse_position))) ; y position
 	  1000 ; life
-	  0); viewport
+	  0)); viewport
 	))
+
+(define select_hex
+  (lambda (mouse_pos)
+	(if (null? mouse_pos)
+		-1
+		(begin
+		  (display "select_hex")
+		  (display  mouse_pos)
+		  (display "\n")
+		  (apply gge:get_tile_from_mouse mouse_pos)
+		  )
+		)
+  ))
 
 (define mouse_click
-  (lambda ()
-	(if (mouse_on_hex?)
-		(display_hex)
-	  )
-	))
+	(lambda ()
+	  (let ( (hex (select_hex (gge:get_mouse_position))) )
+		(if (>= hex 0)
+			(begin
+			  (display_hex hex)
+			  (if (not (= agent:selected_agent -1))
+				  (agent:move_agent agent:selected_agent hex)
+				  (agent:select_agent hex))
+			  ))
+	  )))
 
 (define handle_events
-  (let ((event (gge:get_next_event))) ; does this do something?
+  (let ((event (gge:get_next_event)) 
+		) 
 	(lambda () 
 		(set! event (gge:get_next_event))
 			(when (not (= event 0))
 			  (cond ((= event 113) (quit_game))
-					((= event 1) (mouse_click))
+					((= event 1) (mouse_click ))
 			  (else (display (string-append "\nevent " (number->string event)))))
 			  (handle_events)
 			  );t

@@ -2,6 +2,7 @@
 #include "../gge_modules/agenter.hpp"
 #include "../sdl_helper.hpp"
 #include <algorithm>
+#include "../gge_modules/spriter.hpp"
 
 Tile::Tile(SDL_Point center_point, int size, SDL_Color c)
 {
@@ -11,26 +12,29 @@ Tile::Tile(SDL_Point center_point, int size, SDL_Color c)
 
 void Tile::place_agent(shared_ptr<Agent> agent)
 {
-	throw runtime_error("Cannot place null agent on " + coord_to_string());
+	if(agent == nullptr)
+		throw runtime_error("Cannot place null agent on " + coord_to_string());
+
 	_tile_agents.push_back(agent);
 	agent->tile = shared_from_this();
+#ifdef DEBUG
+	cout << "Agent " << agent->index << " placed on " << _position << endl;
+#endif
 }
 
-shared_ptr<Agent> Tile::remove_agent(shared_ptr<Agent> agent)
+shared_ptr<Agent> Tile::remove_agent(shared_ptr<Agent> agent, bool completely)
 {
 	auto agent_itr = find(_tile_agents.begin(), _tile_agents.end(), agent);
 	_tile_agents.erase(agent_itr);
-	agent->tile = nullptr;
+	if(completely)
+		agent->tile = nullptr;
 	return agent_itr != _tile_agents.end() ? (*agent_itr) : nullptr;
 }
 
 bool Tile::move_agent(shared_ptr<Agent> agent, shared_ptr<Tile> destination)
 {
-	auto tmp_agent = this->remove_agent(agent);
-	if(tmp_agent == nullptr)
-		return false;
 	destination->place_agent(agent);
-	return true;
+	return remove_agent(agent, false) != nullptr;
 }
 
 std::ostream& operator<<(std::ostream& ost, const Tile& tile)

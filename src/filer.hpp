@@ -21,8 +21,8 @@ class Filer
 		bool is_dir(const string& dir_path);
 
 		const string& get_game_root_dir() { return _game_root_dir; }
-		string in_game_dir(const string& append_path);
-		string in_game_dir(const char* append_path);
+		string in_game_dir(const string& append_path) const;
+		string in_game_dir(const char* append_path) const;
 	private:
 		struct stat stat_file(const string& game_dir);
 		void init(const string& game_dir);

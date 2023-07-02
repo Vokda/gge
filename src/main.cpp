@@ -8,6 +8,7 @@ using namespace std;
 #include "gge.hpp"  // just a big ascii of "GGE"
 #include "core.hpp"
 #include "filer.hpp"
+#include "configurer.hpp"
 
 // signal handling
 Core* c;
@@ -30,6 +31,7 @@ int main(int argc, char* argv[])
 	// init 
 	try
 	{
+		// TODO add class to handle arguments properly
 		// handle path to game given
 		Filer filer(argv[1]);
 
@@ -37,7 +39,8 @@ int main(int argc, char* argv[])
 		c = &core; // for signal handling
 
 		GGE_API gge_api(core);
-		Scripter scripter(filer, gge_api);
+		Configurer configurer(filer, gge_api);
+		Scripter scripter(filer, gge_api, configurer.get_configuration());
 
 		core.check_modules_initiated();
 		core.check_commands_order();

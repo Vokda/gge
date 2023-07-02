@@ -91,7 +91,7 @@ class GGE_API
 
 		// agent related
 		size_t create_agent(size_t texture, size_t tile);
-		bool move_agent(size_t agent, size_t to_tile);
+		void move_agent(size_t agent, size_t to_tile);
 		void remove_agent(size_t agent);
 		vector<int> get_agents(size_t tile);
 

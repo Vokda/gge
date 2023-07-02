@@ -15,7 +15,7 @@ Filer::Filer(const char* game_dir)
 	if(!is_dir(_game_root_dir))
 	{
 		stringstream ss;
-		ss << "Scripter: '" << game_dir << "' not a directory!" << _file_stat.st_mode << endl;
+		ss << "Filer: '" << game_dir << "' not a directory!" << _file_stat.st_mode << endl;
 		throw runtime_error(ss.str());
 	}
 }
@@ -32,14 +32,14 @@ bool Filer::is_dir(const string& file_path)
 	return S_ISLNK(_file_stat.st_mode) || S_ISDIR(_file_stat.st_mode);
 }
 
-string Filer::in_game_dir(const string& append_path)
+string Filer::in_game_dir(const string& append_path) const
 {
 	string out = _game_root_dir;
 	out += "/" + append_path;
 	return out;
 }
 
-string Filer::in_game_dir(const char* ap)
+string Filer::in_game_dir(const char* ap) const
 {
 	string s(ap);
 	return in_game_dir(s);

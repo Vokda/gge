@@ -49,9 +49,12 @@ extern "C"
 	SCM load_image(SCM path);
 	SCM create_sprite(SCM texture, SCM x, SCM y);
 
+	// agents
 	SCM create_agent(SCM sprite, SCM tile);
 	SCM get_agents(SCM tile);
+	void move_agent(SCM agent, SCM tile);
+	void remove_agent(SCM agent);
 
-	SCM make_list(SCM* e);
+	SCM make_list(int* e, size_t s);
 
 }

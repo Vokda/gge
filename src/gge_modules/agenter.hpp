@@ -23,7 +23,25 @@ class Agenter:  public Componenter, public GGE_module
 				shared_ptr<Sprite> sprite
 				);
 
-		void move_agent(size_t agent, shared_ptr<Tile> tile);
+		bool move_agent(size_t agent, shared_ptr<Tile> tile);
 		void navigate(size_t agent, shared_ptr<Tile> tile);
 		void remove_agent(size_t agent);
+
+	private:
+		class Move_agent
+		{
+			public:
+				Move_agent(shared_ptr<Agent> a, shared_ptr<Tile> tile)
+				{
+					_tile = tile;
+					_agent = a;
+				}
+
+				Move_agent() = default;
+				bool operator()();
+			private:
+				shared_ptr<Tile> _tile;
+				shared_ptr<Agent> _agent;
+
+		};
 };

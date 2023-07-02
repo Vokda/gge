@@ -31,7 +31,7 @@ class Tile: public enable_shared_from_this<Tile>
 		virtual string coord_to_string() const = 0;
 
 		void place_agent(shared_ptr<Agent>);
-		shared_ptr<Agent> remove_agent(shared_ptr<Agent>);
+		shared_ptr<Agent> remove_agent(shared_ptr<Agent>, bool completely);
 		bool move_agent(shared_ptr<Agent> agent, shared_ptr<Tile> dest);
 		list<shared_ptr<Agent>> get_agents() const { return _tile_agents; }
 
