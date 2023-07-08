@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdarg>
 #include <iostream>
+#include <sstream>
 using namespace std;
 
 extern "C"
@@ -147,14 +148,6 @@ extern "C"
 				);
 	}
 
-	void set_tile_color(SCM r, SCM g, SCM b, SCM index)
-	{
-		int i = scm_to_int(index);
-		if(i < 0) return;
-		_gge_api->set_tile_color(
-				{scm_to_int(r), scm_to_int(g),scm_to_int(b),},
-				i);
-	}
 
 	SCM get_tile_from_mouse(SCM x, SCM y)
 	{
@@ -269,4 +262,25 @@ SCM init_graphics(SCM s, SCM w, SCM h)
 				scm_to_uint(h)
 				)
 			);
+}
+
+void set_tile_color(SCM r, SCM g, SCM b, SCM index)
+{
+	int i = scm_to_int(index);
+	if(i < 0) return;
+	if(!scm_is_integer(r))
+	{
+		int red = scm_to_int(r);
+		stringstream ss;
+		ss << "not an int " << red << endl;
+		ss << "scm_is_integer(r) "<< scm_is_integer(r) << endl;
+		throw runtime_error(ss.str());
+	}
+	else
+	{
+		_gge_api->set_tile_color(
+				{scm_to_int(r), scm_to_int(g),scm_to_int(b)},
+				i);
+		cout << ""; // TODO not having a cout here causes a segfault
+	}
 }

@@ -77,18 +77,16 @@
 	(lambda ()
 	  (let ( (hex (select_hex (gge:get_mouse_position))) )
 		(if (>= hex 0)
-			(begin
-			  (display_hex hex)
-			  (if (not (= agent:selected_agent -1))
-				  (agent:move_agent agent:selected_agent hex)
-				  (agent:select_agent hex))
-			  ))
-	  )))
+			  ;(display_hex hex)
+			  (if (agent:has_agent_selected)
+				(agent:move_selected_agent hex)
+				(agent:select_agent hex)
+				)))))
 
 (define handle_events
-  (let ((event (gge:get_next_event)) 
-		) 
+  (let ((event (gge:get_next_event))) 
 	(lambda () 
+	  ;(display "handle event\n")
 		(set! event (gge:get_next_event))
 			(when (not (= event 0))
 			  (cond ((= event 113) (quit_game))
@@ -100,15 +98,16 @@
 
 (define mouse_hovering
   (lambda ()
-	(begin
-	  (set! current_hex (apply gge:get_tile_from_mouse (gge:get_mouse_position)))
-	  ; color new hex
-	  (gge:set_tile_color 255 0 0 current_hex)
-	  ; decolor old hex
-	  (if (not (= prev_hex current_hex))
-		  (gge:set_tile_color 255 255 255 prev_hex))
-	  (set! prev_hex current_hex)
-	  )
+	(let (( mouse_pos (gge:get_mouse_position) ))
+	  (begin
+		(set! current_hex (apply gge:get_tile_from_mouse mouse_pos))
+		; color new hex
+		(gge:set_tile_color 255 0 0 current_hex)
+		; decolor old hex
+		(if (not (= prev_hex current_hex))
+			(gge:set_tile_color 255 255 255 prev_hex))
+		(set! prev_hex current_hex)
+		))
 	))
 
 (define game_loop

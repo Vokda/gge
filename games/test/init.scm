@@ -54,6 +54,7 @@
 			  #:prefix agent:)
 			 )
 
-(agent:create_agent 1)
-(agent:create_agent 1)
-(agent:create_agent 1)
+(agent:create_agent 1 0)
+(agent:create_agent 1 1)
+(agent:create_agent 1 2)
+(agent:create_agent 1 3)

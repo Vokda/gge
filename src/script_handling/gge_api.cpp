@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include <iostream>
+#include "../sdl_helper.hpp"
 
 #include "../filer.hpp"
 #include "../gge_modules/texter.hpp"
@@ -129,18 +130,28 @@ std::vector<int> GGE_API::get_mouse_position()
 
 const std::queue<int>& GGE_API::get_events() const
 {
+/*#ifdef DEBUG
+	cout << "get_events()"<<endl;
+#endif*/
 	std::shared_ptr<Events> e = static_pointer_cast<Events>(_core.get_module(EVENTS));
 	return e->get_events();
 }
 
 int GGE_API::pop_event()
 {
+#ifdef false //DEBUG
+	cout << "get next event (pop_event); ";
+	int event = static_pointer_cast<Events>(_core.get_module(EVENTS))->pop_event();
+	cout << "event " << event << endl;
+	return event;
+#else
 	return static_pointer_cast<Events>(_core.get_module(EVENTS))->pop_event();
+#endif
 }
 
 size_t GGE_API::get_tile_from_mouse(int x, int y)
 {
-#ifdef DEBUG
+#ifdef false //DEBUG
 	if(_x != x and _y != y)
 	{
 		cout << "DEBUG: raw input [" << x << ", " << y <<"]" << endl;
@@ -158,15 +169,28 @@ size_t GGE_API::get_tile_from_mouse(int x, int y)
 	scroll_mouse(x, y);
 	y += graphics->get_viewport(1).h; */
 	//cube_coord cc = grid->_utils.axial_to_cube(grid->_utils.xy_to_axial(x, y));
+#ifdef false //DEBUG
+	size_t tile = grid->get_tile(x, y);
+	cout << "tile gotten from [" << x << ", " << y << "] => " << tile << endl;
+	return tile;
+#else
 	return grid->get_tile(x, y);
+#endif
 }
 
 void GGE_API::set_tile_color(const vector<int>& c, size_t tile_i)
 {
 	vector<Uint8> v(c.begin(), c.end());
-	SDL_Color color = {v[0], v[1], v[2], v[3]};
+	SDL_Color color = {v[0], v[1], v[2], 0};
+	//SDL_Color color = {c[0], c[1], c[2], c[3]};
+#ifdef false //DEBUG
+	cout << "setting tile "<< tile_i  <<" color to " << color << endl;
+#endif
 	shared_ptr<Tile> tile = get_tile(tile_i);
 	tile->set_color(color);
+#ifdef false //DEBUG
+	cout << "setting tile color done" << endl;
+#endif
 }
 
 bool GGE_API::scroll(vector<int>& mouse_pos)

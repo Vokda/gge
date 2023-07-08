@@ -69,7 +69,15 @@ size_t Hex_grid::get_hex_index(cube_coord cc)
 {
 	try
 	{
+#ifdef false //DEBUG TODO should have some better way of doing it 
+		int hash_cube_coordinate = hash_cube_coord( cc.q, cc.r, cc.s );
+		cout << "hash cube coord " << hash_cube_coordinate << endl;
+		size_t index = _cube_coords_to_i_map.at(hash_cube_coordinate);
+		cout << "tile index " << index << endl;
+		return index;
+#else
 		return _cube_coords_to_i_map.at(hash_cube_coord( cc.q, cc.r, cc.s ) );
+#endif
 	}
 	catch(const out_of_range& oor)
 	{

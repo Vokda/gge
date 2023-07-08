@@ -40,7 +40,6 @@ void Guile::read_file(const string& s)
 
 bool Guile::run_game_loop_once(double delta)
 {
-	//scm_call_1(_scm_game_loop, scm_from_double(delta));
 	SCM scm = scm_call_1(_scm_game_loop, scm_from_double(delta));
 	bool quit = scm_to_bool(scm);
 	return quit;

@@ -22,6 +22,9 @@ void Runner::exec_commands()
 {
 	for(auto cmd: _commands)
 	{
+/*#ifdef DEBUG
+		cout << "Running command " << cmd->get_module()->get_type_string() << endl;
+#endif*/
 		cmd->execute();
 	}
 }
