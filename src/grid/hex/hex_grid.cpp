@@ -14,10 +14,12 @@ using namespace std;
 {
 }*/
 
-Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho, Coordinate_system cs):
+Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho, Coordinate_system cs, int x_offset, int y_offset):
 	_layout(Orientation(ho, size), cs), 
 	Grid(),
-	_utils(_layout)
+	_utils(_layout),
+	_x_offset(x_offset),
+	_y_offset(y_offset)
 {
 	size_t k = 1;
 
@@ -33,6 +35,8 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 			{
 				cube_coord cc = _utils.offset_coord_to_cube(h, w);
 				SDL_Point center_point = _utils.calc_center_point(cc);
+				center_point.x += x_offset;
+				center_point.y += y_offset;
 				shared_ptr<Hex> hex = make_shared<Hex>(cc, center_point, size, _utils);
 				_grid.push_back(hex);
 				int i = _grid.size() - 1;
@@ -87,6 +91,8 @@ size_t Hex_grid::get_hex_index(cube_coord cc)
 
 size_t Hex_grid::get_tile(int x, int y)
 {
+	x -= _x_offset;
+	y -= _y_offset;
 	return get_hex_index(
 			_utils.axial_to_cube(
 				_utils.xy_to_axial(x, y)));

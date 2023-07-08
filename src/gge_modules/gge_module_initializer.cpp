@@ -68,9 +68,9 @@ shared_ptr<GGE_module> GGE_module_initializer::events()
 {
 	return make_shared<Events>();
 }
-shared_ptr<GGE_module> GGE_module_initializer::grider(int gt, int width, int height, int tile_size)
+shared_ptr<GGE_module> GGE_module_initializer::grider(int gt, int width, int height, int tile_size, int x_offset, int y_offset)
 {
-	return make_shared<Grider>((grid_type)gt, width, height, tile_size);
+	return make_shared<Grider>((grid_type)gt, width, height, tile_size, x_offset, y_offset);
 }
 
 shared_ptr<GGE_module> GGE_module_initializer::game_loop(Script_engine& se, Core& c)

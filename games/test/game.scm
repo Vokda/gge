@@ -64,12 +64,7 @@
   (lambda (mouse_pos)
 	(if (null? mouse_pos)
 		-1
-		(begin
-		  (display "select_hex")
-		  (display  mouse_pos)
-		  (display "\n")
-		  (apply gge:get_tile_from_mouse mouse_pos)
-		  )
+		(apply gge:get_tile_from_mouse mouse_pos)
 		)
   ))
 
@@ -77,10 +72,11 @@
 	(lambda ()
 	  (let ( (hex (select_hex (gge:get_mouse_position))) )
 		(if (>= hex 0)
-			  ;(display_hex hex)
 			  (if (agent:has_agent_selected)
 				(agent:move_selected_agent hex)
-				(agent:select_agent hex)
+				(begin
+				  (agent:select_agent hex)
+				  (display_hex hex))
 				)))))
 
 (define handle_events

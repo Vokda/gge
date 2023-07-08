@@ -44,11 +44,8 @@
   (lambda (agent tile)
 	(if (and (>= agent 0) (>= tile 0))
 		(begin
-		  (display "move agent\n")
 		  (gge:move_agent agent tile)
-		  (set! selected_agent -1)
-		  )
-		(display "no agent selected\n")
+		  (set! selected_agent -1))
 		)))
 
 (define has_agent_selected

@@ -15,7 +15,7 @@ class Hex_grid: public Grid
 {
 	public:
 
-		Hex_grid(size_t w, size_t h, double hex_size, Hex_orientation ho, Coordinate_system cs);
+		Hex_grid(size_t w, size_t h, double hex_size, Hex_orientation ho, Coordinate_system cs, int x_offset, int y_offset);
 		//Hex_grid(const Hex_grid& hg);
 
 		//Hex hex_add(const Hex& a, const Hex& b);
@@ -37,6 +37,8 @@ class Hex_grid: public Grid
 
 		// vars
 		Layout _layout;
+		int _x_offset = 0;
+		int _y_offset = 0;
 		
 		/* ugly special case for the gge api 
 		 * so you can do something like

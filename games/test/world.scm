@@ -15,7 +15,7 @@
 (define tile_size 60)
 
 (define grid
-  (gge:init_grider grid_type grid_x grid_y tile_size))
+  (gge:init_grider grid_type grid_x grid_y tile_size tile_size   tile_size ))
 
 (define get_grid
   (lambda ()

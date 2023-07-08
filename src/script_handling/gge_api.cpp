@@ -37,9 +37,9 @@ int GGE_API::init_events()
 	return add_module(EVENTS, _gge_init.events());
 }
 
-int GGE_API::init_grider(int gt, int w, int h, int ts)
+int GGE_API::init_grider(int gt, int w, int h, int ts, int x_offset, int y_offset)
 {
-	return add_module(GRIDER, _gge_init.grider(gt, w, h, ts));
+	return add_module(GRIDER, _gge_init.grider(gt, w, h, ts, x_offset, y_offset));
 }
 
 int GGE_API::init_game_loop()

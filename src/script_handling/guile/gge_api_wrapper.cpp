@@ -40,14 +40,16 @@ extern "C"
 			);
 	}
 
-	SCM init_grider(SCM gt, SCM w, SCM h, SCM s)
+	SCM init_grider(SCM gt, SCM w, SCM h, SCM s, SCM x_offset, SCM y_offset)
 	{
 		return scm_from_int(
 				_gge_api->init_grider(
 					scm_to_int(gt),
 					scm_to_int(w),
 					scm_to_int(h),
-					scm_to_int(s)
+					scm_to_int(s),
+					scm_to_int(x_offset),
+					scm_to_int(y_offset)
 					)
 				);
 	}
@@ -227,7 +229,6 @@ void remove_agent(SCM agent)
 SCM get_agents(SCM tile)
 {
 	vector<int> agents = _gge_api->get_agents(scm_to_int(tile));
-	std::cout << "agents size " << agents.size() << std::endl;
 	if(agents.size() > 0)
 		return make_list(&agents[0], agents.size());
 	else
@@ -239,12 +240,10 @@ SCM make_list(int* agents, size_t size)
 	if(size > 0)
 	{
 		int agent = *agents;
-		cout << "cons agent " << agent << endl;
 		return scm_cons(scm_from_int(agent), make_list(++agents, --size));
 	}
 	else
 	{
-		cout << "end of list!" << endl;
 		return scm_list_n(SCM_UNDEFINED);
 	}
 }

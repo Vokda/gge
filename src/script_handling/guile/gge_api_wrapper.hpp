@@ -14,7 +14,7 @@ extern "C"
 	// init
 	SCM init_graphics(SCM string, SCM w, SCM h);
 	SCM init_events();
-	SCM init_grider(SCM gt, SCM w, SCM h, SCM size);
+	SCM init_grider(SCM gt, SCM w, SCM h, SCM size, SCM x, SCM y);
 	SCM init_game_loop();
 	SCM init_texter();
 	SCM init_spriter();

@@ -32,7 +32,7 @@ class GGE_API
 		// module init returns ID of module
 		int init_graphics(const string& s, size_t, size_t);
 		int init_events();
-		int init_grider(int grid_type, int w, int h, int tile_size);
+		int init_grider(int grid_type, int w, int h, int tile_size, int x, int y);
 		int init_game_loop();
 		int init_texter();
 		int init_spriter();

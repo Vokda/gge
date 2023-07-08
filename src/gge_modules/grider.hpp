@@ -9,9 +9,9 @@ enum grid_type {HEX};
 class Grider: public GGE_module
 {
 	public:
-		Grider(grid_type gt, int width, int height, int tile_size);
+		Grider(grid_type gt, int width, int height, int tile_size, int x_offset, int y_offset);
 
-		void create_grid(grid_type gt, int width, int height, int tile_size);
+		void create_grid(grid_type gt, int width, int height, int tile_size, int x, int y);
 
 		grid_t& get_grid(){ return _grid->get_grid(); }
 		const grid_t& get_grid() const{ return _grid->get_grid(); }
