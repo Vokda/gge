@@ -14,7 +14,6 @@ size_t Spriter::create_sprite(size_t t, const SDL_Point& p, int ms)
 {
 	SDL_Texture* texture = _graphics->get_texture(t);
 	Sprite sprite;
-	sprite.position = p;
 	sprite.texture = texture;
 	sprite.permanent = (ms < 1 ? true : false);
 	sprite.milliseconds = ms;
@@ -26,6 +25,7 @@ size_t Spriter::create_sprite(size_t t, const SDL_Point& p, int ms)
 	_sdl_helper.check_null("SDL_QueryTexture", err);
 
 	sprite.size = rect;
+	sprite.set_position(p);
 
 	_components.push_back(make_shared<Sprite>(sprite));
 	cout << "Created sprite @ " << p << endl;

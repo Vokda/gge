@@ -10,15 +10,16 @@ class Graphics;
 
 struct Sprite: public Base_component
 {
-	SDL_Point position; // not entirely necessary?
+	SDL_Point position; // mid point
 	SDL_Rect size;
 	SDL_Texture* texture;
 	int view_port;
 	void set_position(const SDL_Point& p)
 	{
-		position = p;
-		size.x = p.x;
-		size.y = p.y;
+		position.x = p.x;
+		position.y = p.y;
+		size.x = p.x - size.w / 2;
+		size.y = p.y - size.h / 2;
 	}
 };
 

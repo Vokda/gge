@@ -85,9 +85,6 @@ bool Agenter::Move_agent::operator()()
 	{
 		_agent->tile = _tile;
 		auto pos = _agent->tile->get_position();
-		// TODO for stacking sprites, not yet done for placing
-		// pos.y -= (float)_agent->tile->get_agents().size() * _agent->sprite->size.h * 0.5;
-		_agent->sprite->set_position(pos);
 		return true;
 	}
 	else

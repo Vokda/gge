@@ -41,11 +41,15 @@ class Tile: public enable_shared_from_this<Tile>
 
 		SDL_Point _position; // center point position x y
 		std::vector<SDL_Point> _corners;
+		int _size;
 
 		SDL_Color _color;
 		bool blink = false;
 		map<string, void*> _tile_data;
 		list<shared_ptr<Agent>> _tile_agents; // agents on the tile
+
+	private:
+		void replace_agents();
 
 };
 
