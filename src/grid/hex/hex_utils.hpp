@@ -27,7 +27,7 @@ class Hex_utils
 		cube_coord offset_coord_to_cube(int col, int row) const;
 		SDL_Point offset_to_pixel(cube_coord) const;
 
-		SDL_Point calc_center_point(cube_coord) const;
+		SDL_Point calc_center_point(int col, int row) const;
 
 	private:
 		const Layout& _layout;

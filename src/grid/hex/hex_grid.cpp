@@ -21,8 +21,6 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 	_x_offset(x_offset),
 	_y_offset(y_offset)
 {
-	size_t k = 1;
-
 	// in case of square grid
 	bool success = true;
 	cout << "Grid -";
@@ -34,14 +32,14 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 			try
 			{
 				cube_coord cc = _utils.offset_coord_to_cube(h, w);
-				SDL_Point center_point = _utils.calc_center_point(cc);
+				SDL_Point center_point = _utils.calc_center_point(h, w);
 				center_point.x += x_offset;
 				center_point.y += y_offset;
 				shared_ptr<Hex> hex = make_shared<Hex>(cc, center_point, size, _utils);
 				_grid.push_back(hex);
 				int i = _grid.size() - 1;
 #ifdef DEBUG
-				cout << "Made hex ["<< i << "] at " << hex;
+				cout << "Made hex ["<< i << "] at " << hex << endl;
 				map_cube_to_i(hex->get_cube_coords(), i);
 #endif
 			}

@@ -88,12 +88,10 @@ cube_coord Hex_utils::offset_coord_to_cube(int col, int row) const
 	return cube_coord(q, r, -q-r);
 }
 
-SDL_Point Hex_utils::calc_center_point(cube_coord cc) const
+SDL_Point Hex_utils::calc_center_point(int col, int row) const
 {
 	//SDL_Point p = axial_to_pixel(cube_to_axial(cc));
 	SDL_Point p;
-	int col = cc.q;
-	int row = cc.r;
 	switch(_layout.coordinate_system)
 	{
 		case(RECT_ODD_Q):
@@ -106,7 +104,7 @@ SDL_Point Hex_utils::calc_center_point(cube_coord cc) const
 	}
 #ifdef DEBUG
 #include <iostream>
-	cout << "Center point: " << cc << " -> " << p.x << ',' << p.y << endl;
+	cout << "Center point for [" << col << ", " << row << "] -> " << p.x << ',' << p.y << endl;
 #endif
 	return p;
 }
