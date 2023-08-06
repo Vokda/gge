@@ -60,6 +60,11 @@ void Tile::replace_agents()
 	cout << "agents on tile " << nr_agents << endl;
 }
 
+const vector<shared_ptr<Tile>>& Tile::get_neighbors() const
+{
+	return _neighbors;
+}
+
 std::ostream& operator<<(std::ostream& ost, const Tile& tile)
 {
 	//SDL_Point axial = hex.cube_to_axial(cc);

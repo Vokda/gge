@@ -35,6 +35,10 @@ class Tile: public enable_shared_from_this<Tile>
 		bool move_agent(shared_ptr<Agent> agent, shared_ptr<Tile> dest);
 		list<shared_ptr<Agent>> get_agents() const { return _tile_agents; }
 
+		const vector<shared_ptr<Tile>>& get_neighbors() const; 
+		void set_neighbors(
+				vector<shared_ptr<Tile>> n) { _neighbors = n; };
+
 	protected:
 		virtual void calculate_corners(SDL_Point& c, int s) = 0;
 		virtual SDL_Point calculate_corner(SDL_Point& center, int, int ) = 0;
@@ -42,7 +46,7 @@ class Tile: public enable_shared_from_this<Tile>
 		SDL_Point _position; // center point position x y
 		std::vector<SDL_Point> _corners;
 		int _size;
-
+		vector<shared_ptr<Tile>> _neighbors;
 		SDL_Color _color;
 		bool blink = false;
 		map<string, void*> _tile_data;

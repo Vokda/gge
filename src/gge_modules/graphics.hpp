@@ -29,7 +29,7 @@ class Graphics: public GGE_module
 		enum viewport {MAIN, BAR, SIDE_BAR};
 
 		size_t load_image(const std::string& path);
-		SDL_Texture* get_texture(size_t index) { return _textures[index]; }
+		SDL_Texture* get_texture(size_t index);
 
 		void clear_screen();
 		void render();

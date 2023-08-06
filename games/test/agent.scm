@@ -4,11 +4,14 @@
 						  select_agent 
 						  move_selected_agent 
 						  has_agent_selected
+						  agents
 						  ))
 
 (use-modules ( (gge)
 			  #:prefix gge:)
 			 )
+
+(use-modules (srfi srfi-9))
 
 (define agenter
   (gge:init_agenter))
@@ -28,13 +31,19 @@
 (define triangle_down
   (gge:load_image "sprites/cylinder.png"))
 
+;(define-record-type "agent" 
+;				  (make-agent index tile texture)
+;				  agent?
+;				  (index	agent-index)
+;				  (tile		agent-tile)
+;				  (texture	agent-texture))
 (define agents
   (list '()))
 
 
 (define create_agent 
-  (lambda (tile sprite)
-	(append agents (gge:create_agent sprite tile))))
+  (lambda (tile texture)
+	(append agents (gge:create_agent texture tile))))
 
 (define move_selected_agent
   (lambda (tile)
@@ -42,11 +51,13 @@
 
 (define move_agent
   (lambda (agent tile)
-	(if (and (>= agent 0) (>= tile 0))
+	(let (( a selected_agent))
+	  (if (and (>= agent 0) (>= tile 0))
 		(begin
 		  (gge:move_agent agent tile)
-		  (set! selected_agent -1))
-		)))
+		  (set! selected_agent -1)
+		  a)
+		))))
 
 (define has_agent_selected
   (lambda ()

@@ -12,6 +12,8 @@
 (use-modules (system foreign))
 
 (define delta_string "delta: ")
+(define current_player 0) 
+(define players '(0 1)) ; 0 = player, 1 = world
 (define i 0) ; to show delta every 60th frame
 (define prev_hex -1) ; used to recolor hex from hovering
 (define current_hex -1) ; hex hovered over
@@ -60,6 +62,11 @@
 	  0)); viewport
 	))
 
+(define print_text
+  (lambda (text x y t)
+	(gge:create_text text x y t 0)
+	))
+
 (define select_hex
   (lambda (mouse_pos)
 	(if (null? mouse_pos)
@@ -73,7 +80,10 @@
 	  (let ( (hex (select_hex (gge:get_mouse_position))) )
 		(if (>= hex 0)
 			  (if (agent:has_agent_selected)
-				(agent:move_selected_agent hex)
+				(let (( last_agent (agent:move_selected_agent hex) ))
+				  (agent:create_agent hex 3)
+				  (finish_turn)
+				)
 				(begin
 				  (agent:select_agent hex)
 				  (display_hex hex))
@@ -118,4 +128,32 @@
 	  ) ; begin
 	) ; lambda
   ) ; define
+
+
+(define finish_turn
+  (lambda ()
+	(define text (string-append (string-append "Player " (number->string current_player)) " finished"))
+	(print_text text 0 0 2000)
+	(if (not (= current_player 0))
+	  (growth)
+	  )
+	(set! current_player (modulo (+ current_player 1) 2))))
+
+(define growth
+  (lambda ()
+	; create agents around agent
+	(let (( agents (gge:get_agents -1) ))
+	  (if (pair? agents)
+		(grow_agents agents))
+	)))
+
+(define grow_agents
+  (lambda (agent_ls)
+	(let (( agent (car agent_ls) ))
+	  (cond
+		( (not (pair? agent)) (display "no agents"))
+		( (null? (agent)) (agent:create_agent (gge:get_agent_position agent) (gge:get_agent_texture agent)))
+		(else (grow_agents (cdr agent_ls)))))))
+
+
 

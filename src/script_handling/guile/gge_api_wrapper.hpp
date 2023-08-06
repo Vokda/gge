@@ -40,6 +40,7 @@ extern "C"
 	void set_tile_color(SCM r, SCM g, SCM b, SCM index);
 
 	SCM get_tile_from_mouse(SCM x, SCM y);
+	SCM get_neighbors(SCM tile);
 
 	SCM get_mouse_position();
 
@@ -54,7 +55,16 @@ extern "C"
 	SCM get_agents(SCM tile);
 	void move_agent(SCM agent, SCM tile);
 	void remove_agent(SCM agent);
+	void change_agent_sprite(SCM agent, SCM texture);
 
-	SCM make_list(int* e, size_t s);
-
+// privates
+	SCM make_list(const int* e, size_t s);
+}
+	template<typename T>
+SCM vector_to_list(const vector<T>& v)
+{
+	if(v.size() > 0)
+		return make_list(&v[0], v.size());
+	else
+		return scm_list_n(SCM_UNDEFINED);
 }

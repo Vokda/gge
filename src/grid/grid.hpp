@@ -14,15 +14,17 @@ class Grid
 
 
 		shared_ptr<Tile> get_tile(size_t i);
-		//const Tile& get_tile(size_t i) const { return _grid[i]; };
-
+		int get_tile_index(shared_ptr<Tile> t);
 
 		// getters
 		grid_t& get_grid() { return _grid; };
 		const grid_t& get_grid() const { return _grid; }
 
-		// return index of tile based on mouse position
-		size_t virtual get_tile(int mouse_x, int mouse_y) = 0;
+		/**
+		 * return index of tile based on mouse position
+		 * return -1 if no hex with that index is found
+		 */
+		int virtual get_tile(int mouse_x, int mouse_y) = 0;
 
 	protected:
 		bool is_legal_tile(size_t i);

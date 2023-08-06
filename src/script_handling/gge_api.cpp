@@ -149,7 +149,7 @@ int GGE_API::pop_event()
 #endif
 }
 
-size_t GGE_API::get_tile_from_mouse(int x, int y)
+int GGE_API::get_tile_from_mouse(int x, int y)
 {
 #ifdef false //DEBUG
 	if(_x != x and _y != y)
@@ -174,7 +174,7 @@ size_t GGE_API::get_tile_from_mouse(int x, int y)
 	cout << "tile gotten from [" << x << ", " << y << "] => " << tile << endl;
 	return tile;
 #else
-	return grid->get_tile(x, y);
+	return grid->get_tile_index(x, y);
 #endif
 }
 
@@ -191,6 +191,12 @@ void GGE_API::set_tile_color(const vector<int>& c, size_t tile_i)
 #ifdef false //DEBUG
 	cout << "setting tile color done" << endl;
 #endif
+}
+
+const vector<int>& GGE_API::get_neighbors(int tile)
+{
+	auto grider = static_pointer_cast<Grider>(_core.get_module(GRIDER));
+	return grider->get_tile_neighbors_index(tile);
 }
 
 bool GGE_API::scroll(vector<int>& mouse_pos)
@@ -310,28 +316,62 @@ void GGE_API::remove_agent(size_t a)
 	agenter->remove_agent(a);
 }
 
-vector<int> GGE_API::get_agents(size_t i)
+vector<int> GGE_API::get_agents(int i)
 {
-#ifdef DEBUG
-	cout << "get agents from tile " << i << endl;
-#endif
-	auto tile = get_tile(i);
-	list<shared_ptr<Agent>> agents_on_tile = tile->get_agents();
-	vector<int> agents_i(agents_on_tile.size());
-	size_t a_i = 0;
-	for(auto a: agents_on_tile)
+	vector<int> agents;
+	if(i < 0)
 	{
-		agents_i[a_i++] = a->index;
+		auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
+		agents = agenter->get_components_indices();
 	}
-#ifdef DEBUG
-	if(agents_i.empty())
-		cout << "no agents on tile" << endl;
 	else
-		cout << agents_i.size() << " found on tile" << endl;
+	{
+#ifdef DEBUG
+		cout << "get agents from tile " << i << endl;
 #endif
-	return  agents_i;
+		auto tile = get_tile(i); 
+		auto as = tile->get_agents();
+		agents.resize(as.size());
+		size_t a_i = 0;
+		for(auto a: as)
+		{
+			agents[a_i++] = a->index;
+		}
+	}
+
+#ifdef DEBUG
+	if(agents.empty())
+	{
+		cout << "no agents found";
+		if(i < 0)
+			cout << "found anywhere" << endl;
+		else
+			cout << "on tile" << i << endl;
+	}
+	else
+	{
+		if(i < 0)
+		{
+			cout << agents.size() << " found in total." << endl;
+		}
+		else
+		{
+			cout << agents.size() << " found on tile " << i << endl;
+		}
+	}
+#endif
+	return  agents;
 }
 
+void GGE_API::change_agent_sprite(int agent, int new_texture)
+{
+	auto a = get_agent(agent);
+
+	auto sprite = a->sprite;
+
+	auto spriter = static_pointer_cast<Spriter>(_core.get_module(SPRITER));
+	spriter->change_texture(sprite, new_texture);
+}
 
 /*
  * PRIVATE FUNCTIONS
@@ -339,14 +379,7 @@ vector<int> GGE_API::get_agents(size_t i)
 shared_ptr<Tile> GGE_API::get_tile(size_t i)
 {
 	auto grider = static_pointer_cast<Grider>(_core.get_module(GRIDER));
-	auto grid = grider->get_grid();
-	if(grid.empty())
-	{
-		stringstream ss;
-		ss << "Cannot get tile " << i << " from unitialized grid!"<< endl;
-		throw runtime_error(ss.str());
-	}
-	return grid[i];
+	return grider->get_tile(i);
 }
 
 shared_ptr<Agent> GGE_API::get_agent(size_t a)

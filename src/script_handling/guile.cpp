@@ -53,6 +53,7 @@ void Guile::add_gge_api_functions()
 	SCM prev_module = scm_set_current_module(current_module);
 
 	// gge_begin read subs
+	// scm_c_define_gsubr ( name, required, optional, rest, function)
 	scm_c_define_gsubr("hello", 0, 0, 0, (scm_t_subr) gge_api_hello);
 
 	scm_c_define_gsubr("init_graphics", 3, 0, 0, (scm_t_subr) init_graphics);
@@ -82,9 +83,10 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("create_sprite", 3,0,0, (scm_t_subr) create_sprite);
 
 	scm_c_define_gsubr("create_agent", 2,0,0, (scm_t_subr) create_agent);
-	scm_c_define_gsubr("get_agents", 1,0,0, (scm_t_subr) get_agents);
+	scm_c_define_gsubr("get_agents", 0,1,1, (scm_t_subr) get_agents);
 	scm_c_define_gsubr("move_agent", 2,0,0, (scm_t_subr) move_agent);
 	scm_c_define_gsubr("remove_agent", 1,0,0, (scm_t_subr) remove_agent);
+	scm_c_define_gsubr("change_agent_sprite", 2,0,0, (scm_t_subr) change_agent_sprite);
 
 
 	// gge_end read subs
@@ -116,6 +118,7 @@ void Guile::add_gge_api_functions()
 			"get_agents",
 			"move_agent",
 			"remove_agent",
+			"change_agent_sprite",
 			NULL);
 	// gge_end write subs
 

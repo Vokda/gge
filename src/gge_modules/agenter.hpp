@@ -28,6 +28,7 @@ class Agenter:  public Componenter, public GGE_module
 		void remove_agent(size_t agent);
 
 	private:
+		shared_ptr<Agent> get_agent(int);
 		class Move_agent
 		{
 			public:

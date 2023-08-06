@@ -2,9 +2,11 @@
 #include "../grid/grid.hpp"
 #include "gge_module.hpp"
 #include <memory>
+#include <unordered_map>
 using namespace std;
 
 enum grid_type {HEX};
+class Tile;
 
 class Grider: public GGE_module
 {
@@ -17,8 +19,14 @@ class Grider: public GGE_module
 		const grid_t& get_grid() const{ return _grid->get_grid(); }
 
 
-		size_t get_tile(int x, int y);
+		shared_ptr<Tile> get_tile(int tile);
+		int get_tile_index(int x, int y);
+		int get_tile_index(shared_ptr<Tile>);
+
+		const vector<int>& get_tile_neighbors_index(int tile);
+		
 
 	private:
 		unique_ptr<Grid> _grid; //TODO enable to handle more than one grid
+		std::unordered_map<int, vector<int>> _neighbors_indices; // cache
 };

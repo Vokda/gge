@@ -135,6 +135,7 @@ extern "C"
 	SCM create_text(SCM text, SCM scm_x, SCM scm_y, SCM ms, SCM view_port)
 	{
 		const char* c = scm_to_locale_string(text);
+		// TODO add dynamic wind to free up memory
 		const string str(c);
 		int x = scm_to_int(scm_x);
 		int y = scm_to_int(scm_y);
@@ -209,6 +210,10 @@ extern "C"
 					));
 	}
 
+	void change_agent_sprite(SCM agent, SCM texture)
+	{
+		_gge_api->change_agent_sprite(scm_to_int(agent), scm_to_int(texture));
+	}
 
 } // extern C END
 
@@ -228,14 +233,14 @@ void remove_agent(SCM agent)
 
 SCM get_agents(SCM tile)
 {
-	vector<int> agents = _gge_api->get_agents(scm_to_int(tile));
+	const vector<int> agents = _gge_api->get_agents((scm_null_p(tile)) ?	scm_to_int(tile) : -1);
 	if(agents.size() > 0)
 		return make_list(&agents[0], agents.size());
 	else
 		return scm_list_n(SCM_UNDEFINED);
 }
 
-SCM make_list(int* agents, size_t size)
+SCM make_list(const int* agents, size_t size)
 {
 	if(size > 0)
 	{
@@ -247,7 +252,6 @@ SCM make_list(int* agents, size_t size)
 		return scm_list_n(SCM_UNDEFINED);
 	}
 }
-
 
 // definition outside to handle C++ strings
 SCM init_graphics(SCM s, SCM w, SCM h)
@@ -282,4 +286,10 @@ void set_tile_color(SCM r, SCM g, SCM b, SCM index)
 				i);
 		cout << ""; // TODO not having a cout here causes a segfault
 	}
+}
+
+SCM get_neighbors(SCM tile)
+{
+	int t = scm_to_int(tile);
+	return vector_to_list(_gge_api->get_neighbors(t));
 }

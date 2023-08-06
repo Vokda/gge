@@ -1,17 +1,17 @@
 #include "hex_utils.hpp"
 #include <SDL2/SDL.h>
-#include "coords.hpp"
 #include <tuple>
 using namespace std;
-
-SDL_Point cube_to_evenq(const Cube_coordinate& cube)
-{
-    return {cube.q, (cube.s + (cube.q + cube.q&1)) / 2};
-}
 
 Hex_utils::Hex_utils(const Layout& o):
 	_layout(o)
 {
+
+}
+
+SDL_Point cube_to_evenq(const Cube_coordinate& cube)
+{
+    return {cube.q, (cube.s + (cube.q + cube.q&1)) / 2};
 }
 
 axial_coord Hex_utils::xy_to_axial(int x, int y) const
@@ -106,13 +106,5 @@ SDL_Point Hex_utils::calc_center_point(int col, int row) const
 #include <iostream>
 	cout << "Center point for [" << col << ", " << row << "] -> " << p.x << ',' << p.y << endl;
 #endif
-	return p;
-}
-
-SDL_Point Hex_utils::offset_to_pixel(cube_coord cc) const
-{
-	SDL_Point p;
-	p.x = 0;
-	p.y = 0;
 	return p;
 }

@@ -90,3 +90,8 @@ bool Agenter::Move_agent::operator()()
 	else
 		return false;
 }
+
+shared_ptr<Agent> Agenter::get_agent(int a)
+{
+	return static_pointer_cast<Agent>(get_component(a));
+}

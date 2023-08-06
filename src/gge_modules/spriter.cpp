@@ -1,6 +1,7 @@
 #include "spriter.hpp"
 #include "graphics.hpp"
 
+#include <sstream>
 #include <iostream>
 using namespace std;
 
@@ -10,9 +11,15 @@ Spriter::Spriter(shared_ptr<Graphics> g):
 	_graphics = g;
 }
 
-size_t Spriter::create_sprite(size_t t, const SDL_Point& p, int ms)
+size_t Spriter::create_sprite(int t, const SDL_Point& p, int ms)
 {
 	SDL_Texture* texture = _graphics->get_texture(t);
+	if(texture == nullptr)
+	{
+		stringstream ss;
+		ss <<"Spriter: texture not found: " << t << endl;
+		throw runtime_error(ss.str());
+	}
 	Sprite sprite;
 	sprite.texture = texture;
 	sprite.permanent = (ms < 1 ? true : false);
@@ -40,4 +47,13 @@ size_t Spriter::create_sprite(size_t t, const SDL_Point& p, int ms)
 #endif
 
 	return _components.size() -1;
+}
+
+void Spriter::change_texture(shared_ptr<Sprite> sprite, int texture)
+{
+	auto* sdl_texture = _graphics->get_texture(texture);
+	if(sdl_texture)
+		sprite->texture = sdl_texture;
+	else
+		throw runtime_error("Not a valid texture index");
 }

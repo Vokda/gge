@@ -18,6 +18,10 @@ struct cube_coord
 			throw   "q + r + s must be 0!";
 		}
 	}
+
+	cube_coord& operator+=(const cube_coord& c);
+	cube_coord& operator+(const cube_coord& c);
+
 };
 
 struct axial_coord
@@ -60,6 +64,12 @@ struct Cube_coordinate
 static std::ostream& operator<<(std::ostream& ost, const cube_coord& cc)
 {
 	ost << "[" << cc.q << ", " << cc.r << ", " << cc.s << "]";
+	return ost;
+}
+
+static std::ostream& operator<<(std::ostream& ost, const axial_coord& cc)
+{
+	ost << "[" << cc.q << ", " << cc.r << "]";
 	return ost;
 }
 

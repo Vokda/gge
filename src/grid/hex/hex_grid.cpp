@@ -4,6 +4,7 @@
 #include "hex_utils.hpp"
 #include <stdexcept>
 #include "coords.hpp"
+#include <climits>
 using namespace std;
 
 
@@ -24,6 +25,15 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 	// in case of square grid
 	bool success = true;
 	cout << "Grid -";
+
+	if(width <= 0 or height <= 0)
+		throw runtime_error("width and height of grid needs to be > 0!");
+
+	if(width >= INT_MAX / height)
+	{
+		throw runtime_error("width x height TOO BIG for system to handle!");
+	}
+
 	// && success is for breaking out of outer loop
 	for(size_t w = 0; w < height && success; ++w)
 	{
@@ -39,7 +49,7 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 				_grid.push_back(hex);
 				int i = _grid.size() - 1;
 #ifdef DEBUG
-				cout << "Made hex ["<< i << "] at " << hex << endl;
+				cout << "Made hex ["<< i << "] at " << *hex << endl;
 				map_cube_to_i(hex->get_cube_coords(), i);
 #endif
 			}
@@ -51,6 +61,16 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 			}
 		}
 	}
+
+	// set neighbors
+	for(auto tile: _grid)
+	{
+		shared_ptr<Hex> hex = static_pointer_cast<Hex>(tile);
+		hex->set_neighbors(
+				get_neighbors(
+					hex->get_cube_coords()));
+	}
+
 	if(success)
 		cout << "OK" << endl;
 }
@@ -62,12 +82,20 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, Hex_orientation ho,
 	return Hex(c_a.q + c_b.q, c_a.r + c_b.r, c_a.s + c_b.s, _hex_size);
 }*/
 
-/*Hex& Hex_grid::get_hex(int q, int r, int s)
+shared_ptr<Hex> Hex_grid::get_hex(cube_coord cc)
 {
-	return get_hex(_cube_coords_to_i_map[hash_cube_coord(q,r,s)]);
-}*/
+	try
+	{
+		int index = _cube_coords_to_i_map.at(hash_cube_coord( cc.q, cc.r, cc.s ) );
+		return static_pointer_cast<Hex>(_grid[index]);
+	}
+	catch(const out_of_range& oor)
+	{
+		return nullptr;
+	}
+}
 
-size_t Hex_grid::get_hex_index(cube_coord cc)
+int Hex_grid::get_hex_index(cube_coord cc)
 {
 	try
 	{
@@ -87,7 +115,7 @@ size_t Hex_grid::get_hex_index(cube_coord cc)
 	}
 }
 
-size_t Hex_grid::get_tile(int x, int y)
+int Hex_grid::get_tile(int x, int y)
 {
 	x -= _x_offset;
 	y -= _y_offset;
@@ -109,4 +137,49 @@ int Hex_grid::hash_cube_coord(int q, int r, int s)
 	hash = ((hash << 5) + hash) + (r);
 	hash = ((hash << 5) + hash) + (s);
 	return hash;
+}
+
+
+vector<shared_ptr<Tile>> Hex_grid::get_neighbors(cube_coord cc)
+{
+	vector<shared_ptr<Tile>> neighbors; // at most 6 neighbors
+#ifdef DEBUG
+	// TODO Oh god, why are there two functions with the same name in the parent??
+	cout << "number of neighbors of hex " << Grid::get_tile(get_hex_index(cc)) << ": ";
+#endif
+	for(auto& rel_n: _utils.get_relative_neighbors())
+	{
+		cube_coord neighbor = cc + rel_n;
+		shared_ptr<Tile> i = get_hex(neighbor);
+		if(i) // TODO no need to recalculate every time. Cache it!
+		{
+			neighbors.push_back(i);
+		}
+	}
+#ifdef DEBUG
+	cout << neighbors.size() << endl;
+#endif
+	return neighbors;
+}
+
+vector<int> Hex_grid::get_neighbors_index(cube_coord cc)
+{
+	vector<int> neighbors; // at most 6 neighbors
+#ifdef DEBUG
+	// TODO Oh god, why are there two functions with the same name in the parent??
+	cout << "number of neighbors of hex " << Grid::get_tile(get_hex_index(cc)) << ": ";
+#endif
+	for(auto& rel_n: _utils.get_relative_neighbors())
+	{
+		cube_coord neighbor = cc + rel_n;
+		int i = get_hex_index(neighbor);
+		if(i > -1) // TODO no need to recalculate every time. Cache it!
+		{
+			neighbors.push_back(i);
+		}
+	}
+#ifdef DEBUG
+	cout << neighbors.size() << endl;
+#endif
+	return neighbors;
 }

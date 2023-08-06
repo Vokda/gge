@@ -69,8 +69,9 @@ class GGE_API
 		// create grid TODO paramaterize more
 		int create_grid(size_t, size_t, int);
 		// return index to tile in grid vector
-		size_t get_tile_from_mouse(int x, int y);
+		int get_tile_from_mouse(int x, int y);
 		void set_tile_color(const vector<int>& c, size_t i);
+		const vector<int>& get_neighbors(int tile);
 
 		void set_tile_custom_data(size_t index, const string& name, void* data);
 		void* get_tile_custom_data(size_t index, const string& name);
@@ -93,7 +94,8 @@ class GGE_API
 		size_t create_agent(size_t texture, size_t tile);
 		void move_agent(size_t agent, size_t to_tile);
 		void remove_agent(size_t agent);
-		vector<int> get_agents(size_t tile);
+		vector<int> get_agents(int tile);
+		void change_agent_sprite(int agent, int new_texture);
 
 	private:
 		Core& _core;

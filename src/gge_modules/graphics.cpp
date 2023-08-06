@@ -180,4 +180,13 @@ void Graphics::draw_text(const shared_ptr<Texter> texter)
 		set_viewport(static_cast<viewport>(text->view_port));
 		SDL_RenderCopy(_sdl_renderer, text->texture, NULL, &text->size);
 	}
+} 
+
+
+SDL_Texture* Graphics::get_texture(size_t index)
+{
+	if(index < _textures.size())
+		return _textures[index]; 
+	else
+		return nullptr;
 }

@@ -32,10 +32,13 @@ class Spriter: public Componenter, public GGE_module
 		~Spriter() = default;
 
 		size_t create_sprite(
-				size_t texture,
+				int texture,
 				const SDL_Point& p,
 				int milliseconds
 				);
+		
+		void change_texture(shared_ptr<Sprite>, int texture);
+		void move_sprite(int texture, const SDL_Point& p);
 
 		const list<component>& get_sprites() const { return get_components(); }
 
