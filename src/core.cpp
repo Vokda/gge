@@ -1,17 +1,20 @@
 #include "core.hpp"
-#include <iostream>
+#include <sstream>
 #include <chrono>
 #include <thread>
 #include <stdexcept>
 #include <algorithm>
 #include "gge_modules/gge_module.hpp"
 #include "filer.hpp"
+#include "logger.hpp"
 class Initializer;
 using namespace std;
 
 Core::Core(Filer& f):
 	_runner(_moduler, *this),
-	_filer(f)
+	_filer(f),
+    _logger(Logger::get_instance()),
+	_log( _logger.add_category("Core"))
 {
 }
 
@@ -19,9 +22,7 @@ Core::Core(Filer& f):
 
 void Core::run()
 {
-#ifdef DEBUG
-	cout << "Core: running first loop" << endl;
-#endif
+	_log.debug("running first loop"); 
 	// main loop
 	while(not _quit)
 	{
@@ -54,7 +55,9 @@ void Core::check_modules_initiated()
 	{
 		if(_moduler[m] == nullptr)
 		{
-			cerr << "Warning: " << GGE_module::get_module_name(m) <<  " not initialized!" << endl;
+			stringstream ss;
+            ss << GGE_module::get_module_name(m) <<  " not initialized!" << endl;
+            _logger.log("Core", log4cpp::Priority::WARN, ss.str());
 		}
 	}
 
@@ -67,13 +70,16 @@ void Core::check_modules_initiated()
 
 void Core::check_commands_order()
 {
-	cout << "Command order - ";
 	if(_runner.check_dependencies())
 	{
-		cout << "OK" << endl;
+        //_logger.log("Core", log4cpp::Priority::INFO, "Command order - OK");
+        _log.info("Command order - OK");
 		int nr = _runner.list_commands();
 		if(nr == 0)
+        {
+            _log.notice("Core", "No commands; exiting.");
 			_quit = true;
+        }
 	}
 	else
 	{

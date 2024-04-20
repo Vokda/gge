@@ -7,12 +7,16 @@ class GGE_module;
 #include "moduler.hpp"
 #include "runner.hpp"
 class Filer;
+class Logger;
+namespace log4cpp{
+class Category;
+}
 
 class Core
 {
 	public:
 
-		Core(Filer& f);
+		Core(Filer& game_path);
 
 		Filer& get_filer() { return _filer; }
 
@@ -42,6 +46,8 @@ class Core
 		Runner _runner;
 		Filer& _filer;
 		SDL_helper _sdl_helper;
+        Logger& _logger;
+        log4cpp::Category& _log;
 };
 
 #endif

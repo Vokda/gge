@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <csignal>
 using namespace std;
@@ -9,6 +10,7 @@ using namespace std;
 #include "core.hpp"
 #include "filer.hpp"
 #include "configurer.hpp"
+#include "logger.hpp"
 
 // signal handling
 Core* c;
@@ -17,6 +19,7 @@ void quit(int sig);
 
 int main(int argc, char* argv[])
 {
+    Logger& logger = Logger::get_instance();
 	if(argc < 2)
 	{
 		cout << "How to use:" << endl;
@@ -31,16 +34,22 @@ int main(int argc, char* argv[])
 	// init 
 	try
 	{
-		// TODO add class to handle arguments properly
-		// handle path to game given
-		Filer filer(argv[1]);
+        logger.info("GGE booting");
 
-		Core core(filer);
+		// TODO add class to handle arguments properly
+		// Argument handler here
+		// handle path to game given
+		Filer game_path(argv[1]);
+
+
+		// TODO make argument changeable (2nd arg)
+        // TODO 2nd arg was 1 but no constructor defnied for it; dafuq?
+		Core core(game_path);
 		c = &core; // for signal handling
 
 		GGE_API gge_api(core);
-		Configurer configurer(filer, gge_api);
-		Scripter scripter(filer, gge_api, configurer.get_configuration());
+		Configurer configurer(game_path, gge_api);
+		Scripter scripter(game_path, gge_api, configurer.get_configuration());
 
 		core.check_modules_initiated();
 		core.check_commands_order();
@@ -50,16 +59,21 @@ int main(int argc, char* argv[])
 		signal(SIGTERM, quit);
 		signal(SIGABRT, quit);
 
+        logger.info("GGE running");
 		core.run();
 	}
 	catch (std::exception& e)
 	{
-		cerr << "FATAL ERROR: " << endl << e.what() << endl;
+        stringstream ss;
+        ss << e.what() << endl << "EXITING GGE" << endl;
+        logger.fatal(ss.str());
+		//cerr << ss.str();
 		// kill all objects
 		exit(2);
 	}
 
-	cout << "Thanks for using" << endl << GGE_ASCII << endl;
+	logger.info("Thanks for using\n" + std::string(GGE_ASCII));
+    logger.info("GGE exiting normally");
 	return 0;
 }
 

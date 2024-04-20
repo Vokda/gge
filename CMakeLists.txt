@@ -23,16 +23,23 @@ include_directories(${SDL2_INCLUDE_DIR})
 find_package(Guile REQUIRED)
 include_directories(${GUILE_INCLUDE_DIR})
 
+find_package(Log4cpp REQUIRED)
+include_directories(${LOG4CPP_INCLUDE_DIR})
+
+set(LIBRARIES ${LOG4CPP_LIBRARY} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_SUPPORT_LIBRARIES} ${GUILE_LIBRARY})
+
 # aux_source_directory("../" SOURCE_FILES)
 # source files
 file(GLOB_RECURSE SOURCE_FILES "src/*.c*")
-message(STATUS ${SOURCE_FILES} )
+#string(REGEX REPLACE ".cpp" ".cpp\n" OUT ${SOURCE_FILES} )
+#message(STATUS "Files to be compiled\n" ${OUT})
 
 #execute_process(COMMAND perl build_tools/generate_gge_api_defaults.pl WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 #execute_process(COMMAND perl build_tools/generate_get_gge_modules.pl WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_SUPPORT_LIBRARIES} ${GUILE_LIBRARY})
+target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_SUPPORT_LIBRARIES} ${GUILE_LIBRARY})
 #target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} dl , ${GUILE_LIBRARY})
 
 # compiler flags
