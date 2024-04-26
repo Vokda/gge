@@ -19,7 +19,7 @@ void quit(int sig);
 
 int main(int argc, char* argv[])
 {
-    Logger& logger = Logger::get_instance();
+    Logger::Log& log = Logger::get_instance().get_category();
 	if(argc < 2)
 	{
 		cout << "How to use:" << endl;
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	// init 
 	try
 	{
-        logger.info("GGE booting");
+        log.info("GGE booting");
 
 		// TODO add class to handle arguments properly
 		// Argument handler here
@@ -59,21 +59,21 @@ int main(int argc, char* argv[])
 		signal(SIGTERM, quit);
 		signal(SIGABRT, quit);
 
-        logger.info("GGE running");
+        log.info("GGE running");
 		core.run();
 	}
 	catch (std::exception& e)
 	{
         stringstream ss;
         ss << e.what() << endl << "EXITING GGE" << endl;
-        logger.fatal(ss.str());
+        log.fatal(ss.str());
 		//cerr << ss.str();
 		// kill all objects
 		exit(2);
 	}
 
-	logger.info("Thanks for using\n" + std::string(GGE_ASCII));
-    logger.info("GGE exiting normally");
+	log.info("Thanks for using\n" + std::string(GGE_ASCII));
+    log.info("GGE exiting normally");
 	return 0;
 }
 

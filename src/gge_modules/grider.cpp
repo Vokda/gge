@@ -23,7 +23,7 @@ void Grider::create_grid(grid_type gt, int width, int height, int tile_size, int
 	switch(gt)
 	{
 		case HEX:
-			_grid = make_unique<Hex_grid>(width, height, tile_size, FLAT_TOP, RECT_ODD_Q, x_offset, y_offset); //TODO paramterize
+			_grid = make_unique<Hex_grid>(width, height, tile_size, GGE::FLAT_TOP, GGE::RECT_ODD_Q, x_offset, y_offset); //TODO paramterize
 			break;
 		default:
 			throw runtime_error("Grid type not recognized");

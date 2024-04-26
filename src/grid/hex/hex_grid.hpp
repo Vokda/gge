@@ -15,7 +15,7 @@ class Hex_grid: public Grid
 {
 	public:
 
-		Hex_grid(size_t w, size_t h, double hex_size, Hex_orientation ho, Coordinate_system cs, int x_offset, int y_offset);
+		Hex_grid(size_t w, size_t h, double hex_size, GGE::Hex_orientation ho, GGE::Coordinate_system cs, int x_offset, int y_offset);
 		//Hex_grid(const Hex_grid& hg);
 
 		//Hex hex_add(const Hex& a, const Hex& b);
@@ -41,7 +41,7 @@ class Hex_grid: public Grid
 		vector<shared_ptr<Tile>> get_neighbors(cube_coord cc);
 
 		// vars
-		Layout _layout;
+        GGE::Layout _layout;
 		int _x_offset = 0;
 		int _y_offset = 0;
 		

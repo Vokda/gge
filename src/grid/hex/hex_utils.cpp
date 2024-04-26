@@ -3,7 +3,7 @@
 #include <tuple>
 using namespace std;
 
-Hex_utils::Hex_utils(const Layout& o):
+Hex_utils::Hex_utils(const GGE::Layout& o):
 	_layout(o)
 {
 
@@ -79,7 +79,7 @@ cube_coord Hex_utils::offset_coord_to_cube(int col, int row) const
 	double r = row;
 	switch(_layout.coordinate_system)
 	{
-		case(RECT_ODD_Q):
+        case(GGE::RECT_ODD_Q):
 			r = row - (col - (col&1)) / 2;
 			break;
 		default: 
@@ -94,7 +94,7 @@ SDL_Point Hex_utils::calc_center_point(int col, int row) const
 	SDL_Point p;
 	switch(_layout.coordinate_system)
 	{
-		case(RECT_ODD_Q):
+        case(GGE::RECT_ODD_Q):
 			// odd columns move down
 			p.x = _layout.size * _layout.orientation.f[0] * col;
 			p.y = _layout.size * _layout.orientation.f[3] * (row + 0.5 * (col&1));

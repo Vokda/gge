@@ -6,11 +6,8 @@
 class GGE_module;
 #include "moduler.hpp"
 #include "runner.hpp"
+#include "logger.hpp"
 class Filer;
-class Logger;
-namespace log4cpp{
-class Category;
-}
 
 class Core
 {
@@ -48,6 +45,7 @@ class Core
 		SDL_helper _sdl_helper;
         Logger& _logger;
         log4cpp::Category& _log;
+        Logger::Log_stream _log_stream;
 };
 
 #endif

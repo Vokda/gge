@@ -2,6 +2,7 @@
 #include <string>
 #include "registered_gge_modules.hpp"
 #include <memory>
+#include "../logger.hpp"
 using namespace std;
 /*
  * just a small class to have base pointers of modules
@@ -40,7 +41,11 @@ class GGE_module
 					return "Agenter";
 					// gge_end cases
 				default:
-					return "<Unnamed GGE Module [" + to_string(m) + "]>";
+                    {
+                        string s = "Unnamed GGE Module [" + to_string(m) + "]";
+                        Logger::get_instance().log("", log4cpp::Priority::WARN, s);
+                        return "<" + s + ">";
+                    }
 			}
 		}
 
@@ -49,4 +54,6 @@ class GGE_module
 
 	protected:
 		rgm _module;
+        Logger& _logger;
+        Logger::Log_stream _debug_stream;
 };

@@ -7,7 +7,6 @@ using namespace log4cpp;
 
 Logger::Logger():
 	_root(log4cpp::Category::getRoot())
-    //_current_category(_root)
 {
     // TODO read log amount from config or make file
 	_log_amount = DEBUG;
@@ -16,11 +15,15 @@ Logger::Logger():
 	_appender = make_unique<OstreamAppender>("console", &std::cout);
 
     _pattern_layout = make_shared<PatternLayout>();
-    _pattern_layout->setConversionPattern("%d{%Y-%m-%dT%H:%M:%S} @ %c %p: %m\n");
+    _pattern_layout->setConversionPattern("%d{%Y-%m-%dT%H:%M:%S} - %c %p: %m\n");
 	_appender->setLayout(_pattern_layout.get());
 	//_appender->setLayout(new BasicLayout());
+
 	_root.setPriority(log4cpp::Priority::INFO);
 	_root.addAppender(*_appender);
+    _logger_info = &add_category("Logger", log4cpp::Priority::INFO);
+
+    _root.info("log4cpp setup complete");
 }
 
 log4cpp::Category& Logger::add_category(const string& s, const log4cpp::Priority::Value p)
@@ -36,29 +39,31 @@ log4cpp::Category& Logger::add_category(const string& s)
     return add_category(s, log4cpp::Priority::INFO);
 }
 
-void Logger::set_category(const string& s)
+Logger::Log& Logger::get_category(const string& s)
+{
+    if(auto cat = Category::exists(s))
+       return *cat;
+    else 
+        throw(runtime_error("Category " + s + " does not exist!"));
+}
+
+Logger::Log& Logger::get_category(const string& s, const log4cpp::Priority::Value p)
 {
     if(auto cat = Category::exists(s))
     {
-        _current_category = cat;
+       return *cat;
     }
-    else
-        _root.warn("Category " + s + " does not exist!");
-} 
-
-void Logger::debug(const string& s)
-{
-    _current_category->debug(s);
+    else 
+    {
+        _logger_info->info("Category '" + s + "' does not exist. Creating new category '" + s + "'");
+        return add_category(s, p);
+    }
 }
 
-void Logger::info(const string& s)
+Logger::Log_stream Logger::get_category_stream(const string& category_name, const Priority::Value priority)
 {
-    _current_category->info(s);
-}
-
-void Logger::fatal(const string& s)
-{
-    _current_category->fatal(s);
+    Log& category = get_category(category_name, priority);
+    return category.getStream(priority);
 }
 
 void Logger::log(const string& s, log4cpp::Priority::Value p, const std::string& message)
@@ -69,11 +74,6 @@ void Logger::log(const string& s, log4cpp::Priority::Value p, const std::string&
     }
     else
     {
-        _root.warn("Category " + s + " does not exist!");
+        _root.warn("Category " + s + " does not exist! Printing as root:\n" + message);
     }
-}
-
-void Logger::log(const std::string& message)
-{
-    _current_category->log(_current_category->getPriority(), message);
 }

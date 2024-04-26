@@ -14,7 +14,8 @@ Core::Core(Filer& f):
 	_runner(_moduler, *this),
 	_filer(f),
     _logger(Logger::get_instance()),
-	_log( _logger.add_category("Core"))
+	_log( _logger.add_category("Core")),
+    _log_stream(_logger.get_category_stream("Core", log4cpp::Priority::INFO))
 {
 }
 
@@ -56,7 +57,7 @@ void Core::check_modules_initiated()
 		if(_moduler[m] == nullptr)
 		{
 			stringstream ss;
-            ss << GGE_module::get_module_name(m) <<  " not initialized!" << endl;
+            ss << GGE_module::get_module_name(m) <<  " not initialized!"; 
             _logger.log("Core", log4cpp::Priority::WARN, ss.str());
 		}
 	}
@@ -73,7 +74,7 @@ void Core::check_commands_order()
 	if(_runner.check_dependencies())
 	{
         //_logger.log("Core", log4cpp::Priority::INFO, "Command order - OK");
-        _log.info("Command order - OK");
+        _log_stream <<"Command order - OK"; 
 		int nr = _runner.list_commands();
 		if(nr == 0)
         {

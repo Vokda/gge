@@ -20,6 +20,7 @@ class Logger
 	enum Log_amount {NONE, DEBUG, SPAM};
 	public:
         typedef log4cpp::Category Log;
+        typedef log4cpp::CategoryStream Log_stream;
 
         static Logger& get_instance() 
         {
@@ -33,29 +34,31 @@ class Logger
 
         // log stuff
         void log(const string& category, log4cpp::Priority::Value p, const std::string& message); 
-        void log(const std::string& message); 
-        void info(const std::string& message); 
-		void debug(const string& s);
-        void fatal(const string& s);
-        inline void spam(const string& s);
+
+        // using sstream (buffer)
+        template<typename T>
+        Logger& operator<<(const T& value)
+        {
+            _buffer << value;
+            return *this;
+        }
+        void log_buffer(const string& category, log4cpp::Priority::Value p); 
 
 		log4cpp::Category& add_category(const string& s);
 		log4cpp::Category& add_category(const string& s, const log4cpp::Priority::Value p);
+        Log& get_category(const string& s = "");
+        Log& get_category(const string& s, const log4cpp::Priority::Value p);
 
-        void set_category(const string& s);
+        Log_stream get_category_stream(const string& category_name, const Priority::Value priority);
 
-		// save up
-		//void operator<<(const string &s);
-		//void operator<<(const basic_ostream& o);
-		void flush(); // and pop category*/
 	private:
 		Logger(); 
         ~Logger() {};
 
 		unique_ptr<Appender> _appender;
-		stringstream buffer;
+		stringstream _buffer;
 		Log_amount _log_amount;
 		log4cpp::Category& _root;
-        log4cpp::Category* _current_category = &_root;
+        Log* _logger_info;
         shared_ptr<PatternLayout> _pattern_layout;
 };

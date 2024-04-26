@@ -3,11 +3,6 @@
 #include "../grid/tile.hpp"
 #include <sstream>
 
-#ifdef DEBUG
-#include <iostream>
-using namespace std;
-#endif
-
 Agenter::Agenter():
 	GGE_module(AGENTER) 
 {
