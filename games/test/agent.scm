@@ -28,7 +28,7 @@
 (define triangle_down
   (gge:load_image "sprites/triangle_down.png"))
 
-(define triangle_down
+(define cylinder
   (gge:load_image "sprites/cylinder.png"))
 
 ;(define-record-type "agent" 

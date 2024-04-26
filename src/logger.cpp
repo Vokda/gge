@@ -16,11 +16,11 @@ Logger::Logger():
 
     _pattern_layout = make_shared<PatternLayout>();
     _pattern_layout->setConversionPattern("%d{%Y-%m-%dT%H:%M:%S} - %c %p: %m\n");
-	_appender->setLayout(_pattern_layout.get());
-	//_appender->setLayout(new BasicLayout());
+    _appender->setLayout(_pattern_layout.get());
+    //_appender->setLayout(new BasicLayout());
 
-	_root.setPriority(log4cpp::Priority::INFO);
-	_root.addAppender(*_appender);
+    _root.setPriority(log4cpp::Priority::INFO);
+    _root.addAppender(*_appender);
     _logger_info = &add_category("Logger", log4cpp::Priority::INFO);
 
     _root.info("log4cpp setup complete");
@@ -28,10 +28,18 @@ Logger::Logger():
 
 log4cpp::Category& Logger::add_category(const string& s, const log4cpp::Priority::Value p)
 {
-    log4cpp::Category& instance = Category::getInstance(s);
-	instance.addAppender(*_appender);
-	instance.setPriority(p);
-    return instance;
+    if(auto cat = Category::exists(s))
+    {
+        _logger_info->info("Category '" + s + "' already exists!");
+        return *cat;
+    }
+    else
+    {
+        log4cpp::Category& instance = Category::getInstance(s);
+        //instance.addAppender(*_appender);
+        instance.setPriority(p);
+        return instance;
+    }
 }
 
 log4cpp::Category& Logger::add_category(const string& s)
@@ -76,4 +84,11 @@ void Logger::log(const string& s, log4cpp::Priority::Value p, const std::string&
     {
         _root.warn("Category " + s + " does not exist! Printing as root:\n" + message);
     }
+}
+
+void Logger::log_buffer(const string& category, log4cpp::Priority::Value p)
+{
+    Log& log = get_category("category");
+    log.log(p, _buffer.str());
+    _buffer.flush();
 }

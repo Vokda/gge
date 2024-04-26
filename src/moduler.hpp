@@ -4,6 +4,7 @@
 #include "gge_modules/registered_gge_modules.hpp"
 class GGE_module;
 using namespace std;
+#include "logger.hpp"
 
 class Moduler
 {
@@ -23,5 +24,5 @@ class Moduler
 	private:
 		typedef map<registered_gge_module, shared_ptr<GGE_module>> modules_map;
 		modules_map _modules;
-
+        Logger::Log& _logger_info;
 };

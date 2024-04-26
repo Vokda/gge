@@ -32,16 +32,18 @@ class Logger
         Logger(Logger const&) = delete;
         void operator=(Logger const&) = delete;
 
+        template<typename T>
+        stringstream& operator<<(const T& value)
+        {
+            _buffer << value;
+            return _buffer;
+        }
+
+        stringstream& get_buffer() {return _buffer;}
+
         // log stuff
         void log(const string& category, log4cpp::Priority::Value p, const std::string& message); 
 
-        // using sstream (buffer)
-        template<typename T>
-        Logger& operator<<(const T& value)
-        {
-            _buffer << value;
-            return *this;
-        }
         void log_buffer(const string& category, log4cpp::Priority::Value p); 
 
 		log4cpp::Category& add_category(const string& s);
