@@ -12,6 +12,7 @@
 #include "../gge_modules/spriter.hpp"
 #include "../gge_modules/scroller.hpp"
 #include "../gge_modules/agenter.hpp"
+#include "../gge_modules/shaper.hpp"
 
 using namespace std;
 
@@ -60,6 +61,10 @@ int GGE_API::init_spriter()
 				static_pointer_cast<Graphics>(_core.get_module(GRAPHICS))));
 }
 
+int GGE_API::init_shaper()
+{
+	return add_module(SHAPER, _gge_init.shaper());
+}
 
 int GGE_API::init_agenter()
 {
@@ -220,12 +225,6 @@ void GGE_API::scroll_mouse(int& x, int& y)
 #endif
 }
 
-void GGE_API::create_shape(int shape, const vector<int>& p)
-{
-	// TODO
-	cout <<"shape!" << endl;
-}
-
 void GGE_API::add_command(rgm module, int command, rgm arg)
 {
 	_core.add_command(module, command, arg);
@@ -371,6 +370,15 @@ void GGE_API::change_agent_sprite(int agent, int new_texture)
 
 	auto spriter = static_pointer_cast<Spriter>(_core.get_module(SPRITER));
 	spriter->change_texture(sprite, new_texture);
+}
+
+// shape
+
+size_t GGE_API::create_shape(int shape_type, int pos_x, int pos_y, int size_x, int size_y, int ms)
+{
+    auto shaper = static_pointer_cast<Shaper>(_core.get_module(SHAPER));
+    SDL_Rect rect{pos_x, pos_y, size_x, size_y};
+    return shaper->create_shape(shape_type, rect, ms);
 }
 
 /*

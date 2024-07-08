@@ -37,6 +37,7 @@ class GGE_API
 		int init_texter();
 		int init_spriter();
 		int init_agenter();
+        int init_shaper();
 
 		// events
 		const std::queue<int>& get_events() const;
@@ -84,8 +85,6 @@ class GGE_API
 		void add_command(rgm module, int command, rgm arg);
 		int get_module(const string& module);
 
-		void create_shape(int shape, const vector<int>& p);
-
 		// load and image from path
 		size_t load_image(const string& s);
 		size_t create_sprite(size_t texture, int x, int y);
@@ -96,6 +95,12 @@ class GGE_API
 		void remove_agent(size_t agent);
 		vector<int> get_agents(int tile);
 		void change_agent_sprite(int agent, int new_texture);
+
+        // shape
+        size_t create_shape(int shape_type, int pos_x, int pos_y, int size_x, int size_y, int ms);
+
+        // GUI
+        size_t create_button(const string& text, size_t shape);
 
 	private:
 		Core& _core;

@@ -13,7 +13,7 @@ struct Agent: public Base_component
 	size_t index;
 };
 
-class Agenter:  public Componenter, public GGE_module
+class Agenter: public Componenter, public GGE_module
 {
 	public:
 		Agenter();

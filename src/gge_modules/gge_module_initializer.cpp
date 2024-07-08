@@ -11,6 +11,7 @@
 #include "none.hpp"
 #include "spriter.hpp"
 #include "agenter.hpp"
+#include "shaper.hpp"
 // gge_end import includes
 
 /*GGE_module_initializer::GGE_module_initializer(Moduler& m):
@@ -97,6 +98,11 @@ shared_ptr<GGE_module> GGE_module_initializer::spriter(shared_ptr<Graphics> g)
 shared_ptr<GGE_module> GGE_module_initializer::agenter()
 {
 	return make_shared<Agenter>();
+}
+
+shared_ptr<GGE_module> GGE_module_initializer::shaper()
+{
+	return make_shared<Shaper>();
 }
 
 // gge_begin import ctor_def

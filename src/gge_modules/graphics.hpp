@@ -14,7 +14,7 @@ struct SDL_Renderer;
 class Hex_grid;
 class Texter;
 class Scroller;
-class Shape;
+class Shaper;
 class Spriter;
 class Grider;
 
@@ -48,6 +48,7 @@ class Graphics: public GGE_module
 		void draw_grid(const shared_ptr<Grider> grider);
 		void draw_text(const shared_ptr<Texter>);
 		void draw_sprites(const shared_ptr<Spriter>);
+        void draw_shapes(const shared_ptr<Shaper>);
 		// flushes renderer if viewport changes
 		void set_viewport(viewport v);
 

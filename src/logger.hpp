@@ -6,10 +6,14 @@
 #include <stack>
 #include <sstream>
 using namespace std;
+
 #include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/Category.hh>
 using namespace log4cpp;
+
 #include "gge_modules/registered_gge_modules.hpp"
+#include "sdl_helper.hpp"
+
 namespace log4cpp
 {
     class PatternLayout;

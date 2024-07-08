@@ -39,6 +39,8 @@ class GGE_module
 					return "Spriter";
 				case(AGENTER):
 					return "Agenter";
+                case(SHAPER):
+                    return "Shaper";
 					// gge_end cases
 				default:
                     {
