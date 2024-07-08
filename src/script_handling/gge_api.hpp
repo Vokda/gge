@@ -38,6 +38,7 @@ class GGE_API
 		int init_spriter();
 		int init_agenter();
         int init_shaper();
+        int init_gui();
 
 		// events
 		const std::queue<int>& get_events() const;

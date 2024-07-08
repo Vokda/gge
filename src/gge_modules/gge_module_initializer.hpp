@@ -34,5 +34,6 @@ class GGE_module_initializer
 		shared_ptr<GGE_module> spriter(shared_ptr<Graphics> g);
 		shared_ptr<GGE_module> agenter();
 		shared_ptr<GGE_module> shaper();
+        shared_ptr<GGE_module> gui(SDL_Window* window);
 		// gge_end import ctor_decl
 };

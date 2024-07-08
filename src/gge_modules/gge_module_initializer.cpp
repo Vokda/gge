@@ -12,6 +12,7 @@
 #include "spriter.hpp"
 #include "agenter.hpp"
 #include "shaper.hpp"
+#include "gui.hpp"
 // gge_end import includes
 
 /*GGE_module_initializer::GGE_module_initializer(Moduler& m):
@@ -105,5 +106,9 @@ shared_ptr<GGE_module> GGE_module_initializer::shaper()
 	return make_shared<Shaper>();
 }
 
+shared_ptr<GGE_module> GGE_module_initializer::gui(SDL_Window* window)
+{
+	return make_shared<gge::GUI>(window);
+}
 // gge_begin import ctor_def
 // gge_end import ctor_def

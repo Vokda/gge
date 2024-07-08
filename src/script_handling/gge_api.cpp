@@ -71,6 +71,12 @@ int GGE_API::init_agenter()
 	return add_module(AGENTER, _gge_init.agenter());
 }
 
+int GGE_API::init_gui()
+{
+    auto g = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
+    return add_module(GUI, _gge_init.gui(g->get_window()));
+}
+
 // init end
 
 

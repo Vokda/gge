@@ -63,6 +63,8 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("init_texter", 0, 0, 0, (scm_t_subr) init_texter);
 	scm_c_define_gsubr("init_spriter", 0, 0, 0, (scm_t_subr) init_spriter);
 	scm_c_define_gsubr("init_agenter", 0, 0, 0, (scm_t_subr) init_agenter);
+	scm_c_define_gsubr("init_gui", 0, 0, 0, (scm_t_subr) init_gui);
+
 	scm_c_define_gsubr("game_loop", 0,0,0, (scm_t_subr) init_game_loop);
 
 	scm_c_define_gsubr("quit",0,0,0, (scm_t_subr) quit);
@@ -98,6 +100,7 @@ void Guile::add_gge_api_functions()
 			"init_grider",
 			"init_game_loop",
 			"init_agenter",
+            "init_gui",
 			"game_loop",
 			"quit",
 			"add_command",

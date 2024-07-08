@@ -132,6 +132,14 @@ extern "C"
 				_gge_api->init_spriter()
 				);
 	}
+
+    SCM init_gui()
+    {
+        return scm_from_int(
+                _gge_api->init_spriter()
+                );
+    }
+
 	SCM create_text(SCM text, SCM scm_x, SCM scm_y, SCM ms, SCM view_port)
 	{
 		const char* c = scm_to_locale_string(text);

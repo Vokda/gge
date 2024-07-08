@@ -32,6 +32,8 @@ class Logger
             return instance;
         }
 
+        //static Log& get_category(const string& category_name = "");
+
         // Prevent copying or assignment.
         Logger(Logger const&) = delete;
         void operator=(Logger const&) = delete;

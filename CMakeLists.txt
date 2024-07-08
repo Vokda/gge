@@ -38,7 +38,7 @@ file(GLOB_RECURSE SOURCE_FILES "src/*.c*")
 #execute_process(COMMAND perl build_tools/generate_get_gge_modules.pl WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${LIBRARIES} GL)
 #target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_SUPPORT_LIBRARIES} ${GUILE_LIBRARY})
 #target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} dl , ${GUILE_LIBRARY})
 

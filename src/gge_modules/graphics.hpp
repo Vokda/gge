@@ -44,6 +44,8 @@ class Graphics: public GGE_module
 		const SDL_Rect& get_viewport(int vp);
 		const SDL_Rect& get_viewport(viewport vp);
 
+        SDL_Window* get_window() const { return _window;}
+
 	private:
 		void draw_grid(const shared_ptr<Grider> grider);
 		void draw_text(const shared_ptr<Texter>);

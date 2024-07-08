@@ -32,6 +32,8 @@
   (gge:init_texter))
 (define spriter
   (gge:init_spriter))
+(define gui
+  (gge:init_gui))
 
 (use-modules ( (world)
 			 #:prefix world:)

@@ -41,6 +41,8 @@ class GGE_module
 					return "Agenter";
                 case(SHAPER):
                     return "Shaper";
+                case(GUI):
+                    return "GUI";
 					// gge_end cases
 				default:
                     {

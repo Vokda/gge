@@ -19,6 +19,7 @@ extern "C"
 	SCM init_texter();
 	SCM init_spriter();
 	SCM init_agenter();
+    SCM init_gui();
 
 	void add_command(SCM module...);
 
