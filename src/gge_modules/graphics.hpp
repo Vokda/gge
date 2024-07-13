@@ -17,6 +17,10 @@ class Scroller;
 class Shaper;
 class Spriter;
 class Grider;
+namespace gge
+{
+    class GUI;
+}
 
 class Graphics: public GGE_module
 {
@@ -51,6 +55,7 @@ class Graphics: public GGE_module
 		void draw_text(const shared_ptr<Texter>);
 		void draw_sprites(const shared_ptr<Spriter>);
         void draw_shapes(const shared_ptr<Shaper>);
+        void draw_gui(const shared_ptr<gge::GUI>);
 		// flushes renderer if viewport changes
 		void set_viewport(viewport v);
 

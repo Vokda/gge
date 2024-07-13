@@ -21,7 +21,7 @@ int Moduler::list_modules() const
 
 shared_ptr<GGE_module> Moduler::operator[](registered_gge_module m) 
 { 
-//#ifdef DEBUG
+/*#ifdef DEBUG trying out the unsafe version
 	if(_modules[m] == nullptr)
 	{
 		std::stringstream ss;
@@ -29,6 +29,8 @@ shared_ptr<GGE_module> Moduler::operator[](registered_gge_module m)
         _logger_info.info(ss.str());
 		throw runtime_error(ss.str());
 	}
-//#endif
+#endif*/
 	return _modules[m];
 }
+
+

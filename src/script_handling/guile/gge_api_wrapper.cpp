@@ -136,7 +136,7 @@ extern "C"
     SCM init_gui()
     {
         return scm_from_int(
-                _gge_api->init_spriter()
+                _gge_api->init_gui()
                 );
     }
 

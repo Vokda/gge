@@ -66,9 +66,9 @@ shared_ptr<GGE_module> GGE_module_initializer::graphics(const string& s, size_t 
 	return make_shared<Graphics>(s, w, h);
 }
 
-shared_ptr<GGE_module> GGE_module_initializer::events()
+shared_ptr<GGE_module> GGE_module_initializer::events(shared_ptr<gge::GUI> gui)
 {
-	return make_shared<Events>();
+	return make_shared<Events>(gui);
 }
 shared_ptr<GGE_module> GGE_module_initializer::grider(int gt, int width, int height, int tile_size, int x_offset, int y_offset)
 {
@@ -84,7 +84,6 @@ shared_ptr<GGE_module> GGE_module_initializer::none()
 {
 	return make_shared<None>();
 }
-
 
 shared_ptr<GGE_module> GGE_module_initializer::texter(shared_ptr<Graphics> g)
 {
@@ -106,9 +105,11 @@ shared_ptr<GGE_module> GGE_module_initializer::shaper()
 	return make_shared<Shaper>();
 }
 
-shared_ptr<GGE_module> GGE_module_initializer::gui(SDL_Window* window)
+shared_ptr<GGE_module> GGE_module_initializer::gui(SDL_Window* window, shared_ptr<Events> events)
 {
-	return make_shared<gge::GUI>(window);
+    auto gui = make_shared<gge::GUI>(window);
+    events->set_gui(gui);
+	return gui;
 }
 // gge_begin import ctor_def
 // gge_end import ctor_def

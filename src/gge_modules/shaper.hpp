@@ -10,6 +10,7 @@ struct Shape: public Base_component
 {
     SDL_Point position; // middle position
     SDL_Rect size;
+    // TODO what to draw?
 };
 
 class Shaper: public Componenter, public GGE_module

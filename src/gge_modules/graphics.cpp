@@ -8,6 +8,8 @@
 #include "spriter.hpp"
 #include <memory>
 #include "scroller.hpp"
+#include "shaper.hpp"
+#include "gui.hpp"
 
 #include "grider.hpp"
 using namespace std;
@@ -91,6 +93,12 @@ void Graphics::draw(const shared_ptr<GGE_module> module)
 		case SPRITER:
 			draw_sprites(static_pointer_cast<Spriter>(module));
 			break;
+        case SHAPER:
+            draw_shapes(static_pointer_cast<Shaper>(module));
+            break;
+        case GUI:
+            draw_gui(static_pointer_cast<gge::GUI>(module));
+            break;
 		default:
 			throw domain_error(throw_message(__FILE__, "cannot draw", module->get_type()));
 	}
@@ -164,6 +172,23 @@ void Graphics::draw_sprites(const shared_ptr<Spriter> spriter)
 		set_viewport(static_cast<viewport>(sprite->view_port));
 		SDL_RenderCopy(_sdl_renderer, sprite->texture, NULL, &sprite->size);
 	}
+}
+
+void Graphics::draw_shapes(const shared_ptr<Shaper> shaper)
+{
+	for(auto s: shaper->get_components())
+	{
+		shared_ptr<Shape> shape = static_pointer_cast<Shape>(s);
+		//set_viewport(static_cast<viewport>(shape->view_port)); // TODO <-- que?
+		//SDL_RenderCopy(_sdl_renderer, shape->texture, NULL, &shape->size);
+	}
+}
+
+void Graphics::draw_gui(const shared_ptr<gge::GUI> gui)
+{
+    // GUI uses a external library
+    // ALTHOUGH that library does use sdl so maybe move it in here some day?
+    gui->draw();
 }
 
 

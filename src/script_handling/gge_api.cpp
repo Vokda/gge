@@ -13,6 +13,7 @@
 #include "../gge_modules/scroller.hpp"
 #include "../gge_modules/agenter.hpp"
 #include "../gge_modules/shaper.hpp"
+#include "../gge_modules/gui.hpp"
 
 using namespace std;
 
@@ -35,7 +36,8 @@ int GGE_API::init_graphics(const string& s, size_t w, size_t h)
 
 int GGE_API::init_events()
 {
-	return add_module(EVENTS, _gge_init.events());
+    auto gui = static_pointer_cast<gge::GUI>(_core.get_module(GUI));
+	return add_module(EVENTS, _gge_init.events(gui));
 }
 
 int GGE_API::init_grider(int gt, int w, int h, int ts, int x_offset, int y_offset)
@@ -73,8 +75,10 @@ int GGE_API::init_agenter()
 
 int GGE_API::init_gui()
 {
+    cout << __FUNCTION__ << endl;
     auto g = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
-    return add_module(GUI, _gge_init.gui(g->get_window()));
+    auto events =static_pointer_cast<Events>(_core.get_module(EVENTS)); 
+    return add_module(GUI, _gge_init.gui(g->get_window(), events));
 }
 
 // init end

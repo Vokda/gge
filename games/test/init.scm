@@ -23,7 +23,7 @@
 ; each init method returns an unsigned integer corresponding to the modules enum
 (display "Initialize modules \n")
 (define graphics
-  (gge:init_graphics "GGE Test" 640 480))
+  (gge:init_graphics "GGE Test" 800 600))
 (define events
   (gge:init_events))
 (define gge_game_loop
@@ -50,6 +50,7 @@
 (gge:add_command graphics 1 (world:get_grid) )
 (gge:add_command graphics 1 texter)
 (gge:add_command graphics 1 spriter)
+(gge:add_command graphics 1 gui)
 (gge:add_command graphics 2 0) ;  render
 
 (use-modules ( (agent)

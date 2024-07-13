@@ -1,30 +1,39 @@
 #include "events.hpp"
 #include <iostream>
+#include "gui.hpp"
 using namespace std;
 
-Events::Events():
-	GGE_module(EVENTS)
+Events::Events(shared_ptr<gge::GUI> gui):
+    GGE_module(EVENTS),
+    _gui(gui)
 {
-	_sdl_helper.check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
+    _sdl_helper.check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
 }
 
 void Events::poll_events()
 {
-	//_events.clear();
+    //_events.clear();
 
-	while( SDL_PollEvent(&_event) != 0)
-	{
-		switch(_event.type)
-		{
-			case SDL_MOUSEBUTTONDOWN:
-			//case SDL_MOUSEBUTTONUP:
-				_events.push(_event.button.button);
-				break;
-			case SDL_KEYDOWN:
-				//cout << "gge:event: " << _event.key.keysym.sym <<endl;
-				_events.push(_event.key.keysym.sym);
-				break;
-		}
+    while( SDL_PollEvent(&_event) != 0)
+    {
+        if(_gui->want_capture_mouse() or _gui->want_capture_keyboard())
+        {
+            _gui->process_event(_event);
+        }
+        else
+        {
+            switch(_event.type)
+            {
+                case SDL_MOUSEBUTTONDOWN:
+                    //case SDL_MOUSEBUTTONUP:
+                    _events.push(_event.button.button);
+                    break;
+                case SDL_KEYDOWN:
+                    //cout << "gge:event: " << _event.key.keysym.sym <<endl;
+                    _events.push(_event.key.keysym.sym);
+                    break;
+            }
+        }
 	}
 }
 

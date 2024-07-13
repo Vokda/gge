@@ -4,7 +4,12 @@
 #include <SDL2/SDL.h>
 #include "gge_module.hpp"
 #include "../sdl_helper.hpp"
+#include <memory>
 using namespace std;
+namespace gge
+{
+    class GUI;
+}
 
 enum device {KEYBOARD, MOUSE};
 
@@ -35,9 +40,10 @@ class Events: public GGE_module
 {
 	public:
 		// gge_begin export ctor
-		Events();
+		Events(shared_ptr<gge::GUI> gui);
 		// gge_end export ctor
 		~Events() = default;
+        void set_gui(shared_ptr<gge::GUI> gui) { _gui = gui; } // to allow later initialization of gui
 
 		void poll_events();
 		const queue<int>& get_events();
@@ -52,5 +58,6 @@ class Events: public GGE_module
 		SDL_Event _event; 
 		queue<int> _events; // so that the queue doesn't need to be recreated each time
 		SDL_helper _sdl_helper;
+        shared_ptr<gge::GUI> _gui;
 };
 
