@@ -75,10 +75,9 @@ int GGE_API::init_agenter()
 
 int GGE_API::init_gui()
 {
-    cout << __FUNCTION__ << endl;
     auto g = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
     auto events =static_pointer_cast<Events>(_core.get_module(EVENTS)); 
-    return add_module(GUI, _gge_init.gui(g->get_window(), events));
+    return add_module(GUI, _gge_init.gui(g, events));
 }
 
 // init end

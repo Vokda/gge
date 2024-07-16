@@ -105,9 +105,9 @@ shared_ptr<GGE_module> GGE_module_initializer::shaper()
 	return make_shared<Shaper>();
 }
 
-shared_ptr<GGE_module> GGE_module_initializer::gui(SDL_Window* window, shared_ptr<Events> events)
+shared_ptr<GGE_module> GGE_module_initializer::gui(shared_ptr<Graphics> g, shared_ptr<Events> events)
 {
-    auto gui = make_shared<gge::GUI>(window);
+    auto gui = make_shared<gge::GUI>(g->get_window(), g->get_renderer());
     events->set_gui(gui);
 	return gui;
 }

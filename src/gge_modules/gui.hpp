@@ -3,6 +3,7 @@
 
 #include "../logger.hpp"
 #include "gge_module.hpp"
+class SDL_Renderer;
 
 /*
  * this class uses the Dear Imgui library to handle gui.
@@ -14,7 +15,7 @@ namespace gge
     class GUI: public GGE_module
     {
         public:
-            GUI(SDL_Window* window);
+            GUI(SDL_Window* window, SDL_Renderer* renderer);
             ~GUI();
 
             void draw();
@@ -34,6 +35,6 @@ namespace gge
             // imgui stuff
             ImGuiIO _io;
             SDL_GLContext _gl_context;
-            SDL_Window* _window;
+            SDL_Renderer* _renderer;
     };
 }
