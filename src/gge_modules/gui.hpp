@@ -3,6 +3,8 @@
 
 #include "../logger.hpp"
 #include "gge_module.hpp"
+/*#include <optional>
+#include <functional>*/
 class SDL_Renderer;
 
 /*
@@ -25,16 +27,17 @@ namespace gge
             // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
             // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
             // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-            bool want_capture_mouse() { return (bool)_io.WantCaptureMouse;}
-            bool want_capture_keyboard() {return (bool)_io.WantCaptureKeyboard;}
-            void process_event(SDL_Event& event); 
+            bool want_capture_mouse(); 
+            bool want_capture_keyboard();
+            //void process_event(SDL_Event& event); 
+            bool process_event(SDL_Event& event);
 
         private:
             Logger::Log& _log;
+            Logger::Log& _debug_log;
 
             // imgui stuff
-            ImGuiIO _io;
-            SDL_GLContext _gl_context;
+            //std::optional<std::reference_wrapper<ImGuiIO>> _io_ref;
             SDL_Renderer* _renderer;
     };
 }

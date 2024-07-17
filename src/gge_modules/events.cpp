@@ -16,25 +16,21 @@ void Events::poll_events()
 
     while( SDL_PollEvent(&_event) != 0)
     {
-        if(_gui->want_capture_mouse() or _gui->want_capture_keyboard())
+        //TODO why does this work?
+        if(_gui->process_event(_event))
+            break;
+
+        switch(_event.type)
         {
-            _gui->process_event(_event);
+            case SDL_MOUSEBUTTONDOWN:
+                //case SDL_MOUSEBUTTONUP:
+                _events.push(_event.button.button);
+                break;
+            case SDL_KEYDOWN:
+                _events.push(_event.key.keysym.sym);
+                break;
         }
-        else
-        {
-            switch(_event.type)
-            {
-                case SDL_MOUSEBUTTONDOWN:
-                    //case SDL_MOUSEBUTTONUP:
-                    _events.push(_event.button.button);
-                    break;
-                case SDL_KEYDOWN:
-                    //cout << "gge:event: " << _event.key.keysym.sym <<endl;
-                    _events.push(_event.key.keysym.sym);
-                    break;
-            }
-        }
-	}
+    }
 }
 
 const queue<int>& Events::get_events()
