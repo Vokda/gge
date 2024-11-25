@@ -61,3 +61,6 @@
 (agent:create_agent 1 1)
 (agent:create_agent 1 2)
 (agent:create_agent 1 3)
+
+; gui stuff
+(gge:create_button "test button")

@@ -101,7 +101,7 @@ class GGE_API
         size_t create_shape(int shape_type, int pos_x, int pos_y, int size_x, int size_y, int ms);
 
         // GUI
-        size_t create_button(const string& text, size_t shape);
+        size_t create_button(const string& text);
 
 	private:
 		Core& _core;

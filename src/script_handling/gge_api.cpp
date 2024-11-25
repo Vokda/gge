@@ -390,6 +390,14 @@ size_t GGE_API::create_shape(int shape_type, int pos_x, int pos_y, int size_x, i
     return shaper->create_shape(shape_type, rect, ms);
 }
 
+// gui
+
+size_t GGE_API::create_button(const string& text)
+{
+    auto gui = static_pointer_cast<gge::GUI>(_core.get_module(GUI));
+    gui->create_button(text);
+    return 0;
+}
 /*
  * PRIVATE FUNCTIONS
  */

@@ -13,8 +13,8 @@ using namespace gge;
 
 GUI::GUI(SDL_Window* window, SDL_Renderer* renderer):
     GGE_module(rgm::GUI),
-    _log(Logger::get_instance().add_category("Dear Imgui")),
-    _debug_log(Logger::get_instance().add_category("Dear Imgui", log4cpp::Priority::DEBUG)),
+    _log(Logger::get_instance().add_category("Dearimgui")),
+    //_debug_log(Logger::get_instance().add_category("Dear_imgui", log4cpp::Priority::DEBUG)),
     _renderer(renderer)/*,
     _io_ref(std::nullopt)*/
 {
@@ -73,17 +73,90 @@ bool GUI::want_capture_keyboard()
     return io.WantCaptureKeyboard;
 }
 
+void GUI::handle_focus(ImGuiIO& io)
+{
+    // make focus work like in i3
+    // i.e. hover = focus
+    if(ImGui::IsWindowHovered() and !ImGui::IsWindowFocused())
+    {
+        io.WantCaptureMouse = 1;
+        io.WantCaptureKeyboard = 1;
+    }
+    else if(!ImGui::IsWindowHovered() and ImGui::IsWindowFocused())
+    {
+        io.WantCaptureMouse = 0;
+        io.WantCaptureKeyboard = 0;
+    }
+}
 
 void GUI::draw()
 {
-    // TODO (tmp) Our state 
-    bool show_demo_window = true;
-    bool show_another_window = false;
-
     // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
+
+    ImGuiIO& io = ImGui::GetIO();
+    //demo(); // activate to show demo windows
+
+
+    // main menu
+    ImGui::BeginMainMenuBar();
+    handle_focus(io);
+    create_element();
+    ImGui::EndMainMenuBar();
+
+    // Rendering
+    ImGui::Render();
+    SDL_RenderSetScale(_renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+    /*SDL_SetRenderDrawColor(_renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
+    SDL_RenderClear(_renderer);*/
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), _renderer);
+    SDL_RenderPresent(_renderer);
+}
+
+bool GUI::process_event(SDL_Event& event)
+{ 
+    _log.debug("event processed");
+    ImGui_ImplSDL2_ProcessEvent(&event);
+    return (want_capture_mouse() or want_capture_keyboard());
+}
+
+void GUI::create_button(const string& s)
+{
+    gui_element ge = {s, BUTTON};
+    _gui_elements.push_back(ge);
+}
+
+GUI::~GUI()
+{
+    // Cleanup
+    ImGui_ImplSDLRenderer2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+}
+
+void GUI::create_element()
+{
+    for(gui_element ge : _gui_elements)
+    {
+        switch(ge.get)
+        {
+            case(BUTTON):
+                ImGui::Button(ge.label.c_str());
+                break;
+            default:
+                throw runtime_error("gui error");
+                break;
+        }
+    }
+}
+
+void GUI::demo()
+{
+    // TODO (tmp) Our state 
+    bool show_demo_window = true;
+    bool show_another_window = true;
 
     ImGuiIO& io = ImGui::GetIO();
 
@@ -100,8 +173,8 @@ void GUI::draw()
         ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
         ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui::Text("want capture mouse %b", io.WantCaptureMouse);
-        ImGui::Text("want capture mouse %d, %d ", io.MousePos.x, io.MousePos.y);
+        ImGui::Text("want capture mouse %i", (int)io.WantCaptureMouse);
+        ImGui::Text("want capture mouse %f, %f ", io.MousePos.x, io.MousePos.y);
         ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
         ImGui::Checkbox("Another Window", &show_another_window);
 
@@ -126,33 +199,4 @@ void GUI::draw()
             show_another_window = false;
         ImGui::End();
     }
-
-    // Rendering
-    ImGui::Render();
-    SDL_RenderSetScale(_renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
-    /*SDL_SetRenderDrawColor(_renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
-    SDL_RenderClear(_renderer);*/
-    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), _renderer);
-    SDL_RenderPresent(_renderer);
-}
-
-bool GUI::process_event(SDL_Event& event)
-{ 
-    _log.debug("event processed");
-    ImGui_ImplSDL2_ProcessEvent(&event);
-    return want_capture_mouse() or want_capture_keyboard();
-}
-
-/*void GUI::process_event(SDL_Event& event)
-{ 
-    _log.debug("event processed");
-    ImGui_ImplSDL2_ProcessEvent(&event);
-}*/
-
-GUI::~GUI()
-{
-    // Cleanup
-    ImGui_ImplSDLRenderer2_Shutdown();
-    ImGui_ImplSDL2_Shutdown();
-    ImGui::DestroyContext();
 }

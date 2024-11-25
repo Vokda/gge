@@ -3,6 +3,7 @@
 
 #include "../logger.hpp"
 #include "gge_module.hpp"
+#include <vector>
 /*#include <optional>
 #include <functional>*/
 class SDL_Renderer;
@@ -11,6 +12,8 @@ class SDL_Renderer;
  * this class uses the Dear Imgui library to handle gui.
  * The only modifications on the library are to integrate it to GGE.
  */
+
+enum gui_element_type {BUTTON};
 
 namespace gge
 {
@@ -32,12 +35,29 @@ namespace gge
             //void process_event(SDL_Event& event); 
             bool process_event(SDL_Event& event);
 
+            void demo();
+
+            // creating gui
+            void create_button(const string& s);
+
         private:
+            void handle_focus(ImGuiIO&);
+
+            struct gui_element
+            {
+                const string label;
+                gui_element_type get;
+            };
+
             Logger::Log& _log;
-            Logger::Log& _debug_log;
+            //Logger::Log& _debug_log;
 
             // imgui stuff
             //std::optional<std::reference_wrapper<ImGuiIO>> _io_ref;
             SDL_Renderer* _renderer;
+
+            std::vector<gui_element> _gui_elements;
+
+            void create_element();
     };
 }

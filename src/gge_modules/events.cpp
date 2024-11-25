@@ -1,10 +1,10 @@
 #include "events.hpp"
-#include <iostream>
 #include "gui.hpp"
 using namespace std;
 
 Events::Events(shared_ptr<gge::GUI> gui):
     GGE_module(EVENTS),
+    _log(Logger::get_instance().add_category("Events")),
     _gui(gui)
 {
     _sdl_helper.check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
@@ -16,9 +16,11 @@ void Events::poll_events()
 
     while( SDL_PollEvent(&_event) != 0)
     {
-        //TODO why does this work?
+        // gui now works like in i3 (hovering = focus) see _gui's implementation for mor details
         if(_gui->process_event(_event))
+        {
             break;
+        }
 
         switch(_event.type)
         {

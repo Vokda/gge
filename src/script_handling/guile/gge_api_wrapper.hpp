@@ -58,9 +58,16 @@ extern "C"
 	void remove_agent(SCM agent);
 	void change_agent_sprite(SCM agent, SCM texture);
 
+
 // privates
-	SCM make_list(const int* e, size_t s);
+    SCM make_list(const int* e, size_t s);
 }
+
+// gui
+SCM create_button(SCM text);
+
+const string scm_to_string(SCM text);
+
 	template<typename T>
 SCM vector_to_list(const vector<T>& v)
 {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../logger.hpp"
 #include <queue>
 #include <SDL2/SDL.h>
 #include "gge_module.hpp"
@@ -59,5 +60,6 @@ class Events: public GGE_module
 		queue<int> _events; // so that the queue doesn't need to be recreated each time
 		SDL_helper _sdl_helper;
         shared_ptr<gge::GUI> _gui;
+        Logger::Log& _log;
 };
 

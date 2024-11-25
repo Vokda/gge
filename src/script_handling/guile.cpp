@@ -90,6 +90,9 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("remove_agent", 1,0,0, (scm_t_subr) remove_agent);
 	scm_c_define_gsubr("change_agent_sprite", 2,0,0, (scm_t_subr) change_agent_sprite);
 
+    // gui
+	scm_c_define_gsubr("create_button", 1,0,0, (scm_t_subr) create_button);
+
 
 	// gge_end read subs
 
@@ -122,6 +125,7 @@ void Guile::add_gge_api_functions()
 			"move_agent",
 			"remove_agent",
 			"change_agent_sprite",
+            "create_button",
 			NULL);
 	// gge_end write subs
 

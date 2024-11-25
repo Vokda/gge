@@ -301,3 +301,19 @@ SCM get_neighbors(SCM tile)
 	int t = scm_to_int(tile);
 	return vector_to_list(_gge_api->get_neighbors(t));
 }
+
+SCM create_button(SCM text)
+{
+    return scm_from_int(
+            _gge_api->create_button(
+                scm_to_string(text)
+                )
+            );
+}
+
+const string scm_to_string(SCM text)
+{
+    const char* c = scm_to_locale_string(text);
+    const string scm_str(c);
+    return scm_str;
+}
