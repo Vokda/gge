@@ -4,6 +4,8 @@
 #include <iostream>
 #include "../sdl_helper.hpp"
 
+#include "script_engine.hpp"
+
 #include "../filer.hpp"
 #include "../gge_modules/texter.hpp"
 #include "../gge_modules/events.hpp"
@@ -77,7 +79,7 @@ int GGE_API::init_gui()
 {
     auto g = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
     auto events =static_pointer_cast<Events>(_core.get_module(EVENTS)); 
-    return add_module(GUI, _gge_init.gui(g, events));
+    return add_module(GUI, _gge_init.gui(g, events, *this));
 }
 
 // init end
@@ -392,12 +394,19 @@ size_t GGE_API::create_shape(int shape_type, int pos_x, int pos_y, int size_x, i
 
 // gui
 
-size_t GGE_API::create_button(const string& text)
+size_t GGE_API::create_button(const string& text, void* fn)
 {
     auto gui = static_pointer_cast<gge::GUI>(_core.get_module(GUI));
-    gui->create_button(text);
+    gui->create_button(text, fn);
     return 0;
 }
+
+// script specific
+void GGE_API::call_script_fn(void* fn)
+{
+    _script_engine->call_script_fn(fn);
+}
+
 /*
  * PRIVATE FUNCTIONS
  */

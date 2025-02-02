@@ -45,6 +45,11 @@ bool Guile::run_game_loop_once(double delta)
 	return quit;
 }
 
+void Guile::call_script_fn(void* fn)
+{
+    call_function((SCM)fn);
+}
+
 void Guile::add_gge_api_functions()
 {
 	init_gge_api_wrapper(&_gge_api);
@@ -91,7 +96,7 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("change_agent_sprite", 2,0,0, (scm_t_subr) change_agent_sprite);
 
     // gui
-	scm_c_define_gsubr("create_button", 1,0,0, (scm_t_subr) create_button);
+	scm_c_define_gsubr("create_button", 2,0,0, (scm_t_subr) create_button);
 
 
 	// gge_end read subs

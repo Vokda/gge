@@ -4,8 +4,7 @@
 #include "../logger.hpp"
 #include "gge_module.hpp"
 #include <vector>
-/*#include <optional>
-#include <functional>*/
+#include "../script_handling/gge_api.hpp"
 class SDL_Renderer;
 
 /*
@@ -20,7 +19,7 @@ namespace gge
     class GUI: public GGE_module
     {
         public:
-            GUI(SDL_Window* window, SDL_Renderer* renderer);
+            GUI(SDL_Window* window, SDL_Renderer* renderer, GGE_API& ga);
             ~GUI();
 
             void draw();
@@ -38,7 +37,8 @@ namespace gge
             void demo();
 
             // creating gui
-            void create_button(const string& s);
+            void create_button(const string& s, void* fn);
+
 
         private:
             void handle_focus(ImGuiIO&);
@@ -47,6 +47,7 @@ namespace gge
             {
                 const string label;
                 gui_element_type get;
+                void* fn; // can be guile function. Don't call willy nilly!
             };
 
             Logger::Log& _log;
@@ -55,9 +56,10 @@ namespace gge
             // imgui stuff
             //std::optional<std::reference_wrapper<ImGuiIO>> _io_ref;
             SDL_Renderer* _renderer;
+            GGE_API& _gge_api;
 
             std::vector<gui_element> _gui_elements;
 
-            void create_element();
+            void element_handling();
     };
 }

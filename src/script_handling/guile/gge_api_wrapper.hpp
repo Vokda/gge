@@ -63,8 +63,10 @@ extern "C"
     SCM make_list(const int* e, size_t s);
 }
 
+void call_function(SCM fn);
+
 // gui
-SCM create_button(SCM text);
+SCM create_button(SCM text, SCM fn);
 
 const string scm_to_string(SCM text);
 

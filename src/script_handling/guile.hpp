@@ -9,6 +9,7 @@ class Guile: public Script_engine
 		Guile(GGE_API& ga);
 		void read_file(const string &);
 		bool run_game_loop_once(double delta);
+        void call_script_fn(void* fn);
 	private:
 		void add_gge_api_functions();
 

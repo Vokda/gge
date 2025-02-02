@@ -15,6 +15,9 @@ class Script_engine
 		// return true if should continue to loop
 		// the game loop it self should only be one frame of game logic
 		virtual bool run_game_loop_once(double d) = 0;
+
+        // call script function
+        virtual void call_script_fn(void* fn) = 0;
 	protected:
 		// each script engine shoud add the standard gge api functions
 		void virtual add_gge_api_functions() = 0;

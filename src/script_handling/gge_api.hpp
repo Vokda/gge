@@ -10,7 +10,6 @@
 #include "../gge_modules/registered_gge_modules.hpp"
 #include "../core.hpp"
 
-
 struct SDL_Point;
 class Script_engine;
 class Tile;
@@ -101,7 +100,10 @@ class GGE_API
         size_t create_shape(int shape_type, int pos_x, int pos_y, int size_x, int size_y, int ms);
 
         // GUI
-        size_t create_button(const string& text);
+        size_t create_button(const string& text, void* fn);
+
+
+        void call_script_fn(void* fn); // always script function?
 
 	private:
 		Core& _core;

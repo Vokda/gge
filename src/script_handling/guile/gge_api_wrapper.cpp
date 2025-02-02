@@ -302,13 +302,21 @@ SCM get_neighbors(SCM tile)
 	return vector_to_list(_gge_api->get_neighbors(t));
 }
 
-SCM create_button(SCM text)
+SCM create_button(SCM text, SCM fn)
 {
+    if(!scm_is_true(scm_procedure_p(fn)))
+        throw runtime_error("Not a procedure!");
     return scm_from_int(
             _gge_api->create_button(
-                scm_to_string(text)
+                scm_to_string(text),
+                (void*)fn
                 )
             );
+}
+
+void call_function(SCM fn)
+{
+    scm_call_0(fn);
 }
 
 const string scm_to_string(SCM text)

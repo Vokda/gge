@@ -11,12 +11,11 @@ using namespace gge;
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif
 
-GUI::GUI(SDL_Window* window, SDL_Renderer* renderer):
+GUI::GUI(SDL_Window* window, SDL_Renderer* renderer, GGE_API& ga):
     GGE_module(rgm::GUI),
     _log(Logger::get_instance().add_category("Dearimgui")),
-    //_debug_log(Logger::get_instance().add_category("Dear_imgui", log4cpp::Priority::DEBUG)),
-    _renderer(renderer)/*,
-    _io_ref(std::nullopt)*/
+    _renderer(renderer),
+    _gge_api(ga)
 {
     // From 2.0.18: Enable native IME.
 #ifdef SDL_HINT_IME_SHOW_UI
@@ -103,7 +102,7 @@ void GUI::draw()
     // main menu
     ImGui::BeginMainMenuBar();
     handle_focus(io);
-    create_element();
+    element_handling();
     ImGui::EndMainMenuBar();
 
     // Rendering
@@ -122,9 +121,9 @@ bool GUI::process_event(SDL_Event& event)
     return (want_capture_mouse() or want_capture_keyboard());
 }
 
-void GUI::create_button(const string& s)
+void GUI::create_button(const string& s, void* fn)
 {
-    gui_element ge = {s, BUTTON};
+    gui_element ge = {s, BUTTON, fn};
     _gui_elements.push_back(ge);
 }
 
@@ -136,17 +135,21 @@ GUI::~GUI()
     ImGui::DestroyContext();
 }
 
-void GUI::create_element()
+void GUI::element_handling()
 {
     for(gui_element ge : _gui_elements)
     {
         switch(ge.get)
         {
             case(BUTTON):
-                ImGui::Button(ge.label.c_str());
+                if(ImGui::Button(ge.label.c_str()))
+                {
+                    _log.info( "click");
+                    _gge_api.call_script_fn(ge.fn);
+                }
                 break;
             default:
-                throw runtime_error("gui error");
+                throw runtime_error("cannot create gui element");
                 break;
         }
     }

@@ -13,6 +13,7 @@
 #include "agenter.hpp"
 #include "shaper.hpp"
 #include "gui.hpp"
+#include "../script_handling/gge_api.hpp"
 // gge_end import includes
 
 /*GGE_module_initializer::GGE_module_initializer(Moduler& m):
@@ -105,9 +106,9 @@ shared_ptr<GGE_module> GGE_module_initializer::shaper()
 	return make_shared<Shaper>();
 }
 
-shared_ptr<GGE_module> GGE_module_initializer::gui(shared_ptr<Graphics> g, shared_ptr<Events> events)
+shared_ptr<GGE_module> GGE_module_initializer::gui(shared_ptr<Graphics> g, shared_ptr<Events> events, GGE_API& gge_api)
 {
-    auto gui = make_shared<gge::GUI>(g->get_window(), g->get_renderer());
+    auto gui = make_shared<gge::GUI>(g->get_window(), g->get_renderer(), gge_api);
     events->set_gui(gui);
 	return gui;
 }
