@@ -33,7 +33,9 @@ void GGE_API::hello()
 // init 
 int GGE_API::init_graphics(const string& s, size_t w, size_t h)
 {
-	return add_module(GRAPHICS, _gge_init.graphics(s, w, h));
+    auto graphics = initialize_module<Graphics>(s, w, h);
+	return add_module(GRAPHICS, graphics);
+	//return add_module(GRAPHICS, _gge_init.graphics(s, w, h));
 }
 
 int GGE_API::init_events()

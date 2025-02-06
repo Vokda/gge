@@ -16,8 +16,11 @@ class GGE_module_initializer
 	public:
 		GGE_module_initializer() = default;
 
-		/*template<typename T, typename... Args>
-			shared_ptr<GGE_module> initialize(rgm module, Args... args);*/
+		template<typename T, typename... Args>
+			shared_ptr<GGE_module> initialize(Args... args)
+            {
+                return make_shared<T>(args...);
+            };
 
 		// ye olde C way
 		// int rather than rgm to supress warnings regarding varargs

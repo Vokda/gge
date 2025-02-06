@@ -38,6 +38,10 @@ class GGE_API
 		int init_agenter();
         int init_shaper();
         int init_gui();
+        template<typename T, typename... Args>
+            shared_ptr<GGE_module> initialize_module(Args... args){
+                return _gge_init.initialize<T>(args...);
+            };
 
 		// events
 		const std::queue<int>& get_events() const;
