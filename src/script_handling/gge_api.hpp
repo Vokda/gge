@@ -38,8 +38,21 @@ class GGE_API
 		int init_agenter();
         int init_shaper();
         int init_gui();
+        template<typename... Args>
+            int initialize_gge_module(rgm module, Args&&... args)
+            {
+                auto ptr = initialize_module<module>(args...);
+                return add_module(module, ptr);
+            }
+        template<typename... Args>
+            int initialize_gge_module(int module, Args&&... args)
+            {
+                rgm m = rgm(module);
+                auto ptr = initialize_module<m>(args...);
+                return add_module(m, ptr);
+            }
         template<typename T, typename... Args>
-            shared_ptr<GGE_module> initialize_module(Args... args){
+            shared_ptr<GGE_module> initialize_module(Args&&... args){
                 return _gge_init.initialize<T>(args...);
             };
 

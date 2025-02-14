@@ -20,6 +20,7 @@ extern "C"
 	SCM init_spriter();
 	SCM init_agenter();
     SCM init_gui();
+    SCM initialize_gge_module(SCM args...);
 
 	void add_command(SCM module...);
 
@@ -70,11 +71,11 @@ SCM create_button(SCM text, SCM fn);
 
 const string scm_to_string(SCM text);
 
-	template<typename T>
+template<typename T>
 SCM vector_to_list(const vector<T>& v)
 {
-	if(v.size() > 0)
-		return make_list(&v[0], v.size());
-	else
-		return scm_list_n(SCM_UNDEFINED);
+    if(v.size() > 0)
+        return make_list(&v[0], v.size());
+    else
+        return scm_list_n(SCM_UNDEFINED);
 }

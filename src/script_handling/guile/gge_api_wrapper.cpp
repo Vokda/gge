@@ -4,11 +4,14 @@
 #include <cstdarg>
 #include <iostream>
 #include <sstream>
+#include <variant>
+#include <algorithm>
 using namespace std;
+#include "../gge_api.hpp"
 
 extern "C"
 {
-	extern GGE_API* _gge_api;
+	//GGE_API* _gge_api;
 
 	void init_gge_api_wrapper(GGE_API* ga)
 	{
@@ -209,21 +212,84 @@ extern "C"
 					));
 	}
 
-	SCM create_agent(SCM sprite, SCM tile)
-	{
-		return scm_from_int(
-				_gge_api->create_agent(
-					scm_to_int(sprite),
-					scm_to_int(tile)
-					));
-	}
+    SCM create_agent(SCM sprite, SCM tile)
+    {
+        return scm_from_int(
+                _gge_api->create_agent(
+                    scm_to_int(sprite),
+                    scm_to_int(tile)
+                    ));
+    }
 
-	void change_agent_sprite(SCM agent, SCM texture)
-	{
-		_gge_api->change_agent_sprite(scm_to_int(agent), scm_to_int(texture));
-	}
+    void change_agent_sprite(SCM agent, SCM texture)
+    {
+        _gge_api->change_agent_sprite(scm_to_int(agent), scm_to_int(texture));
+    }
 
 } // extern C END
+
+template<typename... T>
+std::tuple<T...> unpack_to_tuple(const vector<variant<T...>>& variant_parameters)
+{
+    std::tuple<T...> result;
+
+    auto it = std::begin(variant_parameters);
+
+    std::apply([&](auto&... args) {
+                ( (args = std::get< std::decay_t< decltype(args) > >(*it++)), ...);
+            }, 
+            result);
+    return result;
+}
+
+SCM initialize_gge_module(SCM scm_args...)
+{
+    // unpack arguments
+    va_list args;
+    va_start(args, scm_args);
+
+    // first parameter should be module nr TODO rgm
+    int module = -1;
+    module = scm_to_int(va_arg(args, SCM)); 
+    if(module == -1)
+        throw runtime_error("module not set!");
+
+    //get rest of parameters
+    using scm_union = std::variant<int, double, std::string>;
+    std::vector<scm_union> parameters;
+
+    while(SCM scm = va_arg(args, SCM))
+    {
+        if(scm_is_integer(scm))
+        {
+            parameters.push_back(scm_to_int(scm));
+        }
+        else if(scm_is_real(scm))
+        {
+            parameters.push_back(scm_to_double(scm));
+        }
+        else if(scm_is_string(scm))
+        {
+            const char* c = scm_to_locale_string(scm);
+            const string str(c);
+            parameters.push_back(str);
+        }
+    }
+    va_end(args);
+
+    // call gge api
+    auto tuple_parameters = unpack_to_tuple(parameters);
+//(module, tuple_parameters),
+    int module_id = std::apply(
+                [&](auto&&... args) { 
+                    return _gge_api->initialize_gge_module(module, 
+                            std::forward<decltype(args)>(args)...); 
+                    },
+                tuple_parameters
+            );
+
+    return scm_from_int(module_id);
+}
 
 void move_agent(SCM agent, SCM tile)
 {

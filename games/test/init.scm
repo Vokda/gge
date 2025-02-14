@@ -34,6 +34,8 @@
   (gge:init_spriter))
 (define gui
   (gge:init_gui))
+(define scroller
+  (gge:init scroller)
 
 (use-modules ( (world)
 			 #:prefix world:)
