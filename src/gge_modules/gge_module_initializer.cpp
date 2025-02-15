@@ -2,7 +2,7 @@
 #include <cstdarg>
 
 // gge_begin import includes
-#include "events.hpp"
+/*#include "events.hpp"
 #include "graphics.hpp"
 #include "grider.hpp"
 #include "scroller.hpp"
@@ -12,55 +12,16 @@
 #include "spriter.hpp"
 #include "agenter.hpp"
 #include "shaper.hpp"
-#include "gui.hpp"
+#include "gui.hpp"*/
 #include "../script_handling/gge_api.hpp"
 // gge_end import includes
 
-/*GGE_module_initializer::GGE_module_initializer(Moduler& m):
-	_moduler(m)
+GGE_module_initializer::GGE_module_initializer():
+    _log(Logger::make_category("GGE Module Initializer")),
+    _log_stream(Logger::make_category_stream(Priority::INFO, "GGE Module Initializer"))
 {
-}*/
-/*
-shared_ptr<GGE_module> GGE_module_initializer::initialize(int module...)
-{
-	shared_ptr<GGE_module> gge_module = nullptr;
-	va_list args;
-	va_start(args, module);
-
-	rgm m = static_cast<rgm>(module);
-	switch(m)
-	{
-		case GRAPHICS:
-			{
-				char* c = va_arg(args, char*);
-				string s(c);
-				size_t w = va_arg(args, unsigned);
-				size_t h = va_arg(args, unsigned);
-				gge_module = make_shared<Graphics>(s, w, h);
-			}
-			break;
-		case EVENTS:
-			gge_module = make_shared<Events>();
-			break;
-		case GRID:
-			{
-				size_t w = va_arg(args, unsigned);
-				size_t h = va_arg(args, unsigned);
-				int size = va_arg(args, int);
-				gge_module = make_shared<Hex_grid>(w, h, size, FLAT_TOP, RECT_ODD_Q);
-			}
-			break;
-
-
-				// TODO
-		// gge_begin import ctor
-
-		// gge_end import ctor
-		default:
-			throw throw_message(__FILE__, "Cannot initialize", m);
-	}
-	return gge_module;
-}*/
+    _log.info("Initializer initialized");
+}
 
 shared_ptr<GGE_module> GGE_module_initializer::graphics(const string& s, size_t w, size_t h)
 {

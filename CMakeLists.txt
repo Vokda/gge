@@ -8,7 +8,8 @@ include(CMakePrintHelpers)
 #  debug options
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
 	add_definitions(-DDEBUG)
-	set(CMAKE_CXX_FLAGS_DEBUG_INIT "-O0 -g -Wall")
+	set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
 endif()
 
 # includes cmake/FindSDL2.cmake

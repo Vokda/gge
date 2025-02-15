@@ -26,11 +26,23 @@ Logger::Logger():
     _root.info("log4cpp setup complete");
 }
 
+Logger::Log& Logger::make_category(const string& category_name)
+{
+    auto& logger = get_instance();
+    return logger.get_category(category_name);
+}
+
+Logger::Log_stream Logger::make_category_stream(const Priority::Value p, const string& category_name)
+{
+    auto& logger = get_instance();
+    return logger.get_category_stream(category_name, p);
+}
+
 log4cpp::Category& Logger::add_category(const string& s, const log4cpp::Priority::Value p)
 {
     if(auto cat = Category::exists(s))
     {
-        _logger_info->info("Category '" + s + "' already exists!");
+        _logger_info->warn("Category '" + s + "' already exists!");
         return *cat;
     }
     else
@@ -44,7 +56,9 @@ log4cpp::Category& Logger::add_category(const string& s, const log4cpp::Priority
 
 log4cpp::Category& Logger::add_category(const string& s)
 {
-    return add_category(s, log4cpp::Priority::INFO);
+    auto& category = add_category(s, log4cpp::Priority::INFO);
+    _logger_info->info("Added category '" + s);
+    return category;
 }
 
 Logger::Log& Logger::get_category(const string& s)
@@ -52,7 +66,12 @@ Logger::Log& Logger::get_category(const string& s)
     if(auto cat = Category::exists(s))
        return *cat;
     else 
-        throw(runtime_error("Category " + s + " does not exist!"));
+    {
+        _logger_info->info("Category '" + s + "' does not exists. Creating category...");
+        add_category(s);
+        return get_category(s);
+        //throw(runtime_error("Category " + s + " does not exist!"));
+    }
 }
 
 Logger::Log& Logger::get_category(const string& s, const log4cpp::Priority::Value p)

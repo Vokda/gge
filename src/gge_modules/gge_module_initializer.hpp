@@ -1,24 +1,41 @@
 #pragma once
 #include "gge_module.hpp"
-class Script_engine;
+/*class Script_engine;
 class Core;
 class Graphics;
 class Agenter;
 class Events;
-class GGE_API;
-namespace gge
+class GGE_API;*/
+
+#include "scroller.hpp"
+#include "events.hpp"
+#include "graphics.hpp"
+#include "grider.hpp"
+#include "scroller.hpp"
+#include "texter.hpp"
+#include "game_loop.hpp"
+#include "none.hpp"
+#include "spriter.hpp"
+#include "agenter.hpp"
+#include "shaper.hpp"
+#include "gui.hpp"
+
+/*namespace gge
 {
     class GUI;
-}
+}*/
+#include "../logger.hpp"
 
 class GGE_module_initializer
 {
 	public:
-		GGE_module_initializer() = default;
+		GGE_module_initializer();;
 
 		template<typename T, typename... Args>
-			shared_ptr<GGE_module> initialize(Args... args)
+			shared_ptr<GGE_module> initialize(Args&&... args)
             {
+                _log.info("Creating");
+                _log.info(typeid(T).name());
                 return make_shared<T>(args...);
             };
 
@@ -45,4 +62,8 @@ class GGE_module_initializer
 		shared_ptr<GGE_module> shaper();
         shared_ptr<GGE_module> gui(shared_ptr<Graphics> g, shared_ptr<Events>, GGE_API&);
 		// gge_end import ctor_decl
+
+    private:
+        Logger::Log& _log;
+        Logger::Log_stream _log_stream;
 };

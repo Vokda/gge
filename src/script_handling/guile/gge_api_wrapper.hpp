@@ -1,7 +1,9 @@
 // C-wrappers necessary for guile
-#pragma once
+#ifndef GGE_API_WRAPPER_HPP
+#define GGE_API_WRAPPER_HPP
 #include "../gge_api.hpp"
 #include <libguile.h>
+#include "../../logger.hpp"
 
 extern "C"
 { 
@@ -64,6 +66,9 @@ extern "C"
     SCM make_list(const int* e, size_t s);
 }
 
+static Logger::Log& _log = Logger::make_category("Guile GGE API Wrapper");
+static Logger::Log_stream _log_stream = Logger::make_category_stream(Priority::DEBUG, "Guile GGE API Wrapper");
+
 void call_function(SCM fn);
 
 // gui
@@ -79,3 +84,4 @@ SCM vector_to_list(const vector<T>& v)
     else
         return scm_list_n(SCM_UNDEFINED);
 }
+#endif

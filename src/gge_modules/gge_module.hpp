@@ -59,5 +59,6 @@ class GGE_module
 	protected:
 		rgm _module;
         Logger& _logger;
+        Logger::Log& _log;
         Logger::Log_stream _debug_stream;
 };

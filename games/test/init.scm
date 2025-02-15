@@ -35,7 +35,7 @@
 (define gui
   (gge:init_gui))
 (define scroller
-  (gge:init scroller)
+  (gge:initialize_gge_module 4))
 
 (use-modules ( (world)
 			 #:prefix world:)
@@ -66,4 +66,3 @@
 
 ; gui stuff
 (gge:create_button "say 'bleep'"  (lambda () (gge:create_text "bleep" 100 100 1000 0) ))
-;(gge:create_button "say 'bleep'"  (lambda () (display 'hej)))

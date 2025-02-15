@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include "events.hpp"
 #include "../imgui/imgui_impl_sdlrenderer2.h"
+#include "../script_handling/gge_api.hpp"
 
 using namespace gge;
 
@@ -13,7 +14,6 @@ using namespace gge;
 
 GUI::GUI(SDL_Window* window, SDL_Renderer* renderer, GGE_API& ga):
     GGE_module(rgm::GUI),
-    _log(Logger::get_instance().add_category("Dearimgui")),
     _renderer(renderer),
     _gge_api(ga)
 {

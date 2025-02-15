@@ -1,11 +1,10 @@
 #pragma once
 #include "../imgui/imgui.h"
 
-#include "../logger.hpp"
 #include "gge_module.hpp"
 #include <vector>
-#include "../script_handling/gge_api.hpp"
 class SDL_Renderer;
+class GGE_API;
 
 /*
  * this class uses the Dear Imgui library to handle gui.
@@ -49,9 +48,6 @@ namespace gge
                 gui_element_type get;
                 void* fn; // can be guile function. Don't call willy nilly!
             };
-
-            Logger::Log& _log;
-            //Logger::Log& _debug_log;
 
             // imgui stuff
             //std::optional<std::reference_wrapper<ImGuiIO>> _io_ref;

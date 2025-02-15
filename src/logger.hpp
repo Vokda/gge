@@ -2,8 +2,8 @@
 
 #define LOG4CPP_FIX_ERROR_COLLISION 1
 #include <memory>
-#include <map>
-#include <stack>
+/*#include <map>
+#include <stack>*/
 #include <sstream>
 using namespace std;
 
@@ -19,6 +19,20 @@ namespace log4cpp
     class PatternLayout;
 }
 
+/*
+ * log types (priorities)
+ * emerg
+ * fatal
+ * alert
+ * crit
+ * error
+ * warn
+ * notice
+ * info
+ * debug
+ * notset
+ */
+
 class Logger
 {
 	enum Log_amount {NONE, DEBUG, SPAM};
@@ -32,7 +46,9 @@ class Logger
             return instance;
         }
 
-        //static Log& get_category(const string& category_name = "");
+        // some handy function
+        static Log& make_category(const string& category_name = "");
+        static Log_stream make_category_stream(const Priority::Value priority, const string& category_name = "");
 
         // Prevent copying or assignment.
         Logger(Logger const&) = delete;

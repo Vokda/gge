@@ -3,6 +3,7 @@
 #include <memory>
 #include "grider.hpp"
 #include "../sdl_helper.hpp"
+#include "../logger.hpp"
 using namespace std;
 
 Scroller::Scroller(int w, int h, SDL_Rect* max_scroll ):
@@ -11,6 +12,7 @@ Scroller::Scroller(int w, int h, SDL_Rect* max_scroll ):
 	_scrolled.x = 0;
 	_scrolled.y = 0;
 	_max_scroll = max_scroll;
+    _log.info("OK");
 }
 
 Scroller::~Scroller()

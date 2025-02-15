@@ -20,9 +20,10 @@
 using namespace std;
 
 GGE_API::GGE_API(Core& core):
-	_core(core)
+	_core(core), _log(Logger::get_instance().add_category("GGE API"))
 {
 	add_module(NONE, _gge_init.none());
+    _log.info("OK");
 }
 
 void GGE_API::hello()
@@ -79,6 +80,7 @@ int GGE_API::init_agenter()
 
 int GGE_API::init_gui()
 {
+    _log.info("initializing gui");
     auto g = static_pointer_cast<Graphics>(_core.get_module(GRAPHICS));
     auto events =static_pointer_cast<Events>(_core.get_module(EVENTS)); 
     return add_module(GUI, _gge_init.gui(g, events, *this));

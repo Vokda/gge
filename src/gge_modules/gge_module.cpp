@@ -4,6 +4,7 @@ using namespace std;
 
 GGE_module::GGE_module(rgm m):
     _logger(Logger::get_instance()),
+    _log(_logger.add_category(get_module_name(m))),
     _debug_stream(_logger.get_category_stream(get_module_name(m), log4cpp::Priority::DEBUG))
 {
 	_module = m;
@@ -17,6 +18,7 @@ GGE_module::GGE_module():
 
 GGE_module::GGE_module(const GGE_module& m):
     _logger(m._logger),
+    _log(m._log),
     _debug_stream(m._debug_stream)
 {
 	_module = m._module;

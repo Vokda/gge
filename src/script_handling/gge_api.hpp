@@ -9,6 +9,7 @@
 #include <queue>
 #include "../gge_modules/registered_gge_modules.hpp"
 #include "../core.hpp"
+#include "../logger.hpp"
 
 struct SDL_Point;
 class Script_engine;
@@ -48,11 +49,11 @@ class GGE_API
             int initialize_gge_module(int module, Args&&... args)
             {
                 rgm m = rgm(module);
-                auto ptr = initialize_module<m>(args...);
-                return add_module(m, ptr);
+                return initialize_gge_module(m, args...);
             }
         template<typename T, typename... Args>
             shared_ptr<GGE_module> initialize_module(Args&&... args){
+                _log.debug(typeid(T).name());
                 return _gge_init.initialize<T>(args...);
             };
 
@@ -137,6 +138,8 @@ class GGE_API
 
 		shared_ptr<Tile> get_tile(size_t i);
 		shared_ptr<Agent> get_agent(size_t a);
+
+        Logger::Log& _log;
 #ifdef DEBUG
 		int _x, _y = 0;
 #endif

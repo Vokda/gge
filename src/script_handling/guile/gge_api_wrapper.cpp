@@ -253,6 +253,8 @@ SCM initialize_gge_module(SCM scm_args...)
     module = scm_to_int(va_arg(args, SCM)); 
     if(module == -1)
         throw runtime_error("module not set!");
+    else
+        _log_stream << "requesting initialization of module " << module;
 
     //get rest of parameters
     using scm_union = std::variant<int, double, std::string>;
@@ -280,13 +282,15 @@ SCM initialize_gge_module(SCM scm_args...)
     // call gge api
     auto tuple_parameters = unpack_to_tuple(parameters);
 //(module, tuple_parameters),
-    int module_id = std::apply(
+    int module_id = -1; 
+    /*module = std::apply(
                 [&](auto&&... args) { 
                     return _gge_api->initialize_gge_module(module, 
                             std::forward<decltype(args)>(args)...); 
                     },
                 tuple_parameters
-            );
+            );*/
+    _log_stream << typeid(tuple_parameters).name() ;
 
     return scm_from_int(module_id);
 }
