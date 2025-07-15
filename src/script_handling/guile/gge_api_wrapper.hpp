@@ -7,7 +7,7 @@
 
 extern "C"
 { 
-	static GGE_API* _gge_api = NULL;
+	//GGE_API* _gge_api = NULL;
 	void init_gge_api_wrapper(GGE_API* ga);
 
 	void gge_api_hello();
@@ -22,9 +22,9 @@ extern "C"
 	SCM init_spriter();
 	SCM init_agenter();
     SCM init_gui();
-    SCM initialize_gge_module(SCM args...);
+    SCM initialize_gge_module(SCM scm_module, SCM args...);
 
-	void add_command(SCM module...);
+	SCM add_command(SCM module, SCM command, SCM applied_to_module);
 
 	void quit();
 
@@ -57,7 +57,7 @@ extern "C"
 	// agents
 	SCM create_agent(SCM sprite, SCM tile);
 	SCM get_agents(SCM tile);
-	void move_agent(SCM agent, SCM tile);
+	SCM move_agent(SCM agent, SCM tile);
 	void remove_agent(SCM agent);
 	void change_agent_sprite(SCM agent, SCM texture);
 
@@ -65,6 +65,8 @@ extern "C"
 // privates
     SCM make_list(const int* e, size_t s);
 }
+
+
 
 static Logger::Log& _log = Logger::make_category("Guile GGE API Wrapper");
 static Logger::Log_stream _log_stream = Logger::make_category_stream(Priority::DEBUG, "Guile GGE API Wrapper");

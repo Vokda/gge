@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 3.8)
 project(gge)
 
 include(CMakePrintHelpers)
@@ -8,8 +8,8 @@ include(CMakePrintHelpers)
 #  debug options
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
 	add_definitions(-DDEBUG)
-	set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
+    set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -Werror -Wno-error=unused-function -Wno-error=unused-parameter")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
 # includes cmake/FindSDL2.cmake
@@ -45,4 +45,6 @@ target_link_libraries(${PROJECT_NAME} ${LIBRARIES} GL)
 
 # compiler flags
 set(CMAKE_CXX_FLAGS "-std=c++17" )
-set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_COMPILER clang++)

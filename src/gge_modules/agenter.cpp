@@ -48,20 +48,24 @@ size_t Agenter::create_agent(
 bool Agenter::move_agent(size_t a, shared_ptr<Tile> to)
 {
 	auto agent = static_pointer_cast<Agent>(get_component(a));
-#ifdef DEBUG
-	cout << "Moving agent";
-	cout << " to " << to;
-	cout << " old sprite postion " << agent->sprite->position;
-	cout << " new sprite postion " << to->get_position();
-	cout << endl;
-#endif 
+	_log.debugStream() << "Moving agent " << a << " to " << to 
+        << " old sprite postion " << agent->sprite->position
+        << " new sprite postion " << to->get_position();
 
-	Move_agent move(agent, to);
-	return move();
+	auto old_tile = agent->tile;
+	// if successful move on tile was made do the rest of agent movement
+	if( agent->tile->move_agent(agent, to) )
+	{
+		agent->tile = to;
+		return true;
+	}
+	else
+		return false;
 }
 
 void Agenter::navigate(size_t agent, shared_ptr<Tile> tile)
 {
+    _log.debug("agent %i & tile %i", agent, tile->coord_to_string().c_str());
 	throw runtime_error("not implemented");
 }
 
@@ -70,20 +74,6 @@ void Agenter::remove_agent(size_t a)
 	auto agent = static_pointer_cast<Agent>(get_component(a));
 	agent->permanent = false;
 	agent->milliseconds = 0;
-}
-
-bool Agenter::Move_agent::operator()()
-{
-	auto old_tile = _agent->tile;
-	// if successful move on tile was made do the rest of agent movement
-	if( _agent->tile->move_agent(_agent, _tile) )
-	{
-		_agent->tile = _tile;
-		auto pos = _agent->tile->get_position();
-		return true;
-	}
-	else
-		return false;
 }
 
 shared_ptr<Agent> Agenter::get_agent(int a)

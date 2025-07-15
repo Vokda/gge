@@ -25,7 +25,20 @@ Guile::Guile(GGE_API& ga):
 
 void Guile::read_file(const string& s)
 {
-	_scm = scm_c_primitive_load(s.c_str());
+    _log.info("trying to read %s...", s.c_str());
+
+    const char* c = s.c_str();
+    _scm = scm_c_catch(
+        SCM_BOOL_T, // catch all exceptions
+        primitive_load,
+        (void*)c,
+        error_handler,
+        nullptr,
+        preunwind,
+        nullptr
+    );
+
+	//_scm = scm_c_primitive_load(s.c_str());
 	// game class should be included by now
 	SCM game_module = scm_c_resolve_module("game");
 	SCM game_loop_fn = scm_c_module_lookup(game_module, "game_loop");
@@ -33,16 +46,61 @@ void Guile::read_file(const string& s)
 	//_scm_game_loop = scm_variable_ref(scm_c_lookup("game:game_loop"));
 	if(_scm_game_loop == NULL)
 	{
-		runtime_error re("No game loop procedure set in Guile called 'game_loop'");
-		throw re;
+		throw runtime_error("No game loop procedure set in Guile called 'game_loop'");
 	}
+    _log.info("Succesfully read %s and found game loop procedure in module 'game'", s.c_str());
+}
+
+SCM Guile::primitive_load(void* c)
+{
+    return scm_c_primitive_load((char*) c);
 }
 
 bool Guile::run_game_loop_once(double delta)
 {
-	SCM scm = scm_call_1(_scm_game_loop, scm_from_double(delta));
+    Call_data call_data = {_scm_game_loop, delta};
+
+    SCM scm = scm_c_catch(
+        SCM_BOOL_T, // catch all exceptions
+        call_game_loop,
+        &call_data,
+        error_handler,
+        nullptr,
+        preunwind,
+        nullptr
+    );
 	bool quit = scm_to_bool(scm);
 	return quit;
+}
+
+SCM Guile::preunwind(void* data, SCM key, SCM params)
+{
+    SCM handler_data = scm_make_stack (SCM_BOOL_T, SCM_EOL);
+    return scm_display_backtrace(handler_data, scm_current_error_port(), SCM_BOOL_F, SCM_BOOL_F);
+}
+
+SCM Guile::call_game_loop(void* data)
+{
+    Call_data* call_data = static_cast<Call_data*>(data);
+	return scm_call_1(call_data->fn, scm_from_double(call_data->delta));
+}
+
+SCM Guile::error_handler(void* data, SCM keys, SCM args)
+{
+    char* c = scm_to_utf8_string(
+            scm_simple_format(
+                SCM_BOOL_F, scm_from_utf8_string("Keys: ~A"), scm_list_1(keys)));
+    string error(c);
+    free(c);
+
+    c = scm_to_utf8_string(
+            scm_simple_format(
+                SCM_BOOL_F, scm_from_utf8_string("Args: ~A"), scm_list_1(args)));
+    error.append(", ");
+    error.append(c);
+    free(c);
+    throw runtime_error(error);
+    return SCM_BOOL_F; // unreachable return value, yes.
 }
 
 void Guile::call_script_fn(void* fn)
@@ -75,7 +133,7 @@ void Guile::add_gge_api_functions()
 	scm_c_define_gsubr("game_loop", 0,0,0, (scm_t_subr) init_game_loop);
 
 	scm_c_define_gsubr("quit",0,0,0, (scm_t_subr) quit);
-	scm_c_define_gsubr("add_command", 1, 2, 0, (scm_t_subr) add_command);
+	scm_c_define_gsubr("add_command", 3, 0, 0, (scm_t_subr) add_command);
 
 	scm_c_define_gsubr("get_next_event", 0,0,0,(scm_t_subr) get_next_event);
 

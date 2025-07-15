@@ -8,6 +8,7 @@ class Filer;
 #include <string>
 #include <vector>
 #include "script_handling/scripter.hpp"
+class Logger; 
 
 struct Configuration
 {
@@ -30,4 +31,5 @@ class Configurer
 
 		GGE_API& _gge_api;
 		Configuration _config;
+        Logger::Log& _log;
 };

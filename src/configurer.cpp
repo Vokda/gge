@@ -6,12 +6,14 @@
 #include <cctype>
 #include <fstream>
 #include "filer.hpp"
+#include "logger.hpp"
 using namespace std;
 
 Configurer::Configurer(const Filer& f, GGE_API& ga):
-	_gge_api(ga)
+	_gge_api(ga), _log(Logger::make_category("Configurer"))
 {
 	string cfg = f.in_game_dir("gge.cfg");
+    _log.info("Expecting configuration file name: %s", cfg.c_str());
 	read_config(cfg);
 }
 
@@ -21,11 +23,11 @@ const Configuration& Configurer::read_config(const string& config_name)
 
 	if(!config.is_open())
 	{
-		cout << "Configurer: failed to open " << config_name << endl;
+        throw runtime_error("failed to open " + config_name);
 	}
 	else
 	{
-		cout << "Reading config" << config_name << endl;
+        _log.info("Reading config %s", config_name.c_str());
 		string command;
 		vector<string> args;
 		string s;
@@ -38,12 +40,12 @@ const Configuration& Configurer::read_config(const string& config_name)
 
 			to_lower(command);
 			string a;
-			cout << command << endl;
+            _log.info("command %s", command.c_str());
 			while(line >> a)
 			{
 				to_lower(a);
 				args.push_back(a);
-				cout << '\t' << a << endl;
+                _log.info("\t %s", a.c_str());
 			}
 
 			store_config(command, args);
@@ -78,12 +80,14 @@ void Configurer::store_config(const string& command, const vector<string>& args)
 	}
 	else
 	{
+
 		stringstream ss;
 		ss << "configuration not recognized: " << command << " ";
 		for(string s : args)
 		{
 			ss << s << " ";
 		}
+        _log.error("configuration not recognized '%s'", ss.str().c_str());
 		ss << endl;
 		throw runtime_error(ss.str());
 	}

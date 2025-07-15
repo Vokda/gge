@@ -23,7 +23,7 @@ GGE_API::GGE_API(Core& core):
 	_core(core), _log(Logger::get_instance().add_category("GGE API"))
 {
 	add_module(NONE, _gge_init.none());
-    _log.info("OK");
+    _log.info("GGE API OK");
 }
 
 void GGE_API::hello()
@@ -34,9 +34,9 @@ void GGE_API::hello()
 // init 
 int GGE_API::init_graphics(const string& s, size_t w, size_t h)
 {
-    auto graphics = initialize_module<Graphics>(s, w, h);
-	return add_module(GRAPHICS, graphics);
-	//return add_module(GRAPHICS, _gge_init.graphics(s, w, h));
+    /*auto graphics = initialize_module(GRAPHICS, s, w, h);
+	return add_module(GRAPHICS, graphics);*/
+	return add_module(GRAPHICS, _gge_init.graphics(s, w, h));
 }
 
 int GGE_API::init_events()
@@ -102,6 +102,7 @@ size_t GGE_API::create_text(const string& text, int view_port)
 
 size_t GGE_API::create_text(const string& text, int view_port, int ms = 1000, int x = -1, int y = -1)
 {
+    _log.debug("create_text() not using x %i or y %i", x, y);
 	return create_text(text, {255,255,255,255}, {0,0,0,0}, ms, view_port);
 }
 
@@ -242,7 +243,13 @@ void GGE_API::scroll_mouse(int& x, int& y)
 
 void GGE_API::add_command(rgm module, int command, rgm arg)
 {
+    _log.info("adding command %i for module %s applied to %s", 
+            command,
+            GGE_module::get_module_name(module).c_str(), 
+            GGE_module::get_module_name(arg).c_str()
+            );
 	_core.add_command(module, command, arg);
+    _log.debug("command added successfully!");
 }
 
 int GGE_API::add_module(rgm m, shared_ptr<GGE_module> ptr)
@@ -314,14 +321,14 @@ size_t GGE_API::create_agent(size_t texture, size_t tile)
 	return agenter->create_agent(tile_ptr, sprite);
 }
 
-void GGE_API::move_agent(size_t a, size_t to_tile)
+bool GGE_API::move_agent(size_t a, size_t to_tile)
 {
 	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
-
-#ifdef DEBUG
-	cout << "moving agent " << a << " to " << to_tile << endl;
-#endif
-	agenter->move_agent(a, get_tile(to_tile));
+    _log.debug("moving agent %i to tile %i", a, to_tile);
+	bool moved = agenter->move_agent(a, get_tile(to_tile));
+    string out = moved ? "successfully" : "failed";
+    _log.debug("moving agent %i moved to tile %i %s!", a, to_tile, out.c_str());
+    return moved;
 }
 
 void GGE_API::remove_agent(size_t a)

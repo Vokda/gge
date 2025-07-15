@@ -14,12 +14,15 @@ using namespace std;
 
 // signal handling
 Core* c;
+namespace gge 
+{
+    Logger::Log& log = Logger::get_instance().get_category("GGE");
+}
 void quit(int sig);
 
 
 int main(int argc, char* argv[])
 {
-    Logger::Log& log = Logger::get_instance().get_category();
 	if(argc < 2)
 	{
 		cout << "How to use:" << endl;
@@ -34,7 +37,7 @@ int main(int argc, char* argv[])
 	// init 
 	try
 	{
-        log.info("GGE booting");
+        gge::log.info("GGE booting");
 
 		// TODO add class to handle arguments properly
 		// Argument handler here
@@ -59,25 +62,26 @@ int main(int argc, char* argv[])
 		signal(SIGTERM, quit);
 		signal(SIGABRT, quit);
 
-        log.info("GGE running");
+        gge::log.info("GGE running");
 		core.run();
 	}
 	catch (std::exception& e)
 	{
         stringstream ss;
         ss << e.what() << endl << "EXITING GGE" << endl;
-        log.fatal(ss.str());
+        gge::log.fatal(ss.str());
 		//cerr << ss.str();
 		// kill all objects
 		exit(2);
 	}
 
-	log.info("Thanks for using\n" + std::string(GGE_ASCII));
-    log.info("GGE exiting normally");
+    gge::log.info("Thanks for using\n" + std::string(GGE_ASCII));
+    gge::log.info("GGE exiting normally");
 	return 0;
 }
 
 void quit(int sig)
 {
+    gge::log.notice("Signal %i received", sig);
 	c->quit();
 }

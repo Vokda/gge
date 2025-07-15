@@ -60,10 +60,11 @@ vector<int> Componenter::get_components_indices()
 		cout << "rebuilding components indices list" << endl;
 #endif
 		vector<int> ret(_components.size());
-		int i = 0;
-		for(auto c: _components)
+		//int i = 0;
+		//for(auto c: _components)
+        for(size_t i = 0; i < _components.size(); ++i)
 		{
-			ret[i] = i++;
+			ret[i] = i;
 		}
 		_list_changed = false;
 		_cached_indices = ret;

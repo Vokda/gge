@@ -14,7 +14,7 @@ namespace gge
 
 enum device {KEYBOARD, MOUSE};
 
-struct event
+/*struct event TODO not in use? causes warings
 {
 	event()
 	{
@@ -24,18 +24,18 @@ struct event
 	event(SDL_Event& e)
 	{
 		type = e.type;
-		if(SDL_MOUSEBUTTONDOWN or SDL_MOUSEBUTTONUP)
+		if(type == SDL_MOUSEBUTTONDOWN or type == SDL_MOUSEBUTTONUP) // ???
 		{
 			symbol = (unsigned int) e.button.button;
 		}
-		else if(SDL_KEYDOWN or SDL_KEYUP)
+		else if((bool)SDL_KEYDOWN or (bool)SDL_KEYUP)
 		{
 			symbol = (unsigned int)e.key.keysym.sym;
 		}
 	}
 	unsigned int type;
 	unsigned int symbol;
-};
+};*/
 
 class Events: public GGE_module
 {
@@ -51,7 +51,7 @@ class Events: public GGE_module
 		int pop_event(); // returns most recent event
 
 		// this is for external script
-		static SDL_KeyCode get_key_codes();
+		//static SDL_KeyCode get_key_codes();
 
 		vector<int> get_mouse_position();
 
@@ -59,7 +59,7 @@ class Events: public GGE_module
 		SDL_Event _event; 
 		queue<int> _events; // so that the queue doesn't need to be recreated each time
 		SDL_helper _sdl_helper;
-        shared_ptr<gge::GUI> _gui;
         Logger::Log& _log;
+        shared_ptr<gge::GUI> _gui;
 };
 

@@ -3,6 +3,8 @@
 
 #include "gge_module.hpp"
 #include <vector>
+union SDL_Event;
+struct SDL_Window;
 class SDL_Renderer;
 class GGE_API;
 
@@ -19,6 +21,8 @@ namespace gge
     {
         public:
             GUI(SDL_Window* window, SDL_Renderer* renderer, GGE_API& ga);
+            GUI() = delete;
+            GUI(const GUI&) = delete;
             ~GUI();
 
             void draw();

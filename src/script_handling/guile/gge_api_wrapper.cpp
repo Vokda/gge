@@ -5,13 +5,14 @@
 #include <iostream>
 #include <sstream>
 #include <variant>
+#include <tuple>
 #include <algorithm>
 using namespace std;
 #include "../gge_api.hpp"
 
 extern "C"
 {
-	//GGE_API* _gge_api;
+	static GGE_API* _gge_api;
 
 	void init_gge_api_wrapper(GGE_API* ga)
 	{
@@ -25,7 +26,7 @@ extern "C"
 
 	void gge_init_module(SCM module...)
 	{
-		va_list(args);
+		va_list args ;
 		va_start(args, module);
 		rgm m = static_cast<rgm>(scm_to_int(module));
 		switch(m)
@@ -66,42 +67,18 @@ extern "C"
 
 	}
 
-	void add_command(SCM module...)
+	SCM add_command(SCM module, SCM command, SCM applied_to_module)
 	{
-		va_list args;
-		va_start(args, module);
-		SCM scm = va_arg(args, SCM);
-		if(scm == NULL)
-		{
-			va_end(args);
-			_gge_api->add_command(
-					(rgm)scm_to_int(module),
-					-1,
-					(rgm)-1
-					);
-		}
-		else // assume there might be an arg
-		{
-			int cmd = scm_to_int(scm); 
-			scm = va_arg(args, SCM);
-			if(scm == NULL)
-			{
-				_gge_api->add_command(
-						(rgm)scm_to_int(module),
-						cmd,
-						(rgm)-1
-						);
-			}
-			else
-			{
-				_gge_api->add_command(
-						(rgm)scm_to_int(module),
-						cmd,
-						(rgm)scm_to_int(scm)
-						);
-			}
-			va_end(args);
-		}
+        int module_id = scm_to_int(module);
+        int cmd = scm_to_int(command);
+        int module_id_applied = scm_to_int(applied_to_module);
+
+        _gge_api->add_command(
+                (rgm)module_id,
+                cmd,
+                (rgm)module_id_applied
+                );
+        return SCM_UNSPECIFIED;
 	}
 
 	void quit()
@@ -229,20 +206,30 @@ extern "C"
 } // extern C END
 
 template<typename... T>
-std::tuple<T...> unpack_to_tuple(const vector<variant<T...>>& variant_parameters)
+std::tuple<T...> unpack_to_tuple(const vector<std::variant<T...>>& variant_parameters)
 {
     std::tuple<T...> result;
 
-    auto it = std::begin(variant_parameters);
+    //auto it = std::begin(variant_parameters);
+    _log.debug("variant parameters size %i", variant_parameters.size());
+    for(const auto& vp: variant_parameters)
+    {
+        //_log.debug(std::visit(vp));
+        std::visit([result](auto&& v){
+                _log.debug("value %i", v);
+                std::tuple_cat(result, std::make_tuple(v));
+                }, vp);
+    }
 
-    std::apply([&](auto&... args) {
+
+    /*std::apply([&](auto&... args) {
                 ( (args = std::get< std::decay_t< decltype(args) > >(*it++)), ...);
             }, 
-            result);
+            result);*/
     return result;
 }
 
-SCM initialize_gge_module(SCM scm_args...)
+SCM initialize_gge_module(SCM scm_module, SCM scm_args...)
 {
     // unpack arguments
     va_list args;
@@ -250,11 +237,18 @@ SCM initialize_gge_module(SCM scm_args...)
 
     // first parameter should be module nr TODO rgm
     int module = -1;
-    module = scm_to_int(va_arg(args, SCM)); 
+    _log.info(__FUNCTION__);
+    if(scm_module == SCM_UNDEFINED)
+        throw runtime_error("undefined");
+    if(scm_is_integer(scm_module))
+        module = scm_to_int(scm_module); 
+    else
+        _log.fatal("gge module requested to initizlize not an integer");
+
     if(module == -1)
         throw runtime_error("module not set!");
     else
-        _log_stream << "requesting initialization of module " << module;
+        _log.info("Requesting initialization of module %i ", module);
 
     //get rest of parameters
     using scm_union = std::variant<int, double, std::string>;
@@ -276,6 +270,11 @@ SCM initialize_gge_module(SCM scm_args...)
             const string str(c);
             parameters.push_back(str);
         }
+        else
+        {
+            //throw runtime_error("Type not supported");
+            break; // probably null?
+        }
     }
     va_end(args);
 
@@ -295,12 +294,13 @@ SCM initialize_gge_module(SCM scm_args...)
     return scm_from_int(module_id);
 }
 
-void move_agent(SCM agent, SCM tile)
+SCM move_agent(SCM agent, SCM tile)
 {
-	_gge_api->move_agent(
-			scm_to_int(agent),
-			scm_to_int(tile)
-			);
+	return scm_from_bool(
+            _gge_api->move_agent(
+                scm_to_int(agent),
+                scm_to_int(tile)
+                ));
 }
 
 void remove_agent(SCM agent)

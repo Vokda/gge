@@ -29,20 +29,4 @@ class Agenter: public Componenter, public GGE_module
 
 	private:
 		shared_ptr<Agent> get_agent(int);
-		class Move_agent
-		{
-			public:
-				Move_agent(shared_ptr<Agent> a, shared_ptr<Tile> tile)
-				{
-					_tile = tile;
-					_agent = a;
-				}
-
-				Move_agent() = default;
-				bool operator()();
-			private:
-				shared_ptr<Tile> _tile;
-				shared_ptr<Agent> _agent;
-
-		};
 };

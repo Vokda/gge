@@ -1,8 +1,7 @@
 #include "moduler.hpp"
-#include "gge_modules/gge_module.hpp"
 using namespace std;
 Moduler::Moduler():
-    _logger_info(Logger::get_instance().add_category("Moduler", log4cpp::Priority::INFO))
+    _log(Logger::make_category("Moduler"))
 {
 }
 
@@ -15,7 +14,7 @@ int Moduler::list_modules() const
 		ss << "+ " << it->second->get_module_name(it->first) << endl;
 	}
 	ss << endl;
-    _logger_info.info(ss.str());
+    _log.info(ss.str());
 	return _modules.size();
 }
 

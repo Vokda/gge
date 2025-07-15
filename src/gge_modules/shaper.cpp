@@ -33,6 +33,7 @@ size_t Shaper::create_rectangle(const SDL_Rect& rectangle, int ms)
 
     _log_stream << "Creating rectangle" ;
     _log_stream << "size " << shape.size << " @ " << shape.position ;
+    _log_stream << "ms " << ms;
 
 	_components.push_back(make_shared<Shape>(shape));
 	return _components.size() -1;

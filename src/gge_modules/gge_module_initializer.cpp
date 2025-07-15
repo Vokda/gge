@@ -73,5 +73,13 @@ shared_ptr<GGE_module> GGE_module_initializer::gui(shared_ptr<Graphics> g, share
     events->set_gui(gui);
 	return gui;
 }
+
+template<>
+shared_ptr<GGE_module> GGE_module_initializer::init_gge_module<Agenter>()
+{
+    _log.info("Creating agenter");
+    return make_shared<Agenter>();
+};
+
 // gge_begin import ctor_def
 // gge_end import ctor_def

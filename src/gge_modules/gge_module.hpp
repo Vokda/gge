@@ -47,7 +47,9 @@ class GGE_module
 				default:
                     {
                         string s = "Unnamed GGE Module [" + to_string(m) + "]";
-                        Logger::get_instance().log("", log4cpp::Priority::WARN, s);
+                        auto& log = Logger::make_category("NONE");
+                        log.warn(s);
+                        //Logger::get_instance().log("NONE", , s);
                         return "<" + s + ">";
                     }
 			}

@@ -16,11 +16,11 @@ using namespace std;
 }*/
 
 Hex_grid::Hex_grid(size_t width, size_t height, double size, GGE::Hex_orientation ho, GGE::Coordinate_system cs, int x_offset, int y_offset):
-	_layout(GGE::Orientation(ho, size), cs), 
 	Grid(),
-	_utils(_layout),
+	_layout(GGE::Orientation(ho, size), cs), 
 	_x_offset(x_offset),
-	_y_offset(y_offset)
+	_y_offset(y_offset),
+	_utils(_layout)
 {
 	// in case of square grid
 	bool success = true;

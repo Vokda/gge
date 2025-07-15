@@ -12,7 +12,7 @@ using namespace std;
 using namespace log4cpp;
 
 #include "gge_modules/registered_gge_modules.hpp"
-#include "sdl_helper.hpp"
+//#include "sdl_helper.hpp"
 
 namespace log4cpp
 {
@@ -77,7 +77,7 @@ class Logger
 
 	private:
 		Logger(); 
-        ~Logger() {};
+        ~Logger() {}; // necessary private?
 
 		unique_ptr<Appender> _appender;
 		stringstream _buffer;

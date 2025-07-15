@@ -7,6 +7,7 @@ class GGE_module;
 class Core;
 #include "gge_modules/registered_gge_modules.hpp"
 using namespace std;
+#include "logger.hpp"
 /*
  * keeps order of which commands to run in what order
  */
@@ -26,4 +27,5 @@ class Runner
 		Core& _core;
 		Moduler& _moduler;
 		std::vector<std::shared_ptr<Command>> _commands;
+        Logger::Log& _log;
 };

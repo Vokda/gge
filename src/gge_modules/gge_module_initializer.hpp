@@ -31,13 +31,36 @@ class GGE_module_initializer
 	public:
 		GGE_module_initializer();;
 
+		template<typename... Args>
+			shared_ptr<GGE_module> initialize(rgm module, Args&&... args)
+            {
+                shared_ptr<GGE_module> gge_ptr;
+                switch(module)
+                {
+                    /*case(GRAPHICS):
+                        gge_ptr = init_gge_module<Graphics>(args...);
+                        break;*/
+                    /*case(GUI):
+                        gge_ptr = init_gge_module<gge::GUI>(args...);
+                        break;*/
+                    case(AGENTER):
+                        gge_ptr = init_gge_module<Agenter>(args...);
+                        break;
+                    default:
+                        throw invalid_argument("module " + GGE_module::get_module_name(module) + " not implemented");
+                }
+                return gge_ptr;
+            };
+    private:
 		template<typename T, typename... Args>
-			shared_ptr<GGE_module> initialize(Args&&... args)
+			shared_ptr<GGE_module> init_gge_module(Args&&... args)
             {
                 _log.info("Creating");
                 _log.info(typeid(T).name());
                 return make_shared<T>(args...);
             };
+
+    public:
 
 		// ye olde C way
 		// int rather than rgm to supress warnings regarding varargs

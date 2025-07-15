@@ -11,7 +11,7 @@ Hex_utils::Hex_utils(const GGE::Layout& o):
 
 SDL_Point cube_to_evenq(const Cube_coordinate& cube)
 {
-    return {cube.q, (cube.s + (cube.q + cube.q&1)) / 2};
+    return {cube.q, (cube.s + (cube.q + (cube.q&1))) / 2};
 }
 
 axial_coord Hex_utils::xy_to_axial(int x, int y) const

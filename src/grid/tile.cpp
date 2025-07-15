@@ -5,7 +5,11 @@
 #include "../gge_modules/spriter.hpp"
 #include <cmath>
 
-Tile::Tile(SDL_Point center_point, int size, SDL_Color c)
+Tile::Tile(SDL_Point center_point, int size, SDL_Color c):
+    _logger(Logger::get_instance()),
+    _log(_logger.add_category("Tile", log4cpp::Priority::DEBUG)),
+    _log_stream(_logger.make_category_stream(log4cpp::Priority::DEBUG, "Tile"))
+
 {
 	_position = center_point;
 	_color = c;
@@ -20,9 +24,7 @@ void Tile::place_agent(shared_ptr<Agent> agent)
 	_tile_agents.push_back(agent);
 	agent->tile = shared_from_this();
 	replace_agents();
-#ifdef DEBUG
-	//cout << "Agent " << agent->index << " placed on hex at " << _position << endl;
-#endif
+    _log.debug("Agent %i placed @ [%i, %i]", agent->index, _position.x, _position.y);
 }
 
 shared_ptr<Agent> Tile::remove_agent(shared_ptr<Agent> agent, bool completely)

@@ -7,6 +7,7 @@
 #include <sstream>
 #include <memory>
 #include <list>
+#include "../logger.hpp"
 using namespace std;
 
 class Agent;
@@ -52,6 +53,10 @@ class Tile: public enable_shared_from_this<Tile>
 		map<string, void*> _tile_data;
 		list<shared_ptr<Agent>> _tile_agents; // agents on the tile
 
+        Logger& _logger;
+        Logger::Log& _log;
+        Logger::Log_stream _log_stream;
+        
 	private:
 		void replace_agents();
 

@@ -14,7 +14,7 @@
 using namespace std;
 
 Scripter::Scripter(Filer& f, GGE_API& ga, const Configuration& config):
-	_filer(f)
+	_filer(f), _log(Logger::make_category("Scripter"))
 {
 	string file_name;
 	switch(config.script)
@@ -29,8 +29,16 @@ Scripter::Scripter(Filer& f, GGE_API& ga, const Configuration& config):
 	}
 	ga.set_script_engine(_script_engine);
 
-	cout << "Game directory: " << _filer.get_game_root_dir() << endl;
-	_script_engine->read_file(file_name);
+    try
+    {
+        _log.info("Game directory: %s", _filer.get_game_root_dir().c_str());
+        _script_engine->read_file(file_name);
+    }
+    catch (std::exception& e)
+    {
+        _log.fatal("Guile error: %s", e.what());
+        throw runtime_error("Unable to continue Guile execution!");
+    }
 }
 
 bool Scripter::is_script_engine_running()

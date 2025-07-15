@@ -52,20 +52,20 @@ int Events::pop_event()
 	}
 }
 
-SDL_KeyCode Events::get_key_codes()
+/*SDL_KeyCode Events::get_key_codes()
 {
-	SDL_KeyCode kc;
+	SDL_KeyCode kc; 
 	return kc;
-}
+}*/
 
 vector<int> Events::get_mouse_position()
 {
 	int x, y;
-	Uint32 buttons;
+	//Uint32 buttons;
 
 	SDL_PumpEvents();  // make sure we have the latest mouse state.
 
-	buttons = SDL_GetMouseState(&x, &y);
+	/*buttons =*/ SDL_GetMouseState(&x, &y);
 
 /*#ifdef DEBUG
 	SDL_Log("Mouse cursor is at %d, %d", x, y);

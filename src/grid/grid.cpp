@@ -21,7 +21,7 @@ shared_ptr<Tile> Grid::get_tile(size_t i)
 
 bool Grid::is_legal_tile(size_t i )
 {
-	return i >= 0 and i < _grid.size();
+	return i < _grid.size();
 }
 
 int Grid::get_tile_index(shared_ptr<Tile> t)

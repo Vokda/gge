@@ -42,7 +42,7 @@ class GGE_API
         template<typename... Args>
             int initialize_gge_module(rgm module, Args&&... args)
             {
-                auto ptr = initialize_module<module>(args...);
+                auto ptr = initialize_module(module, args...);
                 return add_module(module, ptr);
             }
         template<typename... Args>
@@ -51,10 +51,9 @@ class GGE_API
                 rgm m = rgm(module);
                 return initialize_gge_module(m, args...);
             }
-        template<typename T, typename... Args>
-            shared_ptr<GGE_module> initialize_module(Args&&... args){
-                _log.debug(typeid(T).name());
-                return _gge_init.initialize<T>(args...);
+        template<typename... Args>
+            shared_ptr<GGE_module> initialize_module(rgm module, Args&&... args){
+                return _gge_init.initialize(module, args...);
             };
 
 		// events
@@ -109,7 +108,7 @@ class GGE_API
 
 		// agent related
 		size_t create_agent(size_t texture, size_t tile);
-		void move_agent(size_t agent, size_t to_tile);
+		bool move_agent(size_t agent, size_t to_tile);
 		void remove_agent(size_t agent);
 		vector<int> get_agents(int tile);
 		void change_agent_sprite(int agent, int new_texture);

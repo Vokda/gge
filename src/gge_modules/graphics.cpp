@@ -22,7 +22,7 @@ Graphics::Graphics(
 {
 	_screen_width = x;
 	_screen_height = y;
-	auto pixel_format = SDL_PIXELFORMAT_RGBA8888;
+	//auto pixel_format = SDL_PIXELFORMAT_RGBA8888;
 
 	_sdl_helper.check_null("SDL initialization", SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS));
 	//_sdl_helper.check_null("SDL Image initialization", IMG_INIT(IMG_INIT_PNG));

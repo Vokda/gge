@@ -12,6 +12,7 @@ class Script_engine;
 class GGE_API;
 class Filer;
 class Configuration;
+#include "../logger.hpp"
 
 class Scripter
 {
@@ -25,6 +26,7 @@ class Scripter
 
 		shared_ptr<Script_engine> _script_engine; 
 		Filer& _filer;
+        Logger::Log& _log;
 };
 
 #endif

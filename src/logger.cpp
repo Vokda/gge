@@ -19,7 +19,7 @@ Logger::Logger():
     _appender->setLayout(_pattern_layout.get());
     //_appender->setLayout(new BasicLayout());
 
-    _root.setPriority(log4cpp::Priority::INFO);
+    _root.setPriority(log4cpp::Priority::DEBUG);
     _root.addAppender(*_appender);
     _logger_info = &add_category("Logger", log4cpp::Priority::INFO);
 
@@ -49,7 +49,8 @@ log4cpp::Category& Logger::add_category(const string& s, const log4cpp::Priority
     {
         log4cpp::Category& instance = Category::getInstance(s);
         //instance.addAppender(*_appender);
-        instance.setPriority(p);
+        if(false)
+            instance.setPriority(p); //all categories if not set?
         return instance;
     }
 }
@@ -107,7 +108,7 @@ void Logger::log(const string& s, log4cpp::Priority::Value p, const std::string&
 
 void Logger::log_buffer(const string& category, log4cpp::Priority::Value p)
 {
-    Log& log = get_category("category");
+    Log& log = get_category(category);
     log.log(p, _buffer.str());
     _buffer.flush();
 }

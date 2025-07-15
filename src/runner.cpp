@@ -1,6 +1,5 @@
 #include "runner.hpp"
 #include "gge_modules/gge_module.hpp"
-#include <iostream>
 // gge_begin import headers
 #include "commands/command.hpp"
 #include "commands/game_loop_command.hpp"
@@ -15,16 +14,16 @@
 using namespace std;
 
 Runner::Runner(Moduler& m, Core& c):
-	_moduler(m), _core(c)
-{}
+	_core(c), _moduler(m), _log(Logger::make_category("Runner"))
+{
+    _log.info("OK");
+}
 
 void Runner::exec_commands()
 {
 	for(auto cmd: _commands)
 	{
-/*#ifdef DEBUG
-		cout << "Running command " << cmd->get_module()->get_type_string() << endl;
-#endif*/
+        // _log.debug("Running command %s", cmd->get_module()->get_type_string() );
 		cmd->execute();
 	}
 }
@@ -33,6 +32,11 @@ void Runner::add_command(rgm module, int command, rgm arg)
 {
 	shared_ptr<GGE_module> gge_module = get_module(module);
 	shared_ptr<GGE_module> parameter = get_module(arg);
+    _log.debug("adding command: executor %s, command %i, arg %s",
+            GGE_module::get_module_name(module).c_str(),
+            command,
+            GGE_module::get_module_name(arg).c_str()
+            );
 	
 	switch(module)
 	{
@@ -77,7 +81,7 @@ void Runner::add_command(rgm module, int command, rgm arg)
 			}
 			break;
 	}
-
+    _log.debug("finished adding command");
 }
 
 shared_ptr<GGE_module> Runner::get_module(rgm module)
@@ -93,17 +97,16 @@ shared_ptr<GGE_module> Runner::get_module(rgm module)
 
 int Runner::list_commands()
 {
-	cout << "Commands (GGE module member functions) executed in the following order:"<<endl;
+    _log.info("Commands (GGE module member functions) executed in the following order:");
 	int i = 0;
 	for(auto cmd: _commands)
 	{
-		cout << i++ << ": " << cmd->get_command_string() << endl;
+        _log.info("%i: %s", i++, cmd->get_command_string().c_str());
 	}
 	if(_commands.size() == 0)
 	{
-		cerr << __FILE__ << ": No commands issued! Quitting early!" << endl;
+        _log.notice("No commands issued! Quitting early!");
 	}
-	cout << endl;
 	return _commands.size();
 }
 
