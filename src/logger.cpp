@@ -12,11 +12,11 @@ Logger::Logger():
 	_log_amount = DEBUG;
 
     // TODO only append to ostream atm
-	_appender = make_unique<OstreamAppender>("console", &std::cout);
+	_appender = new OstreamAppender("console", &std::cout);
 
-    _pattern_layout = make_shared<PatternLayout>();
+    _pattern_layout = new PatternLayout();
     _pattern_layout->setConversionPattern("%d{%Y-%m-%dT%H:%M:%S} - %c %p: %m\n");
-    _appender->setLayout(_pattern_layout.get());
+    _appender->setLayout(_pattern_layout);
     //_appender->setLayout(new BasicLayout());
 
     _root.setPriority(log4cpp::Priority::DEBUG);

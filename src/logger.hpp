@@ -1,9 +1,6 @@
 #pragma once
 
 #define LOG4CPP_FIX_ERROR_COLLISION 1
-#include <memory>
-/*#include <map>
-#include <stack>*/
 #include <sstream>
 using namespace std;
 
@@ -77,12 +74,13 @@ class Logger
 
 	private:
 		Logger(); 
-        ~Logger() {}; // necessary private?
+        ~Logger() = default; // necessary private?
 
-		unique_ptr<Appender> _appender;
+		Appender* _appender;
+		//unique_ptr<Appender> _appender;
 		stringstream _buffer;
 		Log_amount _log_amount;
 		log4cpp::Category& _root;
         Log* _logger_info;
-        shared_ptr<PatternLayout> _pattern_layout;
+        PatternLayout* _pattern_layout;
 };
