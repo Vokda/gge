@@ -3,7 +3,6 @@
 #include "gge_module.hpp"
 #include <memory>
 #include <SDL2/SDL.h>
-#include "../sdl_helper.hpp"
 #include <vector>
 using namespace std;
 
@@ -72,8 +71,6 @@ class Graphics: public GGE_module
 		SDL_Rect _bar_view; // top info bar view
 		SDL_Rect _side_bar_view; // side info bar view
 		viewport _current_viewport = MAIN;
-
-		SDL_helper _sdl_helper;
 
 		// textures
 		vector<SDL_Texture*> _textures;

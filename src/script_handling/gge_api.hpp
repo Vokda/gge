@@ -1,7 +1,5 @@
 #ifndef GGE_API_HPP
 #define GGE_API_HPP
-#include "../sdl_helper.hpp"
-
 #include "../gge_modules/gge_module_initializer.hpp"
 #include <string>
 #include <SDL2/SDL.h>
@@ -125,7 +123,6 @@ class GGE_API
 	private:
 		Core& _core;
 		shared_ptr<Script_engine> _script_engine = nullptr;
-		SDL_helper _sdl_helper;
 		GGE_module_initializer _gge_init;
 
 		/*
