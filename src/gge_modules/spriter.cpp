@@ -29,7 +29,7 @@ size_t Spriter::create_sprite(int t, const SDL_Point& p, int ms)
 	rect.x = p.x;
 	rect.y = p.y;
 	int err = SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
-	_sdl_helper.check_null("SDL_QueryTexture", err);
+	check_null("SDL_QueryTexture", err);
 
 	sprite.size = rect;
 	sprite.set_position(p);

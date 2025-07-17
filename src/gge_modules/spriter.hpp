@@ -3,7 +3,6 @@
 #include <SDL2/SDL.h>
 #include "componenter.hpp"
 #include "gge_module.hpp"
-#include "../sdl_helper.hpp"
 using namespace std;
 
 class Graphics;
@@ -45,6 +44,5 @@ class Spriter: public Componenter, public GGE_module
 		shared_ptr<Sprite> get_sprite(size_t i) { return static_pointer_cast<Sprite>(get_component(i)); }
 	private:
 		shared_ptr<Graphics> _graphics;
-		SDL_helper _sdl_helper;
 };
 

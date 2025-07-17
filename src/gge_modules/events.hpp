@@ -4,7 +4,6 @@
 #include <queue>
 #include <SDL2/SDL.h>
 #include "gge_module.hpp"
-#include "../sdl_helper.hpp"
 #include <memory>
 using namespace std;
 namespace gge
@@ -58,7 +57,6 @@ class Events: public GGE_module
 	private:
 		SDL_Event _event; 
 		queue<int> _events; // so that the queue doesn't need to be recreated each time
-		SDL_helper _sdl_helper;
         Logger::Log& _log;
         shared_ptr<gge::GUI> _gui;
 };

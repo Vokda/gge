@@ -2,7 +2,6 @@
 #include <memory>
 #include <vector>
 #include <iostream>
-#include "../sdl_helper.hpp"
 
 #include "script_engine.hpp"
 

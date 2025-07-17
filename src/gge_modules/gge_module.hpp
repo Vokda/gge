@@ -3,6 +3,7 @@
 #include "registered_gge_modules.hpp"
 #include <memory>
 #include "../logger.hpp"
+#include <sstream>
 using namespace std;
 /*
  * just a small class to have base pointers of modules
@@ -59,8 +60,15 @@ class GGE_module
 		const string get_type_string();
 
 	protected:
+		void check_null(const std::string& check_name, const void* SDL_struct);
+		void check_null(const std::string& check_name, const int SDL_result);
+		void make_and_throw_exception(
+				const std::string& check_name, 
+				const std::string& error);
+
 		rgm _module;
         Logger& _logger;
         Logger::Log& _log;
         Logger::Log_stream _debug_stream;
+        stringstream _ss;
 };

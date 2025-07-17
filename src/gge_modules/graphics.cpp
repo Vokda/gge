@@ -24,7 +24,7 @@ Graphics::Graphics(
 	_screen_height = y;
 	//auto pixel_format = SDL_PIXELFORMAT_RGBA8888;
 
-	_sdl_helper.check_null("SDL initialization", SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS));
+	check_null("SDL initialization", SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS));
 	//_sdl_helper.check_null("SDL Image initialization", IMG_INIT(IMG_INIT_PNG));
 
 	// create window
@@ -35,7 +35,7 @@ Graphics::Graphics(
 			_screen_width,
 			_screen_height,
 			SDL_WINDOW_SHOWN); 
-	_sdl_helper.check_null("SDL window", _window);
+	check_null("SDL window", _window);
 /* TODO remove viewports temporarily
 	// create viewports
 	// _bar_view (on top to begin with)
@@ -50,7 +50,7 @@ Graphics::Graphics(
 
 	// create renderer
 	_sdl_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
-	_sdl_helper.check_null("SDL renderer", _sdl_renderer);
+	check_null("SDL renderer", _sdl_renderer);
 
 	//Initialize renderer color
 	SDL_SetRenderDrawColor( _sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -160,7 +160,7 @@ size_t Graphics::load_image(const std::string& path)
 {
 	SDL_Texture* texture = IMG_LoadTexture(_sdl_renderer, path.c_str());
 	_textures.push_back(texture);
-	_sdl_helper.check_null("Creating texture: " + path, texture);
+	check_null("Creating texture: " + path, texture);
 	return _textures.size() - 1;
 }
 

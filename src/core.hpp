@@ -1,7 +1,6 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include "sdl_helper.hpp"
 #include <string>
 class GGE_module;
 #include "moduler.hpp"
@@ -42,7 +41,6 @@ class Core
 		Moduler _moduler;
 		Runner _runner;
 		Filer& _filer;
-		SDL_helper _sdl_helper;
         Logger& _logger;
         log4cpp::Category& _log;
         Logger::Log_stream _log_stream;

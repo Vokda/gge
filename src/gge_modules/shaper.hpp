@@ -1,6 +1,5 @@
 #pragma once
 #include "gge_module.hpp"
-#include "../sdl_helper.hpp"
 class Graphics;
 using namespace std;
 #include "componenter.hpp"
@@ -26,8 +25,6 @@ class Shaper: public Componenter, public GGE_module
 
     private:
         //shared_ptr<Graphics> _graphics;
-        SDL_helper _sdl_helper;
         log4cpp::Category& _log;
         Logger::Log_stream _log_stream;
-        //Logger _logger;
 };

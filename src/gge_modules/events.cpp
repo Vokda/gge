@@ -7,7 +7,7 @@ Events::Events(shared_ptr<gge::GUI> gui):
     _log(Logger::get_instance().add_category("Events")),
     _gui(gui)
 {
-    _sdl_helper.check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
+    check_null("SDL Event", SDL_Init(SDL_INIT_EVENTS));
 }
 
 void Events::poll_events()

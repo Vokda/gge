@@ -5,7 +5,6 @@
 #include <SDL2/SDL_ttf.h>
 #include "componenter.hpp"
 #include "gge_module.hpp"
-#include "../sdl_helper.hpp"
 class Graphics;
 using namespace std;
 
@@ -49,6 +48,5 @@ class Texter: public Componenter, public GGE_module
 		string _font_name = "../fonts/courier_new.ttf";
 		int _font_size = 24;
 		TTF_Font* _font;
-		SDL_helper _sdl_helper;
 };
 #endif

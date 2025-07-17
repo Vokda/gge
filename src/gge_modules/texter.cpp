@@ -12,11 +12,11 @@ Texter::Texter(shared_ptr<Graphics> graphics):
 	GGE_module(TEXTER)
 {
 	_renderer = graphics->get_renderer();
-	_sdl_helper.check_null("SDL_TTF initalization", TTF_Init());
+	check_null("SDL_TTF initalization", TTF_Init());
 	_font = TTF_OpenFont(_font_name.c_str(), _font_size);
 	string s = "Loading font ";
 	s += _font_name;
-	_sdl_helper.check_null(s, _font);
+	check_null(s, _font);
 	_start_time = _timer.get_time_point();
 
 	_re = regex("%i"); // hard coded for now
@@ -93,7 +93,7 @@ SDL_Texture* Texter::text_to_texture(const string& s, const SDL_Color& c)
 			s.c_str(), 
 			c
 			);
-	_sdl_helper.check_null("Texter: TTF_RenderTextSolid", text_surface);
+	check_null("Texter: TTF_RenderTextSolid", text_surface);
 	SDL_Texture* t = SDL_CreateTextureFromSurface(_renderer, text_surface);
 	SDL_FreeSurface(text_surface);
 	return t;
