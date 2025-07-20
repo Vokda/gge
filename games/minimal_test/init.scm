@@ -27,8 +27,8 @@
 ; initialize modules wanted
 ; each init method returns an unsigned integer corresponding to the modules enum
 (display "Initialize modules \n")
-;(define graphics
-;  (gge:init_graphics "GGE Test" 800 600))
+(define graphics
+  (gge:init_graphics "GGE Test" 800 600))
 
 ;(define scroller_id 4) ; TODO special case until I fix the enum situation
 ;(define scroller
