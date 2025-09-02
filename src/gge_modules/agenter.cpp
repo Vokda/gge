@@ -6,7 +6,6 @@
 Agenter::Agenter():
 	GGE_module(AGENTER) 
 {
-	cout << "size of list " << _components.size() << endl;
 }
 
 size_t Agenter::create_agent(
@@ -31,16 +30,11 @@ size_t Agenter::create_agent(
 	agent.creation = sprite->creation;
 	agent.index = _components.size();
 
-
-#ifdef DEBUG
-	cout << "Creating agent";
-	cout << " with sprite " << sprite;
-	cout << " on tile " << tile;
-	cout << " @ " << sprite->position;
-	cout << endl;
-#endif 
-	cout << _components.size() << endl;
+    _debug_stream << "Creating agent with sprite " << sprite << " on tile " << tile << " @ " << sprite->position;
+    _debug_stream.flush();
 	_components.push_back(make_shared<Agent>(agent));
+	_debug_stream << "number of agents: " << _components.size();
+    _debug_stream.flush();
 	agent.tile->place_agent(static_pointer_cast<Agent>(_components.back()));
 	return _components.size() -1;
 }

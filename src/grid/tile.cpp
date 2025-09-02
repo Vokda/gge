@@ -38,6 +38,7 @@ shared_ptr<Agent> Tile::remove_agent(shared_ptr<Agent> agent, bool completely)
 
 bool Tile::move_agent(shared_ptr<Agent> agent, shared_ptr<Tile> destination)
 {
+    _log_stream << "moving agent " << agent->index << " @ " << destination->get_position();
 	destination->place_agent(agent);
 	return remove_agent(agent, false) != nullptr;
 }

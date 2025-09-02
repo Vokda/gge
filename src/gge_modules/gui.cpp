@@ -116,7 +116,7 @@ void GUI::draw()
 
 bool GUI::process_event(SDL_Event& event)
 { 
-    _log.debug("event processed");
+    //_log.debug("event processed");
     ImGui_ImplSDL2_ProcessEvent(&event);
     return (want_capture_mouse() or want_capture_keyboard());
 }
