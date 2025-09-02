@@ -9,6 +9,7 @@ GGE_module::GGE_module(rgm m):
     _debug_stream(_logger.get_category_stream(get_module_name(m), log4cpp::Priority::DEBUG))
 {
 	_module = m;
+    _log.info(get_module_name(m) + " created");
 }
 
 GGE_module::GGE_module():

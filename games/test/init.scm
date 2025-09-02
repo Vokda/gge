@@ -5,7 +5,7 @@
 ;(use-modules (gge_api))
 
 ;; debug stuff
-(debug-enable 'backtrace)
+;(debug-enable 'backtrace)
 ;(debug-enable 'stack)
 ;(debug-enable 'trace)
 
