@@ -19,7 +19,7 @@ Tile::Tile(SDL_Point center_point, int size, SDL_Color c):
 void Tile::place_agent(shared_ptr<Agent> agent)
 {
 	if(agent == nullptr)
-		throw runtime_error("Cannot place null agent on " + coord_to_string());
+		throw runtime_error("Cannot place null agent on " + coordinate_to_string());
 
 	_tile_agents.push_back(agent);
 	agent->tile = shared_from_this();
@@ -66,15 +66,4 @@ void Tile::replace_agents()
 const vector<shared_ptr<Tile>>& Tile::get_neighbors() const
 {
 	return _neighbors;
-}
-
-std::ostream& operator<<(std::ostream& ost, const Tile& tile)
-{
-	//SDL_Point axial = hex.cube_to_axial(cc);
-	ost << "Hex " << &tile << endl;
-	ost << tile.coord_to_string() << endl;
-	//ost << "axial coords [" << axial.x << ", " << axial.y << "]" << endl;
-	ost << "position " << tile.get_position() << endl;
-
-	return ost;
 }

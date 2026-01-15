@@ -1,6 +1,5 @@
 #include "hex_grid.hpp"
 #include "hex.hpp"
-#include <iostream>
 #include "hex_utils.hpp"
 #include <stdexcept>
 #include "coords.hpp"
@@ -24,7 +23,6 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, GGE::Hex_orientatio
 {
 	// in case of square grid
 	bool success = true;
-	cout << "Grid -";
 
 	if(width <= 0 or height <= 0)
 		throw runtime_error("width and height of grid needs to be > 0!");
@@ -48,15 +46,12 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, GGE::Hex_orientatio
 				shared_ptr<Hex> hex = make_shared<Hex>(cc, center_point, size, _utils);
 				_grid.push_back(hex);
 				int i = _grid.size() - 1;
-#ifdef DEBUG
-				cout << "Made hex ["<< i << "] at " << *hex << endl;
-				map_cube_to_i(hex->get_cube_coords(), i);
-#endif
+				_log_stream << "Made hex ["<< i << "] at " << *hex;
 			}
 			catch(char const* e)
 			{
 				success = false;
-				cerr << "Could not create grid: " << e << endl;
+				_log.error("Could not create grid: %s", e);
 				break;
 			}
 		}
@@ -70,9 +65,6 @@ Hex_grid::Hex_grid(size_t width, size_t height, double size, GGE::Hex_orientatio
 				get_neighbors(
 					hex->get_cube_coords()));
 	}
-
-	if(success)
-		cout << "OK" << endl;
 }
 
 /*Hex Hex_grid::hex_add(const Hex& a, const Hex& b)
@@ -143,10 +135,8 @@ int Hex_grid::hash_cube_coord(int q, int r, int s)
 vector<shared_ptr<Tile>> Hex_grid::get_neighbors(cube_coord cc)
 {
 	vector<shared_ptr<Tile>> neighbors; // at most 6 neighbors
-#ifdef DEBUG
-	// TODO Oh god, why are there two functions with the same name in the parent??
-	cout << "number of neighbors of hex " << Grid::get_tile(get_hex_index(cc)) << ": ";
-#endif
+	stringstream ss;
+	//ss << "number of neighbors of hex " << Grid::get_tile(get_hex_index(cc)) << ": ";
 	for(auto& rel_n: _utils.get_relative_neighbors())
 	{
 		cube_coord neighbor = cc + rel_n;
@@ -156,19 +146,15 @@ vector<shared_ptr<Tile>> Hex_grid::get_neighbors(cube_coord cc)
 			neighbors.push_back(i);
 		}
 	}
-#ifdef DEBUG
-	cout << neighbors.size() << endl;
-#endif
+	ss << neighbors.size() << endl;
+	_log_stream << ss.str();
 	return neighbors;
 }
 
 vector<int> Hex_grid::get_neighbors_index(cube_coord cc)
 {
 	vector<int> neighbors; // at most 6 neighbors
-#ifdef DEBUG
-	// TODO Oh god, why are there two functions with the same name in the parent??
-	cout << "number of neighbors of hex " << Grid::get_tile(get_hex_index(cc)) << ": ";
-#endif
+	_log_stream << "Getting neighbors for hex at " << cc.q << "," << cc.r << "," << cc.s;
 	for(auto& rel_n: _utils.get_relative_neighbors())
 	{
 		cube_coord neighbor = cc + rel_n;
@@ -178,8 +164,6 @@ vector<int> Hex_grid::get_neighbors_index(cube_coord cc)
 			neighbors.push_back(i);
 		}
 	}
-#ifdef DEBUG
-	cout << neighbors.size() << endl;
-#endif
+	_log_stream << "Relative nr of neighbors: " << neighbors.size();
 	return neighbors;
 }

@@ -1,6 +1,7 @@
 #include "grider.hpp"
 #include "../grid/hex/orientation.hpp"
 #include "../grid/hex/hex_grid.hpp"
+#include "../grid/square/square_grid.hpp"
 
 Grider::Grider(grid_type gt, int width, int height, int tile_size, int x_offset, int y_offset):
 	GGE_module(GRIDER)
@@ -10,9 +11,9 @@ Grider::Grider(grid_type gt, int width, int height, int tile_size, int x_offset,
 
 void Grider::create_grid(grid_type gt, int width, int height, int tile_size, int x_offset, int y_offset)
 {
+    stringstream ss;
 	if(width < 1 or height < 1 or tile_size < 1)
 	{
-		stringstream ss;
 		ss << "Grid paramters wrong:" << endl;
 		ss << "width: " << width << endl;
 		ss << "height: " << height << endl;
@@ -23,10 +24,18 @@ void Grider::create_grid(grid_type gt, int width, int height, int tile_size, int
 	switch(gt)
 	{
 		case HEX:
+			_log.info("Creating hex grid of width %i and height %i...", width, height);
 			_grid = make_unique<Hex_grid>(width, height, tile_size, GGE::FLAT_TOP, GGE::RECT_ODD_Q, x_offset, y_offset); //TODO paramterize
+			_log.info("OK");
+			break;
+        case SQUARE:
+			_log.info("Creating square grid of width %i and height %i...", width, height);
+            _grid = make_unique<Square_grid>(width, height, tile_size, x_offset, y_offset);
+			_log.info("OK");
 			break;
 		default:
-			throw runtime_error("Grid type not recognized");
+            ss << "Grid type not recognized" << gt << endl;
+			throw runtime_error(ss.str());
 			break;
 	}
 	//return _grid.size() -1;//TODO enable to handle more than one grid

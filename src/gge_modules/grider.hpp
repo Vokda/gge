@@ -5,7 +5,7 @@
 #include <unordered_map>
 using namespace std;
 
-enum grid_type {HEX};
+enum grid_type {HEX, SQUARE};
 class Tile;
 
 class Grider: public GGE_module

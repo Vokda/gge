@@ -12,7 +12,7 @@ Hex::Hex(cube_coord cc, SDL_Point center_point, int size, Hex_utils& hu, SDL_Col
 	calculate_corners(_position, size);
 }
 
-void Hex::calculate_corners(SDL_Point& c, int size)
+void Hex::calculate_corners(const SDL_Point& c, int size)
 {
 	for(int i = 0; i < 6; i++)
 	{
@@ -20,7 +20,7 @@ void Hex::calculate_corners(SDL_Point& c, int size)
 	}
 }
 
-SDL_Point Hex::calculate_corner(SDL_Point& c, int size, int i)
+SDL_Point Hex::calculate_corner(const SDL_Point& c, int size, int i)
 {
 	SDL_Point p;
 	double angle_deg = 60 * i;
@@ -30,7 +30,7 @@ SDL_Point Hex::calculate_corner(SDL_Point& c, int size, int i)
 	return p;
 }
 
-string Hex::coord_to_string() const
+string Hex::coordinate_to_string() const
 {
 	stringstream ss;
 	ss << "hex cube coordinate " << _cube_coordinate << endl;

@@ -72,9 +72,9 @@ class Logger
 
         Log_stream get_category_stream(const string& category_name, const Priority::Value priority);
 
+        ~Logger() = default; 
 	private:
 		Logger(); 
-        ~Logger() = default; // necessary private?
 
 		Appender* _appender;
 		//unique_ptr<Appender> _appender;

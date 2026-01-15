@@ -77,3 +77,4 @@
 
 ; gui stuff
 (gge:create_button "say 'bleep'"  (lambda () (gge:create_text "bleep" 100 100 1000 0) ))
+(gge:create_button "Quit" (lambda () (gge:quit)))	
