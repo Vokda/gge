@@ -3,14 +3,14 @@
 #include <memory>
 using namespace std;
 #include "tile.hpp"
-
+#include "../logger.hpp"
 using grid_t = vector<shared_ptr<Tile>>;
 
 class Grid
 {
 	public:
-		Grid() = default;
-		virtual ~Grid() = default;
+		Grid();
+		virtual ~Grid() {};
 
 
 		shared_ptr<Tile> get_tile(size_t i);
@@ -31,4 +31,6 @@ class Grid
 
 		grid_t _grid;
 		int tile_size;
+        Logger::Log& _log;
+		Logger::Log_stream _log_stream;
 };

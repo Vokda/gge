@@ -8,15 +8,16 @@
 #include <memory>
 #include <list>
 #include "../logger.hpp"
+struct Tile_coordinate;
 using namespace std;
 
 class Agent;
 
-class Tile: public enable_shared_from_this<Tile>
+class Tile: public std::enable_shared_from_this<Tile>
 {
 	public:
 		Tile(SDL_Point center_point, int size, SDL_Color c);
-		virtual ~Tile() = default;
+		virtual ~Tile() {};
 
 		map<string,void*>::mapped_type& operator[](const string& name) { return _tile_data[name]; }
 
@@ -28,8 +29,9 @@ class Tile: public enable_shared_from_this<Tile>
 		const std::vector<SDL_Point>& get_corners() const { return _corners; }
 		std::vector<SDL_Point>& get_corners() { return _corners; }
 
-		// get coordinate string (mainly for <<-op)
-		virtual string coord_to_string() const = 0;
+		/*virtual const Tile_coordinate& get_grid_coordinate() const = 0;
+		virtual Tile_coordinate& get_grid_coordinate() = 0;*/
+		virtual string coordinate_to_string() const = 0;
 
 		void place_agent(shared_ptr<Agent>);
 		shared_ptr<Agent> remove_agent(shared_ptr<Agent>, bool completely);
@@ -41,10 +43,11 @@ class Tile: public enable_shared_from_this<Tile>
 				vector<shared_ptr<Tile>> n) { _neighbors = n; };
 
 	protected:
-		virtual void calculate_corners(SDL_Point& c, int s) = 0;
-		virtual SDL_Point calculate_corner(SDL_Point& center, int, int ) = 0;
+		virtual void calculate_corners(const SDL_Point& c, int s) = 0;
+		virtual SDL_Point calculate_corner(const SDL_Point& center, int, int ) = 0;
 
 		SDL_Point _position; // center point position x y
+		//const Tile_coordinate& _tile_coordinate;
 		std::vector<SDL_Point> _corners;
 		int _size;
 		vector<shared_ptr<Tile>> _neighbors;
@@ -62,4 +65,10 @@ class Tile: public enable_shared_from_this<Tile>
 
 };
 
-std::ostream& operator<<(std::ostream& ost, const Tile&);
+inline std::ostream& operator<<(std::ostream& ost, const Tile& tile)
+{
+	ost << "Tile:" << endl;
+	ost << "grid coordinate: " << tile.coordinate_to_string() << endl;
+	ost << "position: " << tile.get_position() << endl;
+	return ost;;
+}

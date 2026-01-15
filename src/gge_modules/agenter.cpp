@@ -59,7 +59,7 @@ bool Agenter::move_agent(size_t a, shared_ptr<Tile> to)
 
 void Agenter::navigate(size_t agent, shared_ptr<Tile> tile)
 {
-    _log.debug("agent %i & tile %i", agent, tile->coord_to_string().c_str());
+    _log.debug("agent %i & tile %i", agent, tile->coordinate_to_string().c_str());
 	throw runtime_error("not implemented");
 }
 

@@ -18,8 +18,8 @@ class Hex: public Tile
 				SDL_Color c = {255, 255, 255, 255}
 		   );
 
-		void calculate_corners(SDL_Point& c, int s);
-		SDL_Point calculate_corner(SDL_Point& center, int, int );
+		void calculate_corners(const SDL_Point& c, int s);
+		SDL_Point calculate_corner(const SDL_Point& center, int, int );
 
 		// TODO should only need one of these
 		const cube_coord& get_cube_coordinate() const { return _cube_coordinate; }
@@ -28,7 +28,7 @@ class Hex: public Tile
 		axial_coord get_axial_coords() const { return _utils.cube_to_axial(_cube_coordinate); };
 
 
-		string coord_to_string() const;
+		string coordinate_to_string() const;
 	private:
 		cube_coord _cube_coordinate; // cube coordinates
 		const Hex_utils& _utils;
