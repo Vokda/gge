@@ -29,6 +29,9 @@ class Grid
 	protected:
 		bool is_legal_tile(size_t i);
 
+		virtual void create_grid(int width, int height, double tile_size, int x_offset, int y_offset) = 0;
+		virtual void set_tile_neighbors() = 0;
+
 		grid_t _grid;
 		int tile_size;
         Logger::Log& _log;

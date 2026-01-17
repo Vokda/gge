@@ -26,12 +26,10 @@ void Grider::create_grid(grid_type gt, int width, int height, int tile_size, int
 		case HEX:
 			_log.info("Creating hex grid of width %i and height %i...", width, height);
 			_grid = make_unique<Hex_grid>(width, height, tile_size, GGE::FLAT_TOP, GGE::RECT_ODD_Q, x_offset, y_offset); //TODO paramterize
-			_log.info("OK");
 			break;
         case SQUARE:
 			_log.info("Creating square grid of width %i and height %i...", width, height);
             _grid = make_unique<Square_grid>(width, height, tile_size, x_offset, y_offset);
-			_log.info("OK");
 			break;
 		default:
             ss << "Grid type not recognized" << gt << endl;
@@ -39,6 +37,7 @@ void Grider::create_grid(grid_type gt, int width, int height, int tile_size, int
 			break;
 	}
 	//return _grid.size() -1;//TODO enable to handle more than one grid
+	_log.info("Grid created successfully");
 }
 
 int Grider::get_tile_index(shared_ptr<Tile> tile)
