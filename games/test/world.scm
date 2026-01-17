@@ -9,14 +9,14 @@
 
 (use-modules (system foreign))
 
-(define grid_x 6)
-(define grid_y 4)
-(define grid_type 0) ; hex type
+(define grid_x 2)
+(define grid_y 2)
+(define grid_type 1) ; 0 = hex type 1 = square
 (define tile_size 60)
 
 (define grid
   (gge:init_grider grid_type grid_x grid_y tile_size 
-				   (* 1 tile_size) (* 1 tile_size) ))
+				   (* 2 tile_size) (* 2 tile_size) ))
 
 (define get_grid
   (lambda ()

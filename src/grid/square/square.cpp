@@ -13,16 +13,22 @@ Square::Square(Square_coordinate sc, SDL_Point center_point, double size, SDL_Co
 
 void Square::calculate_corners(const SDL_Point& c, int size)
 {
-	for(int i = 1; i <= 4; i++)
+	_log_stream << "Calculating corners for square at " << c << " with size " << size;
+	_log_stream.flush();
+	int corner_distance = size * sqrt(2); // distance from center to corner pythagoran theorem
+	for(int i = 0; i < 4; i++)
 	{
-		_corners.push_back(calculate_corner(c, size, i));
+		_corners.push_back(calculate_corner(c, corner_distance, i));
+		_log_stream << "Corner " << i << ": " << _corners.back();
+		_log_stream.flush();
 	}
+	_log_stream.flush();
 }
 
 SDL_Point Square::calculate_corner(const SDL_Point& c, int size, int i)
 {
 	SDL_Point p;
-	double angle_deg = 90 * i + 45;
+	double angle_deg = 90 * i + 225;
 	double angle_rad = M_PI / 180 * angle_deg;
 	p.x = c.x + size * std::round(cos(angle_rad));
 	p.y = c.y + size * std::round(sin(angle_rad));

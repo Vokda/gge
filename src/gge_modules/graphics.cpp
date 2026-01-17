@@ -145,13 +145,15 @@ const SDL_Rect& Graphics::get_viewport(viewport vp)
 void Graphics::draw_grid(const shared_ptr<Grider> grider)
 {
 	SDL_RenderSetViewport(_sdl_renderer, &_main_view);
-	for(auto tile : grider->get_grid())
+	const auto grid = grider->get_grid();
+	const int nr_corners = grid.front()->get_corners().size();
+	for(auto tile : grid)
 	{
 		const SDL_Point* p = &tile->get_corners().front();
-		const SDL_Point* last_point = p + 5;
+		const SDL_Point* last_point = p + (nr_corners - 1); // draw line to last point
 		const SDL_Color& c = tile->get_color();
 		SDL_SetRenderDrawColor( _sdl_renderer, c.r, c.g, c.b, c.a);
-		SDL_RenderDrawLines( _sdl_renderer, p, 6);
+		SDL_RenderDrawLines( _sdl_renderer, p, nr_corners);
 		SDL_RenderDrawLine( _sdl_renderer, last_point->x, last_point->y, p->x, p->y);
 	}
 }
