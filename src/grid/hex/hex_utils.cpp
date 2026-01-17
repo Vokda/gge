@@ -102,9 +102,9 @@ SDL_Point Hex_utils::calc_center_point(int col, int row) const
 		default: 
 			throw runtime_error("ERROR coordinate system not implemented");
 	}
-#ifdef DEBUG
-#include <iostream>
-	cout << "Center point for [" << col << ", " << row << "] -> " << p.x << ',' << p.y << endl;
+#ifdef false //DEBUG
+//#include <iostream>
+//	cout << "Center point for [" << col << ", " << row << "] -> " << p.x << ',' << p.y << endl;
 #endif
 	return p;
 }

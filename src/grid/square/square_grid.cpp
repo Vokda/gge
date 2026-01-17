@@ -4,16 +4,12 @@
 #include <stdexcept>
 #include <climits>
 
-Square_grid::Square_grid(size_t width, size_t height, double size, int x_offset, int y_offset):
+Square_grid::Square_grid(int width, int height, double size, int x_offset, int y_offset):
 	Grid(),
 	_x_offset(x_offset),
 	_y_offset(y_offset),
 	_utils(size)
 {
-	// in case of square grid
-	bool success = true;
-	cout << "Grid - ";
-
 	if(width <= 0 or height <= 0)
 		throw runtime_error("width and height of grid needs to be > 0!");
 
@@ -22,41 +18,39 @@ Square_grid::Square_grid(size_t width, size_t height, double size, int x_offset,
 		throw runtime_error("width x height TOO BIG for system to handle!");
 	}
 
-	// && success is for breaking out of outer loop
-	for(size_t w = 0; w < height && success; ++w)
+	create_grid(width, height, size, x_offset, y_offset);
+
+	set_tile_neighbors();
+}
+
+void Square_grid::create_grid(int width, int height, double tile_size, int x_offset, int y_offset)
+{
+	for(int w = 0; w < height; ++w)
 	{
-		for(size_t h = 0; h < width; ++h)
+		for(int h = 0; h < width; ++h)
 		{
-			try
-			{
-				SDL_Point center_point = {int(h*size),int(w*size)};// _utils.calc_center_point(h, w);
+				SDL_Point center_point = {int(h*tile_size),int(w*tile_size)};// _utils.calc_center_point(h, w);
 				center_point.x += x_offset;
 				center_point.y += y_offset;
 				Square_coordinate sc{int(h),int(w)};
-				shared_ptr<Square> square = make_shared<Square>(sc, center_point, size);
+				shared_ptr<Square> square = make_shared<Square>(sc, center_point, tile_size);
 				_grid.push_back(square);
 				int i = _grid.size() - 1;
 				_log_stream << "Made square ["<< i << "] at " << *square;
-			}
-			catch(char const* e)
-			{
-				success = false;
-				cerr << "Could not create grid: " << e << endl;
-				break;
-			}
 		}
 	}
+}
 
+void Square_grid::set_tile_neighbors()
+{
 	// set neighbors
 	for(auto tile: _grid)
 	{
 		shared_ptr<Square> square = static_pointer_cast<Square>(tile);
 		square->set_neighbors(
-				get_neighbors(square->get_grid_coordinate()));
+				get_neighbors(
+					square->get_grid_coordinate()));
 	}
-
-	if(success)
-		cout << "OK" << endl;
 }
 
 vector<shared_ptr<Tile>> Square_grid::get_neighbors(Square_coordinate sc)

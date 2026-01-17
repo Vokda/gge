@@ -15,8 +15,10 @@ class Hex_grid: public Grid
 {
 	public:
 
-		Hex_grid(size_t w, size_t h, double hex_size, GGE::Hex_orientation ho, GGE::Coordinate_system cs, int x_offset, int y_offset);
+		Hex_grid(int w, int h, double hex_size, GGE::Hex_orientation ho, GGE::Coordinate_system cs, int x_offset, int y_offset);
 		//Hex_grid(const Hex_grid& hg);
+		void create_grid(int width, int height, double tile_size, int x_offset, int y_offset);
+		void set_tile_neighbors();
 
 		//Hex hex_add(const Hex& a, const Hex& b);
 

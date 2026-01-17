@@ -5,7 +5,7 @@ using namespace std;
 
 Grid::Grid():
     _log(Logger::make_category("Base Grid")),
-	_log_stream(Logger::make_category_stream(log4cpp::Priority::DEBUG, "Grid"))
+	_log_stream(Logger::make_category_stream(log4cpp::Priority::DEBUG, "Base Grid"))
 {
 }
 

@@ -13,8 +13,10 @@ class Square_grid: public Grid
 {
 	public:
 
-		Square_grid(size_t w, size_t h, double square_size, int x_offset, int y_offset);
+		Square_grid(int w, int h, double square_size, int x_offset, int y_offset);
 
+		void create_grid(int width, int height, double tile_size, int x_offset, int y_offset);
+		void set_tile_neighbors();
 		/**
 		 * return -1 if no hex with that index is found
 		 */
