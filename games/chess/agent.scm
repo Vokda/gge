@@ -20,24 +20,32 @@
 (define selected_agent -1)
 
 ; some sprites
-(define placeholder
-  (gge:load_image "sprites/placeholder_white.png"))
+(define pawn_white
+  (gge:load_image "sprites/pawn_white.svg"))
+(define pawn_black
+  (gge:load_image "sprites/pawn_black.svg"))
+(define rook_white
+  (gge:load_image "sprites/rook_white.svg"))
+(define rook_black
+  (gge:load_image "sprites/rook_black.svg"))
+(define knight_white
+  (gge:load_image "sprites/knight_white.svg"))
+(define knight_black
+  (gge:load_image "sprites/knight_black.svg"))
+(define bishop_white
+  (gge:load_image "sprites/bishop_white.svg"))
+(define bishop_black
+  (gge:load_image "sprites/bishop_black.svg"))
+(define queen_white
+  (gge:load_image "sprites/queen_white.svg"))
+(define queen_black
+  (gge:load_image "sprites/queen_black.svg"))
+(define king_white
+  (gge:load_image "sprites/king_white.svg"))
+(define king_black
+  (gge:load_image "sprites/king_black.svg"))
 
-(define triangle_up
-  (gge:load_image "sprites/triangle_up.png"))
 
-(define triangle_down
-  (gge:load_image "sprites/triangle_down.png"))
-
-(define cylinder
-  (gge:load_image "sprites/cylinder.png"))
-
-;(define-record-type "agent" 
-;				  (make-agent index tile texture)
-;				  agent?
-;				  (index	agent-index)
-;				  (tile		agent-tile)
-;				  (texture	agent-texture))
 (define agents
   (list '()))
 
@@ -79,6 +87,16 @@
 
 (define setup_pieces
   (lambda ()
-	(create_agent 0 placeholder)
-	(create_agent 1 placeholder)
+	(create_agent 0 pawn_white)
+	(create_agent 1 pawn_black)
+	(create_agent 2 rook_white)
+	(create_agent 3 rook_black)
+	(create_agent 4 knight_white)
+	(create_agent 5 knight_black)
+	(create_agent 6 bishop_white)
+	(create_agent 7 bishop_black)
+	(create_agent 8 queen_white)
+	(create_agent 9 queen_black)
+	(create_agent 10 king_white)
+	(create_agent 11 king_black)
 	))

@@ -61,6 +61,10 @@ class Tile: public std::enable_shared_from_this<Tile>
         Logger::Log_stream _log_stream;
         
 	private:
+		/**
+		 * Rearrange agents on tile when there is more than one agent on the tile
+		 * in a circular pattern around the tile center
+		 */
 		void replace_agents();
 
 };

@@ -193,12 +193,6 @@ void Graphics::draw_gui(const shared_ptr<gge::GUI> gui)
     gui->draw();
 }
 
-
-/*void Graphics::draw(const Shape& shape)
-{
-	// TODO
-}*/
-
 void Graphics::draw_text(const shared_ptr<Texter> texter)
 {
 	for(auto c: texter->get_components())

@@ -306,7 +306,7 @@ size_t GGE_API::create_agent(size_t texture, size_t tile)
 	const SDL_Point& p = tile_ptr->get_position();
 	size_t sprite_i = create_sprite(texture, p.x, p.y);
 
-	auto component =spriter->get_component(sprite_i);
+	auto component = spriter->get_component(sprite_i);
 	auto sprite = static_pointer_cast<Sprite>(component);
 #ifdef DEBUG
 	cout << "Creating agent @ " << p << endl;
