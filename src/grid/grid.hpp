@@ -9,7 +9,7 @@ using grid_t = vector<shared_ptr<Tile>>;
 class Grid
 {
 	public:
-		Grid();
+		Grid(int width, int height);
 		virtual ~Grid() {};
 
 
@@ -34,6 +34,8 @@ class Grid
 
 		grid_t _grid;
 		int tile_size;
+		int _width;
+		int _height;
         Logger::Log& _log;
 		Logger::Log_stream _log_stream;
 };
