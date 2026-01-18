@@ -46,6 +46,10 @@ bool Tile::move_agent(shared_ptr<Agent> agent, shared_ptr<Tile> destination)
 void Tile::replace_agents()
 {
 	int nr_agents = _tile_agents.size();
+	if(nr_agents == 1)
+		return;
+
+	// if more than one agent per tile to rearrange them in a circular pattern
 	int i = 0;
 	for(auto agent : _tile_agents)
 	{
