@@ -15,7 +15,7 @@ using namespace std;
 }*/
 
 Hex_grid::Hex_grid(int width, int height, double size, GGE::Hex_orientation ho, GGE::Coordinate_system cs, int x_offset, int y_offset):
-	Grid(),
+	Grid(width, height),
 	_layout(GGE::Orientation(ho, size), cs), 
 	_x_offset(x_offset),
 	_y_offset(y_offset),

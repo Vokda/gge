@@ -3,7 +3,9 @@
 #include <algorithm>
 using namespace std;
 
-Grid::Grid():
+Grid::Grid(int width, int height):
+	_width(width),
+	_height(height),
     _log(Logger::make_category("Base Grid")),
 	_log_stream(Logger::make_category_stream(log4cpp::Priority::DEBUG, "Base Grid"))
 {

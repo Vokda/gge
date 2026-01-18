@@ -11,7 +11,7 @@ Square_utils::Square_utils(double square_size):
 
 Square_coordinate Square_utils::pixel_to_coordinate(int x, int y) const
 {
-	int col = x / _square_size;
-	int row = y / _square_size;
+	int col = round(double(x) / _square_size);
+	int row = round(double(y) / _square_size);
 	return Square_coordinate(col, row);
 }

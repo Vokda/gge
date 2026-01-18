@@ -11,7 +11,7 @@ class Square: public Tile
 	public:
 		Square(
 				Square_coordinate,
-				SDL_Point,
+				const SDL_Point&,
 				double size,
 				SDL_Color c = {255, 255, 255, 255}
 		   );

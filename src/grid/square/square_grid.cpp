@@ -5,7 +5,7 @@
 #include <climits>
 
 Square_grid::Square_grid(int width, int height, double size, int x_offset, int y_offset):
-	Grid(),
+	Grid(width, height),
 	_x_offset(x_offset),
 	_y_offset(y_offset),
 	_utils(size)
@@ -20,30 +20,32 @@ Square_grid::Square_grid(int width, int height, double size, int x_offset, int y
 
 	create_grid(width, height, size, x_offset, y_offset);
 
-	set_tile_neighbors();
+	//set_tile_neighbors();
+	//_log.info("Created square grid with %i squares", _grid.size());
 }
 
 void Square_grid::create_grid(int width, int height, double tile_size, int x_offset, int y_offset)
 {
-	for(int w = 0; w < height; ++w)
+	for (int h = 0; h < height; ++h)
 	{
-		for(int h = 0; h < width; ++h)
+		for (int w = 0; w < width; ++w)
 		{
-				SDL_Point center_point = {int(h*tile_size),int(w*tile_size)};// _utils.calc_center_point(h, w);
-				center_point.x += x_offset;
-				center_point.y += y_offset;
-				Square_coordinate sc{int(h),int(w)};
+				SDL_Point center_point;
+				center_point.x = (w * tile_size) + x_offset;
+				center_point.y = (h * tile_size) + y_offset;
+				Square_coordinate sc{int(w),int(h)};
 				shared_ptr<Square> square = make_shared<Square>(sc, center_point, tile_size);
 				_grid.push_back(square);
 				int i = _grid.size() - 1;
 				_log_stream << "Made square ["<< i << "] at " << *square;
 		}
 	}
+	_log_stream.flush();
 }
 
 void Square_grid::set_tile_neighbors()
 {
-	// set neighbors
+	_log.info("Setting tile neighbors for square grid");
 	for(auto tile: _grid)
 	{
 		shared_ptr<Square> square = static_pointer_cast<Square>(tile);
@@ -67,6 +69,7 @@ vector<shared_ptr<Tile>> Square_grid::get_neighbors(Square_coordinate sc)
 		}
 	}
 	_log_stream << neighbors.size(); 
+	_log_stream.flush();
 	return neighbors;
 }
 
@@ -90,7 +93,8 @@ vector<int> Square_grid::get_neighbors_index(Square_coordinate sc)
 shared_ptr<Square> Square_grid::get_square(const Square_coordinate& sc)
 {
 	int index = get_square_index(sc);
-	if(index > -1)
+	// make sure this square exists
+	if(index > -1 and index < (int)_grid.size())
 	{
 		return static_pointer_cast<Square>(_grid[index]);
 	}
@@ -104,21 +108,20 @@ int Square_grid::get_tile(int x, int y)
 {
 	x -= _x_offset;
 	y -= _y_offset;
-	return get_square_index(
-			_utils.pixel_to_coordinate(x, y));
+	Square_coordinate sc = _utils.pixel_to_coordinate(x, y);
+	int index = get_square_index(sc);
+	return index;
 }
 
 int Square_grid::get_square_index(const Square_coordinate& sc)
 {
-	int index = -1;
-	for(size_t i = 0; i < _grid.size(); ++i)
+	int index = sc.x + (sc.y * _width);
+	if(index < 0 or index >= (int)_grid.size())
 	{
-		shared_ptr<Square> square = static_pointer_cast<Square>(_grid[i]);
-		if(square->get_grid_coordinate() == sc )
-		{
-			index = int(i);
-			break;
-		}
+		return -1;
 	}
-	return index;
+	auto square = static_pointer_cast<Square>(_grid[index]);
+	if(square->get_grid_coordinate() == sc)
+		return index;
+	return -1;
 }
