@@ -11,7 +11,7 @@
 
 (define grid_x 2)
 (define grid_y 3)
-(define grid_type 1) ; 0 = hex type 1 = square
+(define grid_type 0) ; 0 = hex type 1 = square
 (define tile_size 60)
 
 (define grid

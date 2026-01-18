@@ -81,7 +81,6 @@
 		(if (>= hex 0)
 			  (if (agent:has_agent_selected)
 				(let (( last_agent (agent:move_selected_agent hex) ))
-				  (agent:create_agent hex 3)
 				  (finish_turn)
 				)
 				(begin
