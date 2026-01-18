@@ -76,4 +76,5 @@
 ;(agent:create_agent 1 3)
 
 ; gui stuff
-(gge:create_button "say 'bleep'"  (lambda () (gge:create_text "click" 100 100 1000 0) ))
+(gge:create_button "New Game"  (lambda () (agent:setup_pieces) ))
+(gge:create_button "Quit" (lambda () (gge:quit)))	

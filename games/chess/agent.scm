@@ -5,6 +5,7 @@
 						  move_selected_agent 
 						  has_agent_selected
 						  agents
+						  setup_pieces
 						  ))
 
 (use-modules ( (gge)
@@ -75,3 +76,9 @@
 		  ))
 	  (set! selected_agent -1)
 	  )))
+
+(define setup_pieces
+  (lambda ()
+	(create_agent 0 placeholder)
+	(create_agent 1 placeholder)
+	))
