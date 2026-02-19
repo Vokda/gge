@@ -130,7 +130,4 @@
   (lambda ()
 	(define text (string-append (string-append "Player " (number->string current_player)) " finished"))
 	(print_text text 0 0 2000)
-	(if (not (= current_player 0))
-	  (growth)
-	  )
 	(set! current_player (modulo (+ current_player 1) 2))))
