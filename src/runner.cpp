@@ -23,7 +23,7 @@ void Runner::exec_commands()
 {
 	for(auto cmd: _commands)
 	{
-        // _log.debug("Running command %s", cmd->get_module()->get_type_string() );
+        //_log.debug("Running command %s", cmd->get_module()->get_type_string() );
 		cmd->execute();
 	}
 }
@@ -72,8 +72,24 @@ void Runner::add_command(rgm module, int command, rgm arg)
 						command
 						));
 			break;
+			case AGENTER:
+			_commands.push_back(
+					make_shared<Ticker_command>(
+						gge_module,
+						get_module(NONE),
+						command
+						));
+			break;
+			case SPRITER:
+			_commands.push_back(
+					make_shared<Ticker_command>(
+						gge_module,
+						get_module(NONE),
+						command
+						));
+			break;
 
-//#include "runner_add_command_switch.generated"
+			// #include "runner_add_command_switch.generated"
 		default:
 			{
 				invalid_argument ia(throw_message(__FILE__, "Cannot create command for", module));

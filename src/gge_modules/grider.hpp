@@ -20,7 +20,9 @@ class Grider: public GGE_module
 
 
 		shared_ptr<Tile> get_tile(int tile);
+		// TODO change name to clarify it refers to the mouse position
 		int get_tile_index(int x, int y);
+		int get_tile_index_from_coordinate(int x, int y);
 		int get_tile_index(shared_ptr<Tile>);
 
 		const vector<int>& get_tile_neighbors_index(int tile);

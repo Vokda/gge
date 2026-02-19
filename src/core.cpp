@@ -52,6 +52,7 @@ void Core::check_modules_initiated()
 
 	// probably important modules
 	vector<registered_gge_module> important = {GRAPHICS, EVENTS, GRIDER, GAME_LOOP};
+	vector<registered_gge_module> componenter_modules = {SPRITER, AGENTER, TEXTER, SHAPER};
 	for(auto m: important)
 	{
 		if(_moduler[m] == nullptr)
@@ -66,6 +67,18 @@ void Core::check_modules_initiated()
 	{
 		std::domain_error de("No game loop provided!");
 		throw de; 
+	}
+	
+	// if a componenter module is present, add its respective ticker command
+	for(auto m: componenter_modules)
+	{
+		if(_moduler[m] == nullptr)
+			continue;
+		else
+			{
+			_log.info("Moduler with componenter modules detected; adding ticker command for %s", GGE_module::get_module_name(m).c_str());
+				_runner.add_command(m,0,m);
+			}
 	}
 }
 

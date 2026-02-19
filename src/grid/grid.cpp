@@ -19,9 +19,7 @@ shared_ptr<Tile> Grid::get_tile(size_t i)
 	}
 	else
 	{
-        _log.fatal("Cannot access hex %s! Out of range for grid (0-%s)",
-                to_string(i), to_string(_grid.size()-1)
-                );
+		_log.fatal("Cannot access hex %i! Out of range for grid (0-%i)", i, _grid.size() - 1);
 		throw out_of_range("Tile outside of range!");
 	}
 }
@@ -33,7 +31,7 @@ bool Grid::is_legal_tile(size_t i )
 
 int Grid::get_tile_index(shared_ptr<Tile> t)
 {
-    _log.debug("Searching for tile index for %i =>", t );
+    _log.debug("Searching for tile index for %p =>", t.get());
 	auto itr = std::find(_grid.begin(), _grid.end(), t);
 	int out = -1;
 	if(itr != _grid.end())
@@ -46,4 +44,10 @@ int Grid::get_tile_index(shared_ptr<Tile> t)
         _log.debug("NOT found!");
 	}
 	return out;
+}
+
+int Grid::get_tile_index_from_coordinate(int x, int y)
+{
+	_log.warn("Not implemented to get tile index from coordinate [%i, %i]! Returning -1", x, y);
+	return -1;
 }

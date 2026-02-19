@@ -11,7 +11,7 @@
 struct Tile_coordinate;
 using namespace std;
 
-class Agent;
+struct Agent;
 
 class Tile: public std::enable_shared_from_this<Tile>
 {
@@ -34,13 +34,13 @@ class Tile: public std::enable_shared_from_this<Tile>
 		virtual string coordinate_to_string() const = 0;
 
 		void place_agent(shared_ptr<Agent>);
-		shared_ptr<Agent> remove_agent(shared_ptr<Agent>, bool completely);
+		void remove_agent(shared_ptr<Agent>);
 		bool move_agent(shared_ptr<Agent> agent, shared_ptr<Tile> dest);
-		list<shared_ptr<Agent>> get_agents() const { return _tile_agents; }
+		list<weak_ptr<Agent>> get_agents() const { return _tile_agents; }
 
-		const vector<shared_ptr<Tile>>& get_neighbors() const; 
+		const vector<weak_ptr<Tile>>& get_neighbors() const; 
 		void set_neighbors(
-				vector<shared_ptr<Tile>> n) { _neighbors = n; };
+				vector<weak_ptr<Tile>> n) { _neighbors = n; };
 
 	protected:
 		virtual void calculate_corners(const SDL_Point& c, int s) = 0;
@@ -50,11 +50,11 @@ class Tile: public std::enable_shared_from_this<Tile>
 		//const Tile_coordinate& _tile_coordinate;
 		std::vector<SDL_Point> _corners;
 		int _size;
-		vector<shared_ptr<Tile>> _neighbors;
+		vector<weak_ptr<Tile>> _neighbors;
 		SDL_Color _color;
 		bool blink = false;
 		map<string, void*> _tile_data;
-		list<shared_ptr<Agent>> _tile_agents; // agents on the tile
+		list<weak_ptr<Agent>> _tile_agents; // agents on the tile
 
         Logger& _logger;
         Logger::Log& _log;

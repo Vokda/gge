@@ -55,9 +55,9 @@ void Square_grid::set_tile_neighbors()
 	}
 }
 
-vector<shared_ptr<Tile>> Square_grid::get_neighbors(Square_coordinate sc)
+vector<weak_ptr<Tile>> Square_grid::get_neighbors(Square_coordinate sc)
 {
-	vector<shared_ptr<Tile>> neighbors; // at most 8 neighbors
+	vector<weak_ptr<Tile>> neighbors; // at most 8 neighbors
 	_log_stream << "number of neighbors of square " << Grid::get_tile(get_square_index(sc)) << ": ";
 	for(auto& rel_n: _utils.get_relative_neighbors())
 	{
@@ -111,6 +111,12 @@ int Square_grid::get_tile(int x, int y)
 	Square_coordinate sc = _utils.pixel_to_coordinate(x, y);
 	int index = get_square_index(sc);
 	return index;
+}
+
+int Square_grid::get_tile_index_from_coordinate(int x, int y)
+{
+	Square_coordinate sc{x, y};
+	return get_square_index(sc);
 }
 
 int Square_grid::get_square_index(const Square_coordinate& sc)

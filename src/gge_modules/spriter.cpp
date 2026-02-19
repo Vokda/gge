@@ -34,19 +34,10 @@ size_t Spriter::create_sprite(int t, const SDL_Point& p, int ms)
 	sprite.size = rect;
 	sprite.set_position(p);
 
-	_components.push_back(make_shared<Sprite>(sprite));
-	cout << "Created sprite @ " << p << endl;
-#ifdef DEBUG
-	cout << "Sprite index: " << _components.size() - 1 << endl;
-	cout << "sprites stored {" << endl;
-	for(auto comp: _components)
-	{
-		cout << "\tsprite " <<comp << endl;
-	}
-	cout << '}' << endl;
-#endif
-
-	return _components.size() -1;
+	auto component = add_component(make_shared<Sprite>(sprite));
+	_log.debugStream() << "Created sprite with texture " << t << " @ " << p;
+	_log.debugStream() << "Sprite index: " << component->id; 
+	return component->id;
 }
 
 void Spriter::change_texture(shared_ptr<Sprite> sprite, int texture)

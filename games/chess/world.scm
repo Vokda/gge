@@ -21,9 +21,3 @@
 (define get_grid
   (lambda ()
 	grid))
-
-; set data to hexes
-(do ((i 0 (1+ i)))
-  ((>= i (* grid_x grid_y)))
-   (gge:set_tile_custom_data i "name" (string->pointer (string-append "hex " (number->string i)))))
-

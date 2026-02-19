@@ -50,6 +50,10 @@ int Grider::get_tile_index(int x, int y)
 	return _grid->get_tile(x, y);
 }
 
+int Grider::get_tile_index_from_coordinate(int x, int y)
+{
+	return _grid->get_tile_index_from_coordinate(x, y);
+}
 
 shared_ptr<Tile> Grider::get_tile(int tile_i)
 {
@@ -67,9 +71,9 @@ const vector<int>& Grider::get_tile_neighbors_index(int t_i)
 	{
 		// cache result
 		vector<int> new_neighbors;
-		for(shared_ptr<Tile> n : tile->get_neighbors())
+		for(auto n : tile->get_neighbors())
 		{
-			new_neighbors.push_back(get_tile_index(n));
+			new_neighbors.push_back(get_tile_index(n.lock()));
 		}
 		_neighbors_indices[t_i] = new_neighbors;
 		return _neighbors_indices[t_i];

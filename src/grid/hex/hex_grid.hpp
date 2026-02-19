@@ -40,7 +40,7 @@ class Hex_grid: public Grid
 		int hash_cube_coord(int q, int r, int s);
 
 		vector<int> get_neighbors_index(cube_coord cc);
-		vector<shared_ptr<Tile>> get_neighbors(cube_coord cc);
+		vector<weak_ptr<Tile>> get_neighbors(cube_coord cc);
 
 		// vars
         GGE::Layout _layout;

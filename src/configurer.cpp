@@ -7,6 +7,7 @@
 #include <fstream>
 #include "filer.hpp"
 #include "logger.hpp"
+#include "script_handling/gge_api.hpp"
 using namespace std;
 
 Configurer::Configurer(const Filer& f, GGE_API& ga):
@@ -15,6 +16,8 @@ Configurer::Configurer(const Filer& f, GGE_API& ga):
 	string cfg = f.in_game_dir("gge.cfg");
     _log.info("Expecting configuration file name: %s", cfg.c_str());
 	read_config(cfg);
+	// TODO actually do something with the config, like initialize modules and stuff
+	_gge_api.hello();
 }
 
 const Configuration& Configurer::read_config(const string& config_name)

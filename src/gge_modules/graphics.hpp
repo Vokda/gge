@@ -70,7 +70,7 @@ class Graphics: public GGE_module
 		SDL_Rect _main_view; // where game is drawn
 		SDL_Rect _bar_view; // top info bar view
 		SDL_Rect _side_bar_view; // side info bar view
-		viewport _current_viewport = MAIN;
+		//viewport _current_viewport = MAIN;
 
 		// textures
 		vector<SDL_Texture*> _textures;

@@ -1,8 +1,10 @@
 #include "timer.hpp"
+#include <cmath>
 
 int Timer::time_left(const moment& m, int ms)
 {
 	moment now = get_time_point();
-	std::chrono::duration<double, std::milli>  d = now - m;
-	return ms - d.count();
+	using ms_duration = std::chrono::milliseconds;
+	auto d = std::chrono::duration_cast<ms_duration>(now - m).count();
+	return std::max(ms - (int)d, 0);
 }

@@ -24,23 +24,32 @@ void Tile::place_agent(shared_ptr<Agent> agent)
 	_tile_agents.push_back(agent);
 	agent->tile = shared_from_this();
 	replace_agents();
-    _log.debug("Agent %i placed @ [%i, %i]", agent->index, _position.x, _position.y);
+    _log.debug("Agent %i placed @ [%i, %i]", agent->id, _position.x, _position.y);
 }
 
-shared_ptr<Agent> Tile::remove_agent(shared_ptr<Agent> agent, bool completely)
+void Tile::remove_agent(shared_ptr<Agent> agent)
 {
-	auto agent_itr = find(_tile_agents.begin(), _tile_agents.end(), agent);
-	_tile_agents.erase(agent_itr);
-	if(completely)
-		agent->tile = nullptr;
-	return agent_itr != _tile_agents.end() ? (*agent_itr) : nullptr;
+	auto agent_itr = find_if(
+		_tile_agents.begin(),
+		_tile_agents.end(),
+		[agent](const weak_ptr<Agent> &a)
+		{
+			auto target = agent;
+			auto agent_ptr = a.lock();
+			return agent_ptr && agent_ptr->id == target->id; 
+		});
+	if(agent_itr != _tile_agents.end())
+		_tile_agents.erase(agent_itr);
+	else
+		throw runtime_error("Cannot remove agent " + to_string(agent->id) + " from tile " + coordinate_to_string() + " because it is not on the tile!");
 }
 
 bool Tile::move_agent(shared_ptr<Agent> agent, shared_ptr<Tile> destination)
 {
-    _log_stream << "moving agent " << agent->index << " @ " << destination->get_position();
+    _log_stream << "moving agent " << agent->id << " @ " << destination->get_position();
 	destination->place_agent(agent);
-	return remove_agent(agent, false) != nullptr;
+	remove_agent(agent);
+	return true;
 }
 
 void Tile::replace_agents()
@@ -51,23 +60,22 @@ void Tile::replace_agents()
 
 	// if more than one agent per tile to rearrange them in a circular pattern
 	int i = 0;
-	for(auto agent : _tile_agents)
+	for(weak_ptr<Agent> a : _tile_agents)
 	{
+		auto agent = a.lock();
 		int x = int(_position.x - (_size/2) *(sin(i)));
 		int y = int(_position.y - (_size/2) *(cos(i))) ;
-		agent->sprite->set_position({
+		agent->sprite.lock()->set_position({
 				x, 
 				y
 				});
 		++i;
-#ifdef DEBUG
-	cout << "Agent " << agent->index << " replaced at  " << agent->sprite->position << endl;
-#endif
+		_log.debug("Agent %i replaced @ [%i, %i]", agent->id, x, y);
 	}
-	cout << "agents on tile " << nr_agents << endl;
+	_log.debug("agents on tile %i", nr_agents);
 }
 
-const vector<shared_ptr<Tile>>& Tile::get_neighbors() const
+const vector<weak_ptr<Tile>>& Tile::get_neighbors() const
 {
 	return _neighbors;
 }

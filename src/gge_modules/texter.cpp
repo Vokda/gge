@@ -3,10 +3,6 @@
 #include "texter.hpp"
 #include "graphics.hpp"
 #include <memory>
-#ifdef DEBUG
-#include <iostream>
-using namespace std;
-#endif 
 
 Texter::Texter(shared_ptr<Graphics> graphics):
 	GGE_module(TEXTER)
@@ -17,30 +13,24 @@ Texter::Texter(shared_ptr<Graphics> graphics):
 	string s = "Loading font ";
 	s += _font_name;
 	check_null(s, _font);
-	_start_time = _timer.get_time_point();
-
 	_re = regex("%i"); // hard coded for now
 }
 
 Texter::~Texter()
 {
 	TTF_CloseFont(_font);
-	for(auto comp: _components)
+	for_each_component([&](component c)
 	{
-		auto text = static_pointer_cast<Text>(comp);
+		auto text = static_pointer_cast<Text>(c);
 		SDL_DestroyTexture(text->texture);
-	}
+	});
 }
 
 bool Texter::modify_text(size_t i, int value)
 {
-	if(i >= _components.size()) return false;
-	auto itr = _components.begin();
-	while(itr != _components.end())
-	{
-		itr++;
-	}
-	auto text = static_pointer_cast<Text>(*itr);
+	if(i >= get_number_of_components()) return false;
+	auto text = static_pointer_cast<Text>(get_component_by_id(i));
+	if(text == nullptr) return false;
 	string& s = text->text;
 	string r = regex_replace(s, _re, to_string(value));
 	if(s == r) return false;
@@ -71,19 +61,17 @@ size_t Texter::create_text(
 
 	text.view_port = vp;
 	text.milliseconds = ms;
-	text.creation = _timer.get_time_point();
+	text.creation = now();
 	text.text = msg;
 	text.color = color;
 	text.texture = text_to_texture(msg, color);
 
-	_components.push_back(make_shared<Text>(text));
+	auto component =(make_shared<Text>(text));
 
-#ifdef DEBUG
-	cout << "Debug: Adv text created @ " << text.position.x << " " << text.position.y << endl;
-	cout << "Debug: size " << rect.w << " " << rect.h << endl;
-	cout << "Debug: text '" << msg << "'" << endl;
-#endif 
-	return _components.size() - 1;
+	_log.debug("Created text @ %i %i", text.position.x, text.position.y);
+	_log.debug("size %i %i", rect.w, rect.h);
+	_log.debug("text '%s'", msg.c_str());
+	return component->id;
 }
 
 SDL_Texture* Texter::text_to_texture(const string& s, const SDL_Color& c)

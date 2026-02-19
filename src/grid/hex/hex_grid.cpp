@@ -127,17 +127,16 @@ int Hex_grid::hash_cube_coord(int q, int r, int s)
 	return hash;
 }
 
-
-vector<shared_ptr<Tile>> Hex_grid::get_neighbors(cube_coord cc)
+vector<weak_ptr<Tile>> Hex_grid::get_neighbors(cube_coord cc)
 {
-	vector<shared_ptr<Tile>> neighbors; // at most 6 neighbors
+	vector<weak_ptr<Tile>> neighbors; // at most 6 neighbors
 	stringstream ss;
 	//ss << "number of neighbors of hex " << *get_hex(cc) << ": "; // TODO borked?
 	for(auto& rel_n: _utils.get_relative_neighbors())
 	{
 		cube_coord neighbor = cc + rel_n;
-		shared_ptr<Tile> i = get_hex(neighbor);
-		if(i) // TODO no need to recalculate every time. Cache it!
+		weak_ptr<Tile> i = get_hex(neighbor);
+		if(i.lock()) // TODO no need to recalculate every time. Cache it!
 		{
 			neighbors.push_back(i);
 		}

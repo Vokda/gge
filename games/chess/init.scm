@@ -49,6 +49,9 @@
 (use-modules ( (world)
 			 #:prefix world:)
 			)
+(use-modules ( (agent)
+			  #:prefix agent:)
+			 )
 
 (display "Add commands \n")
 ; add_command <module to execute command> <command number, -1 = there is only one to pick (change to 0?)> <id to module used as parameter, 0 = None>
@@ -58,22 +61,12 @@
 (gge:hello)
 (gge:add_command events -1 0)
 (gge:add_command gge_game_loop -1 0)
-(gge:add_command texter 0 0) ; ticker
 ; draw stuff
 (gge:add_command graphics 1 (world:get_grid) )
 (gge:add_command graphics 1 texter)
 (gge:add_command graphics 1 spriter)
 (gge:add_command graphics 1 gui)
 (gge:add_command graphics 2 0) ;  render
-
-(use-modules ( (agent)
-			  #:prefix agent:)
-			 )
-
-;(agent:create_agent 1 0)
-;(agent:create_agent 1 1)
-;(agent:create_agent 1 2)
-;(agent:create_agent 1 3)
 
 ; gui stuff
 (gge:create_button "New Game"  (lambda () (agent:setup_pieces) ))

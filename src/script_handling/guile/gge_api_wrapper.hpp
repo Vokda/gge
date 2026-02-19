@@ -50,6 +50,7 @@ extern "C"
 
 	void set_tile_custom_data(SCM i, SCM name, SCM data);
 	SCM get_tile_custom_data(SCM index, SCM name);
+	SCM get_tile_from_coordinate(SCM x, SCM y);
 
 	SCM load_image(SCM path);
 	SCM create_sprite(SCM texture, SCM x, SCM y);

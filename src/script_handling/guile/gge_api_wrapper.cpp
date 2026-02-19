@@ -171,6 +171,15 @@ extern "C"
 		const string str(c);
 		return scm_from_pointer( _gge_api->get_tile_custom_data(i, str), NULL );
 	}
+	
+	SCM get_tile_from_coordinate(SCM x, SCM y)
+	{
+		return scm_from_int(
+				_gge_api->get_tile_from_coordinate(
+					scm_to_int(x),
+					scm_to_int(y)
+					));
+	}
 
 	SCM load_image(SCM path)
 	{
@@ -216,7 +225,8 @@ std::tuple<T...> unpack_to_tuple(const vector<std::variant<T...>>& variant_param
     {
         //_log.debug(std::visit(vp));
         std::visit([result](auto&& v){
-                _log.debug("value %i", v);
+                //_log.debug("value %i", v);
+				_log_stream << "value " << v << "\n";
                 std::tuple_cat(result, std::make_tuple(v));
                 }, vp);
     }
@@ -306,6 +316,7 @@ SCM move_agent(SCM agent, SCM tile)
 void remove_agent(SCM agent)
 {
 	_gge_api->remove_agent(scm_to_int(agent));
+	//cout << ""; // TODO not having a cout here causes a segfault
 }
 					
 
@@ -362,7 +373,7 @@ void set_tile_color(SCM r, SCM g, SCM b, SCM index)
 		_gge_api->set_tile_color(
 				{scm_to_int(r), scm_to_int(g),scm_to_int(b)},
 				i);
-		cout << ""; // TODO not having a cout here causes a segfault
+		//cout << ""; // TODO not having a cout here causes a segfault
 	}
 }
 
@@ -386,6 +397,8 @@ SCM create_button(SCM text, SCM fn)
 
 void call_function(SCM fn)
 {
+	if(!scm_is_true(scm_procedure_p(fn)))
+		throw runtime_error("Not a procedure!");
     scm_call_0(fn);
 }
 

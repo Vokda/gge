@@ -49,13 +49,10 @@
 
 (define display_hex
   (lambda (hex)
-	(if (null? hex) (display "no hex display")
+	(if (null? hex) 
+	(display "no hex display")
 	(gge:create_text 
-	  (pointer->string (gge:get_tile_custom_data 
-						 hex
-						 "name"
-						 )) ; text ( hex data 'name)
-	  ;(number->string (apply gge:get_hex_from_mouse (gge:get_mouse_position))) ; text (# of hex)
+	  (string-append "Hex: " (number->string hex))
 	  (inexact->exact (car (gge:get_mouse_position))) ; x position
 	  (inexact->exact (cadr (gge:get_mouse_position))) ; y position
 	  1000 ; life
@@ -137,22 +134,3 @@
 	  (growth)
 	  )
 	(set! current_player (modulo (+ current_player 1) 2))))
-
-(define growth
-  (lambda ()
-	; create agents around agent
-	(let (( agents (gge:get_agents -1) ))
-	  (if (pair? agents)
-		(grow_agents agents))
-	)))
-
-(define grow_agents
-  (lambda (agent_ls)
-	(let (( agent (car agent_ls) ))
-	  (cond
-		( (not (pair? agent)) (display "no agents"))
-		( (null? (agent)) (agent:create_agent (gge:get_agent_position agent) (gge:get_agent_texture agent)))
-		(else (grow_agents (cdr agent_ls)))))))
-
-
-

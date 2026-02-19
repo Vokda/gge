@@ -146,6 +146,7 @@ void GUI::element_handling()
                 {
                     _log.info( "click");
                     _gge_api.call_script_fn(ge.fn);
+                    _log.debug("called script function %i", ge.fn);
                 }
                 break;
             default:

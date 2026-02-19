@@ -3,14 +3,13 @@
 #include "componenter.hpp"
 #include <memory>
 
-class Sprite;
+struct Sprite;
 class Tile;
 
 struct Agent: public Base_component
 {
-	shared_ptr<Tile> tile; 
-	shared_ptr<Sprite> sprite;
-	size_t index;
+	weak_ptr<Tile> tile; 
+	weak_ptr<Sprite> sprite;
 };
 
 class Agenter: public Componenter, public GGE_module
@@ -18,6 +17,9 @@ class Agenter: public Componenter, public GGE_module
 	public:
 		Agenter();
 		~Agenter() = default;
+		/**
+		 * create an agent and return its id
+		 */
 		size_t create_agent(
 				shared_ptr<Tile> tile,
 				shared_ptr<Sprite> sprite
@@ -26,6 +28,8 @@ class Agenter: public Componenter, public GGE_module
 		bool move_agent(size_t agent, shared_ptr<Tile> tile);
 		void navigate(size_t agent, shared_ptr<Tile> tile);
 		void remove_agent(size_t agent);
+		
+		void tick() override;
 
 	private:
 		shared_ptr<Agent> get_agent(int);

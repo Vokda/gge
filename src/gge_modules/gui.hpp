@@ -5,7 +5,7 @@
 #include <vector>
 union SDL_Event;
 struct SDL_Window;
-class SDL_Renderer;
+struct SDL_Renderer;
 class GGE_API;
 
 /*

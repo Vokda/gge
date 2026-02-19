@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 using namespace std;
-//#include "../gge_module.hpp"
+#include "../logger.hpp"
 
 class GGE_module;
 
@@ -23,13 +23,13 @@ class Command
 		virtual bool is_valid_command() const;
 
 	protected:
-
+		shared_ptr<GGE_module> _module;
+		shared_ptr<GGE_module> _arg;
+		Logger::Log& _log;
 		/*
 		 * specific command to be executed
 		 * in case of command containting multiple functions to execute
 		 */
 		int _cmd;
-		shared_ptr<GGE_module> _arg;
-		shared_ptr<GGE_module> _module;
 
 };
