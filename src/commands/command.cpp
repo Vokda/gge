@@ -1,10 +1,12 @@
 #include "command.hpp"
+#include "../gge_modules/gge_module.hpp"
 
-Command::Command(shared_ptr<GGE_module> m,  shared_ptr<GGE_module> arg, int command)
+Command::Command(shared_ptr<GGE_module> m,  shared_ptr<GGE_module> arg, int command):
+	_log(Logger::get_instance().add_category(m->get_type_string() + " command " + to_string(command)))
 {
 	_module = m;
-	_cmd = command;
 	_arg = arg;
+	_cmd = command;
 }
 
 int Command::get_command()

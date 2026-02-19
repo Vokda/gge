@@ -22,9 +22,9 @@ class Guile: public Script_engine
         static SCM call_game_loop(void* data);
         static SCM primitive_load(void*);
         static SCM error_handler(void* data, SCM keys, SCM args);
-        static SCM preunwind(void* data, SCM key, SCM params);
+        //static SCM preunwind(void* data, SCM key, SCM params);
 
 		SCM _scm;
 		SCM _scm_game_loop;
-		SCM _current_module;
+		//SCM _current_module;
 };

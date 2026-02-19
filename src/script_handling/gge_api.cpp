@@ -259,6 +259,7 @@ int GGE_API::add_module(rgm m, shared_ptr<GGE_module> ptr)
 
 void GGE_API::quit()
 {
+	_log.info("Quit called from script");
 	_core.quit();
 }
 
@@ -273,11 +274,15 @@ void GGE_API::set_tile_custom_data(size_t tile_i, const string& name, void* data
 
 void* GGE_API::get_tile_custom_data(size_t tile_i, const string& name)
 {
-#ifdef DEBUG
-	cout << "reading data " << name << " from tile " << tile_i << endl;
-#endif
+	_log.debug("getting custom data '%s' from tile %i", name.c_str(), tile_i);
 	auto tile = get_tile(tile_i);
 	return (*tile)[name];
+}
+
+int GGE_API::get_tile_from_coordinate(int x, int y)
+{
+	auto grid = static_pointer_cast<Grider>(_core.get_module(GRIDER));
+	return grid->get_tile_index_from_coordinate(x, y);
 }
 
 size_t GGE_API::load_image(const string& s)
@@ -296,28 +301,24 @@ size_t GGE_API::create_sprite(size_t t, int x, int y)
 	return spriter->create_sprite(t, p, -1);
 }
 
+// TODO should probably move the sprite creation elsewhere and just pass the sprite to create_agent
 size_t GGE_API::create_agent(size_t texture, size_t tile)
 {
 	// get modules
 	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
-	auto spriter = static_pointer_cast<Spriter>(_core.get_module(SPRITER));
 
+	// get tile position
 	auto tile_ptr = get_tile(tile);
 	const SDL_Point& p = tile_ptr->get_position();
+
+	// create sprite
 	size_t sprite_i = create_sprite(texture, p.x, p.y);
 
-	auto component = spriter->get_component(sprite_i);
-	auto sprite = static_pointer_cast<Sprite>(component);
-#ifdef DEBUG
-	cout << "Creating agent @ " << p << endl;
-	cout << "tile " << tile << endl;
-	cout << "spriter " <<spriter << endl;
-	cout << "component " <<component<< endl;
-	cout << "sprite " << sprite_i << endl;
-	cout << "tile_ptr " << tile_ptr << endl;
-	cout << "sprite_ptr " << sprite << endl;
-#endif
-	return agenter->create_agent(tile_ptr, sprite);
+	auto sprite = static_pointer_cast<Spriter>(_core.get_module(SPRITER))->get_sprite(sprite_i);
+	size_t agent_i = agenter->create_agent(tile_ptr, sprite);
+	_log.info("Agent created @ [%i, %i]", p.x, p.y);
+
+	return agent_i;
 }
 
 bool GGE_API::move_agent(size_t a, size_t to_tile)
@@ -332,8 +333,10 @@ bool GGE_API::move_agent(size_t a, size_t to_tile)
 
 void GGE_API::remove_agent(size_t a)
 {
+	_log.info("removing agent %i", a);
 	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
 	agenter->remove_agent(a);
+
 }
 
 vector<int> GGE_API::get_agents(int i)
@@ -346,40 +349,16 @@ vector<int> GGE_API::get_agents(int i)
 	}
 	else
 	{
-#ifdef DEBUG
-		cout << "get agents from tile " << i << endl;
-#endif
+		_log.debug("get agents from tile %i", i);
 		auto tile = get_tile(i); 
-		auto as = tile->get_agents();
+		auto as = tile->get_agents(); // TODO just make a function that returns a vector of IDs.
 		agents.resize(as.size());
 		size_t a_i = 0;
 		for(auto a: as)
 		{
-			agents[a_i++] = a->index;
+			agents[a_i++] = a.lock()->id;
 		}
 	}
-
-#ifdef DEBUG
-	if(agents.empty())
-	{
-		cout << "no agents found";
-		if(i < 0)
-			cout << "found anywhere" << endl;
-		else
-			cout << "on tile" << i << endl;
-	}
-	else
-	{
-		if(i < 0)
-		{
-			cout << agents.size() << " found in total." << endl;
-		}
-		else
-		{
-			cout << agents.size() << " found on tile " << i << endl;
-		}
-	}
-#endif
 	return  agents;
 }
 
@@ -387,7 +366,7 @@ void GGE_API::change_agent_sprite(int agent, int new_texture)
 {
 	auto a = get_agent(agent);
 
-	auto sprite = a->sprite;
+	auto sprite = a->sprite.lock();
 
 	auto spriter = static_pointer_cast<Spriter>(_core.get_module(SPRITER));
 	spriter->change_texture(sprite, new_texture);
@@ -414,6 +393,7 @@ size_t GGE_API::create_button(const string& text, void* fn)
 // script specific
 void GGE_API::call_script_fn(void* fn)
 {
+	_log.info("Calling script function %p", fn);
     _script_engine->call_script_fn(fn);
 }
 
@@ -429,6 +409,6 @@ shared_ptr<Tile> GGE_API::get_tile(size_t i)
 shared_ptr<Agent> GGE_API::get_agent(size_t a)
 {
 	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
-	shared_ptr<Agent> agent = static_pointer_cast<Agent>(agenter->get_component(a));
+	shared_ptr<Agent> agent = static_pointer_cast<Agent>(agenter->get_component_by_id(a));
 	return agent;
 }

@@ -41,7 +41,7 @@ class Spriter: public Componenter, public GGE_module
 
 		const list<component>& get_sprites() const { return get_components(); }
 
-		shared_ptr<Sprite> get_sprite(size_t i) { return static_pointer_cast<Sprite>(get_component(i)); }
+		shared_ptr<Sprite> get_sprite(size_t i) { return static_pointer_cast<Sprite>(get_component_by_id(i)); }
 	private:
 		shared_ptr<Graphics> _graphics;
 };

@@ -14,6 +14,7 @@ class Grid
 
 
 		shared_ptr<Tile> get_tile(size_t i);
+		virtual int get_tile_index_from_coordinate(int x, int y);
 		int get_tile_index(shared_ptr<Tile> t);
 
 		// getters

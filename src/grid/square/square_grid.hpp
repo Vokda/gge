@@ -22,6 +22,7 @@ class Square_grid: public Grid
 		 */
 		int get_square_index(const Square_coordinate& sc);
 		int get_tile(int x, int y);
+		int get_tile_index_from_coordinate(int x, int y);
 		shared_ptr<Square> get_square(const Square_coordinate& sc);
 
 	private:
@@ -29,7 +30,7 @@ class Square_grid: public Grid
 		typedef std::unordered_map<int, int> cube_coords_map;
 
 		vector<int> get_neighbors_index(Square_coordinate sc);
-		vector<shared_ptr<Tile>> get_neighbors(Square_coordinate sc);
+		vector<weak_ptr<Tile>> get_neighbors(Square_coordinate sc);
 
 		// vars
 		int _x_offset = 0;

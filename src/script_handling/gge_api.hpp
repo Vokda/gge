@@ -12,7 +12,7 @@
 struct SDL_Point;
 class Script_engine;
 class Tile;
-class Agent;
+struct Agent;
 
 using namespace std;
 
@@ -86,6 +86,7 @@ class GGE_API
 		int create_grid(size_t, size_t, int);
 		// return index to tile in grid vector
 		int get_tile_from_mouse(int x, int y);
+		int get_tile_from_coordinate(int x, int y);
 		void set_tile_color(const vector<int>& c, size_t i);
 		const vector<int>& get_neighbors(int tile);
 

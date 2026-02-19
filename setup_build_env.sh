@@ -12,6 +12,7 @@ rm -f Makefile
 #export CXX=clang++
 
 cmake -B build -DCMAKE_BUILD_TYPE=Debug
+echo "Building for Debug"
 
 cd build
 ln -sf ../games/

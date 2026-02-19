@@ -34,7 +34,8 @@ void Guile::read_file(const string& s)
         (void*)c,
         error_handler,
         nullptr,
-        preunwind,
+		nullptr,
+        //preunwind,
         nullptr
     );
 
@@ -66,18 +67,19 @@ bool Guile::run_game_loop_once(double delta)
         &call_data,
         error_handler,
         nullptr,
-        preunwind,
+		nullptr,
+        //preunwind,
         nullptr
     );
 	bool quit = scm_to_bool(scm);
 	return quit;
 }
 
-SCM Guile::preunwind(void* data, SCM key, SCM params)
+/*SCM Guile::preunwind(void* data, SCM key, SCM params)
 {
-    SCM handler_data = scm_make_stack (SCM_BOOL_T, SCM_EOL);
-    return scm_display_backtrace(handler_data, scm_current_error_port(), SCM_BOOL_F, SCM_BOOL_F);
-}
+	_log.error("Preunwind %p, %p, %p", data, key, params);
+	return SCM_UNSPECIFIED;
+}*/
 
 SCM Guile::call_game_loop(void* data)
 {
@@ -87,6 +89,8 @@ SCM Guile::call_game_loop(void* data)
 
 SCM Guile::error_handler(void* data, SCM keys, SCM args)
 {
+	cout << "data"<< data << endl;
+	//_log.error("%p", data);
     char* c = scm_to_utf8_string(
             scm_simple_format(
                 SCM_BOOL_F, scm_from_utf8_string("Keys: ~A"), scm_list_1(keys)));
@@ -99,6 +103,11 @@ SCM Guile::error_handler(void* data, SCM keys, SCM args)
     error.append(", ");
     error.append(c);
     free(c);
+
+	// Optional: print the backtrace here using scm_display_backtrace(...)
+	SCM bt = scm_make_stack (SCM_BOOL_T, SCM_EOL);
+    scm_display_backtrace(bt, scm_current_error_port(), SCM_BOOL_F, SCM_BOOL_F);
+
     throw runtime_error(error);
     return SCM_BOOL_F; // unreachable return value, yes.
 }
@@ -139,9 +148,11 @@ void Guile::add_gge_api_functions()
 
 	scm_c_define_gsubr("create_text", 5,0,0, (scm_t_subr) create_text);
 
+	// tiles
 	scm_c_define_gsubr("set_tile_color", 4,0,0, (scm_t_subr) set_tile_color);
 	scm_c_define_gsubr("get_tile_from_mouse", 2,0,0, (scm_t_subr) get_tile_from_mouse);
 	scm_c_define_gsubr("get_mouse_position", 0,0,0, (scm_t_subr) get_mouse_position);
+	scm_c_define_gsubr("get_tile_from_coordinate", 2,0,0, (scm_t_subr) get_tile_from_coordinate);
 
 	scm_c_define_gsubr("set_tile_custom_data", 3,0,0, (scm_t_subr) set_tile_custom_data);
 	scm_c_define_gsubr("get_tile_custom_data", 2,0,0, (scm_t_subr) get_tile_custom_data);
@@ -178,6 +189,7 @@ void Guile::add_gge_api_functions()
 			"init_spriter",
 			"create_text",
 			"get_mouse_position",
+			"get_tile_from_coordinate",
 			"get_tile_from_mouse",
 			"set_tile_color",
 			"set_tile_custom_data",

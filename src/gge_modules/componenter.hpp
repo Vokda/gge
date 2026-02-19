@@ -3,40 +3,62 @@
 #include <memory>
 #include "timer.hpp"
 #include <vector>
+#include "../logger.hpp"
 using namespace std;
+
+static size_t counter_id = 0;
 
 struct Base_component
 {
+	virtual ~Base_component() = default;
 	bool permanent;
 	moment creation;
 	int milliseconds;
+	const size_t id = counter_id++;
 };
 
 typedef shared_ptr<Base_component> component;
 
+/**
+ * Responsible for handling components 
+ * i.e. entities that can be added/removed over time
+ */
 class Componenter
 {
 	public:
-		Componenter() = default;
+		Componenter();
 		virtual ~Componenter() = default;
 
-		/*
-		 * returns memory address of t
-		 * to be used to refer to specific text
-		 */
-		void* add_component(component c);
 		list<component>::iterator rm_component(list<component>::iterator itr);
 
 		const list<component>& get_components() const { return _components; }
 		vector<int> get_components_indices();
 
-		component get_component(size_t i);
+		size_t get_number_of_components() const { return _components.size(); }
+
+		component get_component_by_id(size_t id);
 
 		// gge_begin make commands
-		void tick();
+		virtual void tick();
 		// gge_end make commands
 
 	protected:
+		component add_component(component c);
+		// returns the component with the given id, or nullptr if not found
+		void remove_component(size_t id);
+		template <typename F>
+		void for_each_component(F &&f) 
+		{
+			for (auto &c : _components)
+			{
+				f(c);
+			}
+		}
+		// returns the current time point
+		moment now() { return _timer.get_time_point(); }
+
+	private:
+		Logger::Log& _componenter_log; // TODO it is inherted for some reason by agenter
 		Timer _timer;
 		moment _start_time; // of the object;
 		list<component> _components;

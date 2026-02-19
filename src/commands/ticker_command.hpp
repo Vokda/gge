@@ -11,7 +11,7 @@ class Ticker_command: public Command
 				shared_ptr<GGE_module> arg,
 				int command);
 		void execute();
-		enum command {TEXTER, MAX};
+		enum command {TEXTER, AGENTER, SPRITER, MAX};
 		const string get_command_string() const;
 		bool is_valid_command() const;
 	private:

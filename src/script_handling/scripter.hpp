@@ -11,7 +11,7 @@ using namespace std;
 class Script_engine;
 class GGE_API;
 class Filer;
-class Configuration;
+struct Configuration;
 #include "../logger.hpp"
 
 class Scripter
