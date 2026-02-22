@@ -31,25 +31,11 @@ class GGE_module_initializer
 	public:
 		GGE_module_initializer();;
 
-		template<typename... Args>
-			shared_ptr<GGE_module> initialize(rgm module, Args&&... args)
+		template<typename T, typename... Args>
+			shared_ptr<GGE_module> initialize(Args&&... args)
             {
-                shared_ptr<GGE_module> gge_ptr;
-                switch(module)
-                {
-                    /*case(GRAPHICS):
-                        gge_ptr = init_gge_module<Graphics>(args...);
-                        break;*/
-                    /*case(GUI):
-                        gge_ptr = init_gge_module<gge::GUI>(args...);
-                        break;*/
-                    case(AGENTER):
-                        gge_ptr = init_gge_module<Agenter>(args...);
-                        break;
-                    default:
-                        throw invalid_argument("module " + GGE_module::get_module_name(module) + " not implemented");
-                }
-                return gge_ptr;
+                _log.info("Creating %s", typeid(T).name());
+                return make_shared<T>(args...);
             };
     private:
 		template<typename T, typename... Args>
@@ -81,7 +67,7 @@ class GGE_module_initializer
 		shared_ptr<GGE_module> none();
 		shared_ptr<GGE_module> texter(shared_ptr<Graphics> g);
 		shared_ptr<GGE_module> spriter(shared_ptr<Graphics> g);
-		shared_ptr<GGE_module> agenter();
+		//shared_ptr<GGE_module> agenter();
 		shared_ptr<GGE_module> shaper();
         shared_ptr<GGE_module> gui(shared_ptr<Graphics> g, shared_ptr<Events>, GGE_API&);
 		// gge_end import ctor_decl

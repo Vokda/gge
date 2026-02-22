@@ -38,14 +38,17 @@ class Componenter
 
 		component get_component_by_id(size_t id);
 
+		/**
+		 * Will remove component right away
+		 */
+		void remove_component(size_t id);
+
 		// gge_begin make commands
 		virtual void tick();
 		// gge_end make commands
 
 	protected:
 		component add_component(component c);
-		// returns the component with the given id, or nullptr if not found
-		void remove_component(size_t id);
 		template <typename F>
 		void for_each_component(F &&f) 
 		{

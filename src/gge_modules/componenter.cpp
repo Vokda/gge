@@ -3,6 +3,7 @@
 #include <iostream>
 using namespace std;
 #endif 
+#include "agenter.hpp"
 
 Componenter::Componenter():
 	_componenter_log(Logger::make_category("Componenter"))
@@ -35,13 +36,19 @@ void Componenter::tick()
 		{
 			_componenter_log.debug("Checking component %i for expiration", c->id);
 			_componenter_log.debug("milli seconds: %i", c->milliseconds);
+			cout << c->creation.time_since_epoch().count() << endl;
+			cout << c->milliseconds << endl;
 			int time_left = _timer.time_left(c->creation, c->milliseconds);
 			_componenter_log.debug("Checking component for expiration - time left: %i ms", time_left);
-			if(time_left <= 0)
+			if(not _timer.has_time_left(c))
 			{
 				c = nullptr; // make sure to release the component before erasing it
 				itr = _components.erase(itr);
 				_componenter_log.debug("Component expired and removed");
+			} 
+			else if (time_left > 10000)
+			{
+				throw runtime_error("Component has more than 10 seconds left, something is wrong with the timer");
 			}
 		}
 	}
@@ -97,4 +104,10 @@ void Componenter::remove_component(size_t id)
 			return;
 		}
 	}
+	_componenter_log.debug("Available components:");
+	for(auto c: _components)
+	{
+		_componenter_log.debug("Component %i", c->id);
+	}
+	throw runtime_error("Component with id " + to_string(id) + " not found");
 }

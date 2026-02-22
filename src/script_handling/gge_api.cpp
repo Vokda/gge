@@ -74,7 +74,9 @@ int GGE_API::init_shaper()
 
 int GGE_API::init_agenter()
 {
-	return add_module(AGENTER, _gge_init.agenter());
+	auto spriter = static_pointer_cast<Spriter>(_core.get_module(SPRITER));
+	auto agenter = _gge_init.initialize<Agenter>(spriter);
+	return add_module(AGENTER, agenter);
 }
 
 int GGE_API::init_gui()

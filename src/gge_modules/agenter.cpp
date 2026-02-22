@@ -2,9 +2,11 @@
 #include "spriter.hpp"
 #include "../grid/tile.hpp"
 #include <sstream>
+#include "spriter.hpp"
 
-Agenter::Agenter():
-	GGE_module(AGENTER) 
+Agenter::Agenter(shared_ptr<Spriter> spriter):
+	GGE_module(AGENTER),
+	_spriter(spriter)
 {
 }
 
@@ -79,6 +81,8 @@ void Agenter::remove_agent(size_t a)
 	auto tile = agent->tile.lock();
 	tile->remove_agent(agent);
 
+	_log.debug("Removing sprite %i", sprite->id);
+	_spriter->remove_component(sprite->id);
 	remove_component(a);
 }
 

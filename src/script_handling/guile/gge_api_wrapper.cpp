@@ -398,8 +398,8 @@ SCM create_button(SCM text, SCM fn)
 
 void call_function(SCM fn)
 {
-	if(!scm_is_true(scm_procedure_p(fn)))
-		throw runtime_error("Not a procedure!");
+	/*if(!scm_is_true(scm_procedure_p(fn)))
+		throw runtime_error("Not a procedure!");*/
     scm_call_0(fn);
 }
 

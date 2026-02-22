@@ -5,6 +5,7 @@
 
 struct Sprite;
 class Tile;
+class Spriter;
 
 struct Agent: public Base_component
 {
@@ -15,7 +16,7 @@ struct Agent: public Base_component
 class Agenter: public Componenter, public GGE_module
 {
 	public:
-		Agenter();
+		Agenter(shared_ptr<Spriter> spriter);
 		~Agenter() = default;
 		/**
 		 * create an agent and return its id
@@ -33,4 +34,5 @@ class Agenter: public Componenter, public GGE_module
 
 	private:
 		shared_ptr<Agent> get_agent(int);
+		shared_ptr<Spriter> _spriter;
 };
