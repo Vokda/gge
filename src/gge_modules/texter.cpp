@@ -81,7 +81,7 @@ SDL_Texture* Texter::text_to_texture(const string& s, const SDL_Color& c)
 			s.c_str(), 
 			c
 			);
-	check_null("Texter: TTF_RenderTextSolid", text_surface);
+	check_null("TTF_RenderTextSolid", text_surface);
 	SDL_Texture* t = SDL_CreateTextureFromSurface(_renderer, text_surface);
 	SDL_FreeSurface(text_surface);
 	return t;

@@ -44,8 +44,7 @@ void GGE_module::check_null(const std::string& check_name, const void * SDL_stru
 	}
 	else
 	{
-	    _ss << check_name<< " - OK" <<endl;;
-        _log.info(_ss.str());
+        _log.info("check_null: %s - OK", check_name.c_str());
 	}
 }
 
@@ -57,7 +56,7 @@ void GGE_module::check_null(const std::string& check_name, const int SDL_result)
 	}
 	else
 	{
-		_log.infoStream() << check_name << " - OK";
+        _log.info("check_null: %s - OK", check_name.c_str());
 	}
 }
 
