@@ -43,19 +43,15 @@ size_t Agenter::create_agent(
 bool Agenter::move_agent(size_t a, shared_ptr<Tile> to)
 {
 	auto agent = static_pointer_cast<Agent>(get_component_by_id(a));
-	_log.debugStream() << "Moving agent " << a << " to " << to 
+	_log.debugStream() << "Moving agent " << a << " to " << to->coordinate_to_string() 
         << " old sprite postion " << agent->sprite.lock()->position
         << " new sprite postion " << to->get_position();
 
-	auto old_tile = agent->tile;
 	// if successful move on tile was made do the rest of agent movement
-	if (agent->tile.lock()->move_agent(agent, to))
-	{
-		agent->tile = to;
-		return true;
-	}
-	else
-		return false;
+	auto old_tile = agent->tile.lock();
+	old_tile->remove_agent(agent);
+	to->place_agent(agent);
+	return true;
 }
 
 void Agenter::navigate(size_t agent, shared_ptr<Tile> tile)

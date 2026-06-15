@@ -14,6 +14,7 @@ using namespace gge;
 
 GUI::GUI(SDL_Window* window, SDL_Renderer* renderer, GGE_API& ga):
     GGE_module(rgm::GUI),
+    _debug(false),
     _renderer(renderer),
     _gge_api(ga)
 {
@@ -104,6 +105,13 @@ void GUI::draw()
     handle_focus(io);
     element_handling();
     ImGui::EndMainMenuBar();
+    
+    if(_debug)
+    {
+        ImGui::Begin("Debugger");
+        debug(_debug);
+        ImGui::End();
+    }
 
     // Rendering
     ImGui::Render();
@@ -202,5 +210,20 @@ void GUI::demo()
         if (ImGui::Button("Close Me"))
             show_another_window = false;
         ImGui::End();
+    }
+}
+
+void GUI::debug(bool d)
+{
+    _debug = d;
+    
+    if(_debug)
+    {
+        _log.debug("Debug mode enabled for GUI");
+        //ImGui::Text("Debug mode enabled for GUI");
+    }
+    else
+    {
+        _log.debug("Debug mode disabled for GUI");
     }
 }

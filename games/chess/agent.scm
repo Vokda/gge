@@ -62,7 +62,14 @@
 
 (define move_selected_agent
   (lambda (tile)
-	(move_agent selected_agent tile)))
+	  (if (has_agent_selected)
+		(begin
+		  (move_agent selected_agent tile)
+		  (display "Agent moved\n")
+		  )
+		(display "No agent selected\n")
+		)
+	))
 
 (define move_agent
   (lambda (agent tile)
@@ -84,9 +91,10 @@
   (lambda (tile)
 	(if (number? tile)
 	  (let ((agents (gge:get_agents tile)))
-		(if (pair? agents)
-		  (set! selected_agent (car agents)) ;; just select first agent for now
-		  (set! selected_agent -1)
+		  (begin
+		  	(set! selected_agent (car agents))
+			(display "select agent\n")
+			(display (string-append "Selected agent " (number->string selected_agent) "\n"))
 		  ))
 	  (set! selected_agent -1)
 	  )))

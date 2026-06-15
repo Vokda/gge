@@ -42,6 +42,7 @@ namespace gge
             // creating gui
             void create_button(const string& s, void* fn);
 
+            void debug(bool d);
 
         private:
             void handle_focus(ImGuiIO&);
@@ -52,6 +53,8 @@ namespace gge
                 gui_element_type get;
                 void* fn; // can be guile function. Don't call willy nilly!
             };
+            
+            bool _debug;
 
             // imgui stuff
             //std::optional<std::reference_wrapper<ImGuiIO>> _io_ref;

@@ -1,103 +1,80 @@
 #include "configurer.hpp"
-#include <sstream>
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <cctype>
-#include <fstream>
 #include "filer.hpp"
 #include "logger.hpp"
 #include "script_handling/gge_api.hpp"
 using namespace std;
+using namespace libconfig;
 
 Configurer::Configurer(const Filer& f, GGE_API& ga):
-	_gge_api(ga), _log(Logger::make_category("Configurer"))
+	_gge_api(ga), _config(*new Config()), _log(Logger::make_category("Configurer"))
 {
 	string cfg = f.in_game_dir("gge.cfg");
     _log.info("Expecting configuration file name: %s", cfg.c_str());
 	read_config(cfg);
-	// TODO actually do something with the config, like initialize modules and stuff
-	_gge_api.hello();
+	//apply_config();
 }
 
-const Configuration& Configurer::read_config(const string& config_name)
+void Configurer::read_config(const std::string& config_path)
 {
-	ifstream config(config_name, std::ifstream::in);
-
-	if(!config.is_open())
+	_log.info("Reading configuration file: %s", config_path.c_str());
+	try 
 	{
-        throw runtime_error("failed to open " + config_name);
+		_config.readFile(config_path.c_str());
 	}
-	else
+	catch(const FileIOException& e)
 	{
-        _log.info("Reading config %s", config_name.c_str());
-		string command;
-		vector<string> args;
-		string s;
-		while(std::getline(config, s))
+		_log.error("I/O error while reading configuration file: %s", e.what());
+		throw runtime_error(e.what());
+	}
+	catch(const libconfig::ParseException& e)
+	{
+		_log.error("Error parsing configuration file: %s", e.what());
+		throw runtime_error(e.what());
+	}
+	
+	_log.info("Configuration file read successfully.");
+}
+
+const libconfig::Config& Configurer::get_configuration() const
+{
+	return _config;
+}
+
+void Configurer::apply_config()
+{
+	// modules
+	const Setting& root = _config.getRoot();
+	if(root.exists("modules"))
+	{
+		_log.debug("Applying configuration for modules...");
+		const Setting& modules = root["modules"];
+		// TODO make this more dynamic
+		if (modules.exists("graphics"))
 		{
-			stringstream line(s);
-			line >> command;
-
-			if(command.find_first_of("#") != std::string::npos) continue;
-
-			to_lower(command);
-			string a;
-            _log.info("command %s", command.c_str());
-			while(line >> a)
-			{
-				to_lower(a);
-				args.push_back(a);
-                _log.info("\t %s", a.c_str());
-			}
-
-			store_config(command, args);
+			_log.debug("Applying configuration for graphics module...");
+			const Setting& graphics_config = modules["graphics"];
+			_log.debug("calling api to initialize graphics module...");
+			string window_title; 
+			int window_width, window_height;
+			graphics_config.lookupValue("window_title", window_title);
+			graphics_config.lookupValue("window_width", window_width);
+			graphics_config.lookupValue("window_height", window_height);
+			_gge_api.init_graphics(
+				window_title,
+				window_width,
+				window_height);
+		}
+		if (modules.exists("events"))
+		{
+			_gge_api.init_events();
+		}
+		if (modules.exists("gui"))
+		{
+			_gge_api.init_gui();
 		}
 	}
 
-	return _config;
-}
-
-void Configurer::to_lower(string& s)
-{
-	std::transform(s.begin(), s.end(), s.begin(),
-			[](unsigned char c){ return std::tolower(c); });
-}
-
-void Configurer::store_config(const string& command, const vector<string>& args)
-{
-	if(command == "script")
-	{
-		if(args.front() == "guile")
-			_config.script = Scripter::GUILE;
-		else
-			_config.script = Scripter::NOT_SUPPORTED;
-	}
-	else if(command == "game_file")
-	{
-		_config.game_file_name = args.front();
-	}
-	else if(command == "game_loop_function")
-	{
-		_config.game_loop_name = args.front();
-	}
-	else
-	{
-
-		stringstream ss;
-		ss << "configuration not recognized: " << command << " ";
-		for(string s : args)
-		{
-			ss << s << " ";
-		}
-        _log.error("configuration not recognized '%s'", ss.str().c_str());
-		ss << endl;
-		throw runtime_error(ss.str());
-	}
-}
-
-
-const Configuration& Configurer::get_configuration() const
-{
-	return _config;
+	bool debug_mode = read_value<bool>("debug_mode");
+	_gge_api.debug(debug_mode);
+	
 }

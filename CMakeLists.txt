@@ -16,12 +16,14 @@ set(CMAKE_CXX_COMPILER clang++)
 #  debug options
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
 	add_definitions(-DDEBUG)
-    set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -Werror -Wno-error=unused-function -Wno-error=unused-parameter -fsanitize=address,undefined -fno-omit-frame-pointer")
+    set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -Werror -Wno-error=unused-function -Wno-error=unused-parameter") # -fsanitize=address,undefined -fno-omit-frame-pointer")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
 # includes cmake/FindSDL2.cmake
-set(CMAKE_MODULE_PATH cmake/)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+find_package(PkgConfig REQUIRED)
 
 # sdl2
 find_package(SDL2 REQUIRED)
@@ -35,7 +37,10 @@ include_directories(${GUILE_INCLUDE_DIR})
 find_package(Log4cpp REQUIRED)
 include_directories(${LOG4CPP_INCLUDE_DIR})
 
-set(LIBRARIES ${LOG4CPP_LIBRARY} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_SUPPORT_LIBRARIES} ${GUILE_LIBRARY})
+pkg_check_modules(LIBCONFIG++ REQUIRED libconfig++)
+include_directories(${LIBCONFIG++_INCLUDE_DIRS})
+
+set(LIBRARIES ${LOG4CPP_LIBRARY} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_SUPPORT_LIBRARIES} ${GUILE_LIBRARY} ${LIBCONFIG++_LIBRARIES})
 
 # source files
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <functional>
 #include <SDL2/SDL.h>
+#include <algorithm>
 
 #include "../configurer.hpp"
 #include "scripter.hpp"
@@ -9,30 +10,27 @@
 #include "guile.hpp"
 #include "script_engine.hpp"
 #include "gge_api.hpp"
-#include "../filer.hpp"
 //class GGE_API;
 using namespace std;
 
-Scripter::Scripter(Filer& f, GGE_API& ga, const Configuration& config):
-	_filer(f), _log(Logger::make_category("Scripter"))
+Scripter::Scripter(const string& main_file, GGE_API& ga, const string& scripting_language):
+	_log(Logger::make_category("Scripter"))
 {
-	string file_name;
-	switch(config.script)
+	switch(parse_language_string(scripting_language))
 	{
 		case GUILE:
 			_script_engine = make_shared<Guile>(ga);
-			file_name = _filer.in_game_dir("init.scm");
 			break;
 		default:
-			throw runtime_error("Scripting language not supported!");
+			throw runtime_error("Scripting language " + scripting_language + " is not supported!");
 			break;
 	}
 	ga.set_script_engine(_script_engine);
 
     try
     {
-        _log.info("Game directory: %s", _filer.get_game_root_dir().c_str());
-        _script_engine->read_file(file_name);
+        _log.info("Reading file: %s", main_file.c_str());
+        _script_engine->read_file(main_file);
     }
     catch (std::exception& e)
     {
@@ -44,6 +42,16 @@ Scripter::Scripter(Filer& f, GGE_API& ga, const Configuration& config):
 bool Scripter::is_script_engine_running()
 { 
 	return _script_engine->is_running(); 
+}
+
+Scripter::scripting_language Scripter::parse_language_string(const string& s)
+{
+	string lower_s = s;
+	std::transform(lower_s.begin(), lower_s.end(), lower_s.begin(), ::tolower);
+	if (lower_s == "guile")
+		return GUILE;
+	else
+		return NOT_SUPPORTED;
 }
 
 /*

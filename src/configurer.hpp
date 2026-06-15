@@ -6,30 +6,46 @@
 class GGE_API;
 class Filer;
 #include <string>
+#include <stdexcept>
 #include <vector>
 #include "script_handling/scripter.hpp"
+#include <libconfig.h++>
 class Logger; 
-
-struct Configuration
-{
-	Scripter::scripting_language script;
-	string game_file_name;
-	string game_loop_name; // within game
-};
 
 class Configurer
 {
 	public:
 		Configurer(const Filer& f, GGE_API&);
 
-		const Configuration& get_configuration() const;
+		const libconfig::Config& get_configuration() const;
+
+		template<typename T>
+		T read_value(const std::string& name) 
+		{
+			T value;
+			try
+			{
+				_config.lookupValue(name.c_str(), value);
+			}
+			catch(const libconfig::SettingNotFoundException& e)
+			{
+				_log.error("Configuration setting not found: %s", name.c_str());
+				throw std::runtime_error(e.what());
+			}
+			catch(const libconfig::SettingTypeException& e)
+			{
+				_log.error("Configuration setting has wrong type: %s", name.c_str());
+				throw std::runtime_error(e.what());
+			}
+			return value;
+		};
 
 	private:
-		const Configuration& read_config(const std::string&);
+		void read_config(const std::string&);
 		void store_config(const string& command, const vector<string>& args);
-		void to_lower(string& s);
+		void apply_config();
 
 		GGE_API& _gge_api;
-		Configuration _config;
+		libconfig::Config& _config;
         Logger::Log& _log;
 };

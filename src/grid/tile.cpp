@@ -23,6 +23,7 @@ void Tile::place_agent(shared_ptr<Agent> agent)
 
 	_tile_agents.push_back(agent);
 	agent->tile = shared_from_this();
+	agent->sprite.lock()->set_position(_position);
 	replace_agents();
     _log.debug("Agent %i placed @ [%i, %i]", agent->id, _position.x, _position.y);
 }
@@ -39,7 +40,10 @@ void Tile::remove_agent(shared_ptr<Agent> agent)
 			return agent_ptr && agent_ptr->id == target->id; 
 		});
 	if(agent_itr != _tile_agents.end())
+	{
+		_log.debug("Removing agent %i from tile %s", agent->id, coordinate_to_string().c_str());
 		_tile_agents.erase(agent_itr);
+	}
 	else
 		throw runtime_error("Cannot remove agent " + to_string(agent->id) + " from tile " + coordinate_to_string() + " because it is not on the tile!");
 }
@@ -56,7 +60,14 @@ void Tile::replace_agents()
 {
 	int nr_agents = _tile_agents.size();
 	if(nr_agents == 1)
+	{
+		_log.debug("only one agent on tile %s, no need to replace", coordinate_to_string().c_str());
 		return;
+	}
+	else 
+	{
+		_log.debug("replacing %i agents on tile %s", nr_agents, coordinate_to_string().c_str());
+	}
 
 	// if more than one agent per tile to rearrange them in a circular pattern
 	int i = 0;

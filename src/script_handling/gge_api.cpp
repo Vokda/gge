@@ -30,6 +30,15 @@ void GGE_API::hello()
 	cout << "GGE API says hello!\n" << endl;
 }
 
+void GGE_API::debug(bool d)
+{
+	_log.debug("Debug mode set to %s", d ? "true" : "false");
+	
+	// draw debug info
+    auto gui = static_pointer_cast<gge::GUI>(_core.get_module(GUI));
+	gui->debug(d);
+}
+
 // init 
 int GGE_API::init_graphics(const string& s, size_t w, size_t h)
 {
@@ -325,11 +334,11 @@ size_t GGE_API::create_agent(size_t texture, size_t tile)
 
 bool GGE_API::move_agent(size_t a, size_t to_tile)
 {
-	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
     _log.debug("moving agent %i to tile %i", a, to_tile);
+	auto agenter = static_pointer_cast<Agenter>(_core.get_module(AGENTER));
 	bool moved = agenter->move_agent(a, get_tile(to_tile));
     string out = moved ? "successfully" : "failed";
-    _log.debug("moving agent %i moved to tile %i %s!", a, to_tile, out.c_str());
+    _log.debug("Agent %i moved to tile %i %s!", a, to_tile, out.c_str());
     return moved;
 }
 

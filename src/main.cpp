@@ -42,6 +42,8 @@ int main(int argc, char* argv[])
 		// TODO add class to handle arguments properly
 		// Argument handler here
 		// handle path to game given
+		const string game_dir = argv[1];
+		gge::log.info("Game directory: %s", game_dir.c_str());
 		Filer game_path(argv[1]);
 
 
@@ -52,7 +54,9 @@ int main(int argc, char* argv[])
 
 		GGE_API gge_api(core);
 		Configurer configurer(game_path, gge_api);
-		Scripter scripter(game_path, gge_api, configurer.get_configuration());
+		string script_language = configurer.read_value<string>("script");
+		string main_file = configurer.read_value<string>("main_file");
+		Scripter scripter(game_dir + "/" + main_file, gge_api, script_language);
 
 		core.check_modules_initiated();
 		core.check_commands_order();

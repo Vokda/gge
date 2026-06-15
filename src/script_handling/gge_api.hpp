@@ -26,6 +26,8 @@ class GGE_API
 		SDL_KeyCode get_sdl_keycodes() const;
 
 		void hello();
+		
+		void debug(bool d);
 
 		// module init returns ID of module
 		int init_graphics(const string& s, size_t, size_t);
