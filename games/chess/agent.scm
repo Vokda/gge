@@ -91,13 +91,17 @@
   (lambda (tile)
 	(if (number? tile)
 	  (let ((agents (gge:get_agents tile)))
-		  (begin
-		  	(set! selected_agent (car agents))
-			(display "select agent\n")
-			(display (string-append "Selected agent " (number->string selected_agent) "\n"))
-		  ))
+		(if (and agents (pair? agents))
+		    (begin
+		      (set! selected_agent (car agents))
+		      (display "select agent\n")
+		      (display (string-append "Selected agent " (number->string selected_agent) "\n")))
+		    (begin
+		      (display "No agents on tile\n")
+		      (set! selected_agent -1))))
 	  (set! selected_agent -1)
 	  )))
+
 
 (define remove_agent
   (lambda (agent_list)
